@@ -1,0 +1,11 @@
+# ascii dump of database
+
+# DpType
+TypeName
+_Splash._Splash	1#1
+	command	25#2
+	response	25#3
+
+# Datapoint/DpId
+DpName	TypeName	ID
+_Splash	_Splash	508

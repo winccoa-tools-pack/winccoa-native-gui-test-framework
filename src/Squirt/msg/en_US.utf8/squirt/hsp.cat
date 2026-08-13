@@ -1,0 +1,5 @@
+# message catalog for HPS (HightSpeedProgramming)  integration
+guiTests,GUI Tests
+navigateToGuiTest,Open GUI Test
+startGuiTest,Start/Stop GUI Test
+startGuiTestRecursive,Start All GUI Tests (recursive)

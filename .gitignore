@@ -1,0 +1,6 @@
+
+# WinCC OA backup files
+*.bak
+
+
+pw.cmd

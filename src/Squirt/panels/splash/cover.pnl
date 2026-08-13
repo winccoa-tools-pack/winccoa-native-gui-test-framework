@@ -1,0 +1,107 @@
+V 14
+1
+LANG:10000 0 
+PANEL,-1 -1 702 475 N "_Transparent" 0
+E E E E E 1 -1 -1 0  30 30
+""0  1
+E E 4
+"CBRef" "1"
+"EClose" "main()
+{
+  return; //do not allow to close
+}
+" 0
+
+"dpi" "96"
+"pdpi" "141.951"
+2 0 0
+""
+DISPLAY_LAYER, 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0
+LAYER, 0 
+0
+6 2
+"RECTANGLE1"
+""
+1 60 50 E E E 1 E 1 E N "stoerGingUnq" E N "_Transparent" E E
+ E E
+2 0 0 0 0 0
+E E E
+0
+1
+LANG:10000 0 
+
+7
+"transparentForMouse" ""
+"minimumSize" "100 100"
+"sizePolicy" "Expanding Expanding"
+"layoutAlignment" "AlignNone"
+"focusPolicy" "NoFocus"
+"dashclr"N "_Transparent"
+"antiAliased" "0"
+"
+string sModule = myModuleName();
+
+
+main()
+{
+  bool bRecording = TRUE;
+  if(isDollarDefined(\"$MODEREC\"))
+  {
+    bRecording = getDollarValue(\"$MODEREC\");
+  }
+  const string sColorRec = \"<{250,0,4,127},8,{250,0,4,0},4>\";
+  const string sColorReplay = \"green\";
+DebugN(\"recording=?\",bRecording);
+  RECTANGLE1.foreCol = bRecording ? sColorRec : sColorReplay;
+
+  string flags = self.windowFlags + \"|FramelessWindowHint\";
+  self.windowFlags = flags;
+  DebugN(\"windowFlags=\"+self.windowFlags);
+  startThread(\"getInFront\");
+  moduleShowFullScreen(sModule);
+  delay(1);
+  moduleShowFullScreen(sModule);
+}
+
+getInFront()
+{
+
+  while(1)
+  {
+    moduleRaise(sModule);
+//     if (isModuleOpen(\"Vision_1\"))
+    delay(0,500);
+  }
+}
+" 0
+ E 0 3 3 2 1 E U  1 E 60 50 450 310
+0
+LAYER, 1 
+0
+0
+LAYER, 2 
+0
+0
+LAYER, 3 
+0
+0
+LAYER, 4 
+0
+0
+LAYER, 5 
+0
+0
+LAYER, 6 
+0
+0
+LAYER, 7 
+0
+0
+4 0 "LAYOUT_GROUP3" -1
+1 0 
+2 
+
+"S 2" "0 0 1 1"
+"" ""
+0 1 0 0
+0

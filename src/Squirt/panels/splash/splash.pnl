@@ -1,0 +1,690 @@
+V 14
+1
+LANG:10000 0 
+PANEL,-1 -1 1301 766 N "WF_PanelBackground" 0
+"main()
+{
+  uiConnect(\"workCB_selChanged\", self.selectionChanged);
+  uiConnect(\"workCB_splashStateChanged\", self.splashStateChange);
+
+    dyn_string dsFiles;
+  string pat = \"*.ctl\";
+
+  string absPath = spSplash.getScriptPath();
+
+// DebugN(\"absPath\", absPath);
+  string relPath = \"\";
+
+DebugN(\"path\",absPath, spSplash.getScriptPath(), spSplash);
+  getFilesRecursive(dsFiles, absPath, relPath, pat);
+
+  //remvoe \"/splashRecord.ctl\"
+  int iPos = dynContains(dsFiles, \"/splashRecord.ctl\");
+  if (iPos > 0)
+    dynRemove(dsFiles, iPos);
+
+  tTestScripts.addColumn(\"\");
+  tTestScripts.addColumn(\"tests\");
+  tTestScripts.alternatingRowColors(true);
+  tTestScripts.setColumnWidthMode(1, TREE_WIDTH_STRETCH);
+  tTestScripts.addColumn(\"files\");
+  tTestScripts.addColumn(\"params\");
+
+  addDynToTree(dsFiles);
+
+  //add files without tests
+
+  pat = \"*.[px][nm][l]\";
+  absPath = getPath(PANELS_REL_PATH);
+  relPath = \"\";
+
+  dynClear(dsFiles);
+  getFilesRecursive(dsFiles, absPath, relPath, pat);
+
+  for (int i = dynlen(dsAdditionalPanels); i > 0; i--)
+  {
+    dynInsertAt(dsFiles, dsAdditionalPanels[i], 1);
+  }
+
+      //remove panel extension
+
+  for (int i = dynlen(dsFiles); i > 0; i--)
+  {
+    if (patternMatch(\"/splash/*\", dsFiles[i]))
+    {
+      dynRemove(dsFiles, i);
+    }
+    string s = dsFiles[i];
+    if (s.lastIndexOf(\".\") < 0)
+      continue;
+
+    int iPos = s.length()- s.lastIndexOf(\".\");
+
+    if (iPos >0)
+      s.chop(iPos);
+
+    dsFiles[i] = s;
+  }
+
+  addDynToTree(dsFiles, TRUE);
+
+  tTestScripts.setSorting(0,true);
+}
+
+workCB_selChanged(string sFile, string sParams, string sTC)
+{
+  setMultiValue(\"txtPanelSelected\", \"text\", sFile,
+                \"txtTestCaseReplay\", \"text\", sTC,
+                \"txtParams\", \"text\", sParams);
+
+  if (sTC != \"\") //for recording, do not reset TC
+    txtTestCase.text = sTC;
+}
+
+workCB_splashStateChanged(eSplash splashState)
+{
+  bool bPlay, bRec, bStop;
+  switch(splashState)
+  {
+    case eSplash::play:
+      bPlay = 0;
+      bRec = 0;
+      bStop = 1;
+      break;
+    case eSplash::record:
+      bPlay = 0;
+      bRec = 0;
+      bStop = 1;
+      break;
+    case eSplash::stop:
+      bPlay = 1;
+      bRec = 1;
+      bStop = 0;
+      break;
+  }
+  setMultiValue(\"pbPlay\", \"enabled\", bPlay,
+                \"pbRec\",  \"enabled\", bRec,
+                \"pbStop\", \"enabled\", bStop);
+}
+
+
+addDynToTree(dyn_string &dsFiles, bool bPanelsOnly = FALSE)
+{
+  for (int i = 1; i <= dynlen(dsFiles); i++)
+  {
+    //remove recorder panels
+//     if (patternMatch(\"/splash/*\", dsFiles[i]))
+//       continue;
+
+    dyn_string dsSplit = strsplit(dsFiles[i], \"/\"); // first element is empty because paths starting with /
+    if(!bPanelsOnly)DebugN(\"files\",dsSplit, dsFiles[i]);
+
+    string sPath, sParent, sParentPath;
+    for (int j = 2; j <= dynlen(dsSplit); j++)
+    {
+      sParentPath += \"/\" + dsSplit[j];
+      if (sPath != \"\")
+        sPath += \"_\";
+
+      sPath += dsSplit[j];
+      if (!mappingHasKey(mFiles, sPath))
+      {
+        tTestScripts.appendItemNC(sParent, sPath, dsSplit[j]);
+        if (!bPanelsOnly && j==dynlen(dsSplit)) //test script names
+          tTestScripts.setText(sPath, 1,  dsSplit[j]); //test col
+        if (bPanelsOnly && j==dynlen(dsSplit)) //panel file
+          tTestScripts.setText(sPath, 2, dsFiles[i]); //file col
+        else if (!bPanelsOnly && j>=dynlen(dsSplit)-1) //panel file or script file
+        {
+          if (j==dynlen(dsSplit)) //script
+          {
+            tTestScripts.setText(sPath, 2, dsFiles[i]); //file col
+            tTestScripts.setText(sPath, 3, bPanelsOnly ? \"\" : spSplash.getParamsFromScript(dsFiles[i]) ); //parameter col
+          }
+          else //replace script by panel
+          {
+            string sPanel = dsFiles[i]; //without panel extenstion
+
+            tTestScripts.setText(sPath, 2, sParentPath); //file col
+          }
+        }
+
+        eNodeType nodeType;
+
+        if (bPanelsOnly)
+        {
+          nodeType = j==dynlen(dsSplit) ? eNodeType::panel : eNodeType::folder;
+        }
+        else //with existing test scripts below
+        {
+          if (j==dynlen(dsSplit)) //script
+            nodeType = eNodeType::script;
+          else if (j==dynlen(dsSplit)-1) //panel
+            nodeType = eNodeType::panelWithScripts;
+          else //folder with scripts
+             nodeType = eNodeType::folderWithScripts;
+
+        }
+
+        setNodeIcon(sPath, nodeType);
+
+        mFiles[sPath] = i==dynlen(dsFiles) ? dsFiles[i] : \"\";
+
+      }
+      sParent = sPath;
+    }
+  }
+}" 0
+ E E E E 1 -1 -1 0  60 40
+""0  1
+E "#uses \"classes/splash/Splash\"
+#event selectionChanged(string sFile, string sParams, string sTC)
+#event splashStateChange(eSplash splashState)
+
+mapping mFiles;
+shared_ptr<Splash> spSplash  = new Splash(FALSE); //ready for replay controll
+const dyn_string dsAdditionalPanels = makeDynString(\"/vision/login.pnl\" /*, \"/vision/loginFramework/login_Standard.pnl\"*/);
+
+enum eNodeType
+{
+  folder,
+  folderWithScripts,
+  panel,
+  panelWithScripts,
+  script
+};
+
+reactOnFinish()
+{
+  string sTC = txtTestCase.text;
+  if (!patternMatch(\"*.ctl\", sTC))
+    sTC += \".ctl\";
+
+  txtTestCaseReplay.text = sTC;
+  updateNode(sTC, txtPanelSelected.text, txtParams.text);
+  triggerEvent(self.splashStateChange, eSplash::stop);
+}
+
+updateNode(string sTC, string sPanel, string sParams)
+{
+  string sParent, sNode, sFile;
+  strreplace(sPanel, \"\\\\\", \"/\");
+
+  if (!patternMatch(\"*.ctl\", sTC))
+    sTC+=\".ctl\";
+
+  string sTotalPath = txtPanelSelected.text + \"/\" + sTC;
+
+  getNodeIdFromFilePath(sPanel, sParent, sNode, sFile);
+  if (!mappingHasKey(mFiles, sNode)) //panel
+  {
+//     DebugN(\"add node\", sParent, sNode, sFile, mFiles);
+    tTestScripts.appendItem(sParent, sNode, sFile);
+    setNodeIcon(sNode, eNodeType::panelWithScripts);
+
+    mFiles[sNode] = sPanel;
+  }
+  else //panel update
+  {
+    setNodeIcon(sNode, eNodeType::panelWithScripts);
+  }
+
+  //TC
+  getNodeIdFromFilePath(sTotalPath, sParent, sNode, sFile);
+  if (!mappingHasKey(mFiles, sNode))
+  {
+    DebugN(\"add node 2\", sParent, sNode, sFile, mFiles);
+    tTestScripts.appendItem(sParent, sNode, makeDynString(sFile, sFile, sTotalPath));
+    //icon and cols
+    setNodeIcon(sNode, eNodeType::script);
+
+    mFiles[sNode] = sPanel;
+    tTestScripts.setText(sNode, 3, sParams ); //parameter col
+  }
+  if (sNode != \"\")
+    tTestScripts.setSelectedItem(sNode, true);
+//     tTestScripts.selectedItem(sNode);
+}
+
+getNodeIdFromFilePath(string sPath, string &sParent, string &sNode, string &sFile)
+{
+  strreplace(sPath, \"\\\\\", \"/\");
+  dyn_string dsSplit = strsplit(sPath, \"/\");
+  if (dynlen(dsSplit)>0 && dsSplit[1]==\"\")
+    dynRemove(dsSplit, 1);
+  string sId;
+
+  int iLen = dynlen(dsSplit);
+  if (iLen == 0)
+    return;
+
+  sNode = \"\";
+
+  for (int i = 1; i <= iLen; i++)
+  {
+    if (i == iLen)
+      sParent = sNode;
+
+    if (i>1)
+      sNode += \"_\";
+
+    sNode += dsSplit[i];
+  }
+  sFile = dsSplit[iLen];
+}
+
+setNodeIcon(string sNode, eNodeType nodeType)
+{
+  string sIcon;
+
+  switch(nodeType)
+  {
+    case eNodeType::folder:
+      sIcon = \"folder.png\";
+      break;
+    case eNodeType::folderWithScripts:
+      sIcon = \"wf/stylesheet/folder.png\";
+      break;
+    case eNodeType::panel:
+      sIcon = \"ProjectView/file.png\";
+      break;
+    case eNodeType::panelWithScripts:
+      sIcon = \"newpanel.png\";
+      break;
+    case eNodeType::script:
+    default:
+      sIcon = \"scripteditor.png\";
+      break;
+  }
+  tTestScripts.setIcon(sNode, 0, sIcon);
+}
+" 0
+ 5
+"CBRef" "1"
+"EClose" E
+"type" "WF"
+"dpi" "96"
+"pdpi" "141.951"
+2 0 0
+""
+DISPLAY_LAYER, 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0
+LAYER, 0 
+0
+29 9
+"tTestScripts"
+"WF"
+1 19.83333333333317 26.61904761904759 E E E 1 E 1 E N "_WindowText" E N "_Window" E E
+ E E
+9 0 0 0 0 0
+E E E
+0
+1
+LANG:10000 0 
+
+1
+"layoutAlignment" "AlignNone"
+2
+LANG:10000 43 Noto Sans,-1,16,5,400,0,0,0,0,0,0,0,0,0,0,1
+LANG:10001 43 Noto Sans,-1,16,5,400,0,0,0,0,0,0,0,0,0,0,1
+0  19.83333333333317 26.61904761904759 1239.833333333333 566.6190476190476
+10 TreeWidget
+2
+0 "selectionChanged" "(string id)"
+"  string sSelectedFilePath = tTestScripts.getText(id, 2); //file
+  string sParams = tTestScripts.getText(id, 3); //params
+
+  string sPanel;
+  string sTC;
+  if (sSelectedFilePath == \"\")
+  {
+    sPanel = \"\";
+    sTC = \"\";
+
+  }
+  else
+  {
+    dyn_string dsSplit = strsplit(sSelectedFilePath, \"/\");
+
+    bool isTC = patternMatch(\"*.ctl\", dsSplit[dynlen(dsSplit)]);
+    sTC = isTC ? dsSplit[dynlen(dsSplit)] : \"\";
+
+    for (int i = 1; i < dynlen(dsSplit) + !isTC; i++)
+    {
+      if (i!=1)
+        sPanel+=\"/\";
+      sPanel += dsSplit[i];
+    }
+    DebugN(\"selected\", sTC, dsSplit);
+  }
+
+  triggerEvent(\"selectionChanged\", sPanel, sParams, sTC);"
+0 "rightClicked" "(string id, int column)"
+"  DebugN(\"id:\",id);"
+E13 11
+"pbPlay"
+"WF"
+1 70 685 E E E 1 E 1 E N "_ButtonText" E N "_Button" E E
+ E E
+11 0 0 0 0 0
+E E E
+8
+1
+LANG:10000 0 
+
+2
+"minimumSize" "80 32"
+"layoutAlignment" "AlignNone"
+2
+LANG:10000 43 Noto Sans,-1,16,5,400,0,0,0,0,0,0,0,0,0,0,1
+LANG:10001 43 Noto Sans,-1,16,5,400,0,0,0,0,0,0,0,0,0,0,1
+0  68 648 302 742
+
+T 
+1
+LANG:10000 4 play
+"main(mapping event)
+{
+//   triggerEvent(self.splashStateChange, eSplash::play);
+  DebugTN(\"spSplash start test now\", spSplash);
+  spSplash.play(txtTestCaseReplay.text, txtPanelSelected.text, txtParams.text);
+//   triggerEvent(self.splashStateChange, eSplash::stop);
+  DebugTN(\"test finished\");
+}" 0
+ E E E
+13 12
+"pbRec"
+"WF"
+1 338 685 E E E 1 E 1 E N "_ButtonText" E N "_Button" E E
+ E E
+12 0 0 0 0 0
+E E E
+8
+1
+LANG:10000 0 
+
+2
+"minimumSize" "80 30"
+"layoutAlignment" "AlignNone"
+2
+LANG:10000 43 Noto Sans,-1,16,5,400,0,0,0,0,0,0,0,0,0,0,1
+LANG:10001 43 Noto Sans,-1,16,5,400,0,0,0,0,0,0,0,0,0,0,1
+0  336 648 570 742
+
+T 
+1
+LANG:10000 6 record
+"main(mapping event)
+{
+  DebugTN(event);
+  string sTC = txtTestCase.text, sFile = txtPanelSelected.text;
+
+  if (sTC.isEmpty() || sFile.isEmpty())
+  {
+    throwError(makeError(\"\", PRIO_WARNING, ERR_CONTROL, 54, \"The test case or selected file is empty\", sTC, sFile));
+    return;
+  }
+
+//   triggerEvent(self.splashStateChange, eSplash::record);
+  DebugTN(\"spSplash start rec now\", spSplash);
+
+  spSplash.record(sTC, sFile, txtParams.text);
+//   triggerEvent(self.splashStateChange, eSplash::stop);
+  DebugTN(\"rec finished\");
+}
+" 0
+ E E E
+13 13
+"pbStop"
+"WF"
+1 568 685 E E E 1 E 1 E N "_ButtonText" E N "_Button" E E
+ E E
+13 0 0 0 0 0
+E E E
+8
+1
+LANG:10000 0 
+
+2
+"minimumSize" "80 30"
+"layoutAlignment" "AlignNone"
+2
+LANG:10000 43 Noto Sans,-1,16,5,400,0,0,0,0,0,0,0,0,0,0,1
+LANG:10001 43 Noto Sans,-1,16,5,400,0,0,0,0,0,0,0,0,0,0,1
+0  566 648 800 742
+
+T 
+1
+LANG:10000 4 stop
+"main(mapping event)
+{
+  spSplash.stop(txtTestCase.text, txtPanelSelected.text, txtParams.text);
+//   reactOnFinish();
+}
+" 0
+ E E E
+14 14
+"txtPanelSelected"
+"WF"
+1 155 580 E E E 1 E 1 E N "_WindowText" E N "_Window" E E
+ E E
+14 0 0 0 0 0
+E E E
+0
+1
+LANG:10000 0 
+
+2
+"minimumSize" "-1 26"
+"layoutAlignment" "AlignNone"
+2
+LANG:10000 43 Noto Sans,-1,16,5,400,0,0,0,0,0,0,0,0,0,0,1
+LANG:10001 43 Noto Sans,-1,16,5,400,0,0,0,0,0,0,0,0,0,0,1
+0  153 573 447 607
+3 "0s" 0 0 0 0 0 -1  E E E
+14 15
+"txtTestCase"
+"WF"
+1 582 570 E E E 1 E 1 E N "_WindowText" E N "_Window" E E
+ E E
+15 0 0 0 0 0
+E E E
+0
+1
+LANG:10000 0 
+
+2
+"minimumSize" "-1 26"
+"layoutAlignment" "AlignNone"
+2
+LANG:10000 43 Noto Sans,-1,16,5,400,0,0,0,0,0,0,0,0,0,0,1
+LANG:10001 43 Noto Sans,-1,16,5,400,0,0,0,0,0,0,0,0,0,0,1
+0  580 558 944 602
+3 "0s" 0 0 0 0 0 -1  E E E
+2 16
+"PRIMITIVE_TEXT1"
+"WF"
+1 40 580 E E E 1 E 1 E N "_WindowText" E N "_Window" E E
+ E E
+16 0 0 0 0 0
+E E E
+0
+1
+LANG:10000 0 
+
+4
+"layoutAlignment" "AlignNone"
+"dashclr"N "_Transparent"
+"antiAliased" "0"
+"transformable" "0"
+E E 0 1 3 2 1 E U  0 E 40 580 88 601
+0 2 2 "0s" 0 0 0 192 0 0  40 580 1
+2
+LANG:10000 43 Noto Sans,-1,16,5,400,0,0,0,0,0,0,0,0,0,0,1
+LANG:10001 43 Noto Sans,-1,16,5,400,0,0,0,0,0,0,0,0,0,0,1
+0 1
+LANG:10000 6 panel:
+2 17
+"PRIMITIVE_TEXT2"
+"WF"
+1 470 590 E E E 1 E 1 E N "_WindowText" E N "_Window" E E
+ E E
+17 0 0 0 0 0
+E E E
+0
+1
+LANG:10000 0 
+
+4
+"layoutAlignment" "AlignNone"
+"dashclr"N "_Transparent"
+"antiAliased" "0"
+"transformable" "0"
+E E 0 1 3 2 1 E U  0 E 470 590 543 611
+0 2 2 "0s" 0 0 0 192 0 0  470 590 1
+2
+LANG:10000 43 Noto Sans,-1,16,5,400,0,0,0,0,0,0,0,0,0,0,1
+LANG:10001 43 Noto Sans,-1,16,5,400,0,0,0,0,0,0,0,0,0,0,1
+0 1
+LANG:10000 10 test case:
+32 18
+"SPACER1"
+""
+1 310 670 E E E 1 E 1 E N {0,0,0} E N {255,255,255} E E
+ E E
+18 0 0 0 0 0
+E E E
+0
+1
+LANG:10000 0 
+
+3
+"transparentForMouse" ""
+"sizePolicy" "Expanding Ignored"
+"layoutAlignment" "AlignNone"
+ 310 670 330 710 1
+14 19
+"txtTestCaseReplay"
+"WF"
+1 960 585 E E E 1 E 1 E N "_WindowText" E N "_Window" E E
+ E E
+19 0 0 0 0 0
+E E E
+0
+1
+LANG:10000 0 
+
+2
+"minimumSize" "-1 26"
+"layoutAlignment" "AlignNone"
+2
+LANG:10000 43 Noto Sans,-1,16,5,400,0,0,0,0,0,0,0,0,0,0,1
+LANG:10001 43 Noto Sans,-1,16,5,400,0,0,0,0,0,0,0,0,0,0,1
+0  958 568 1062 622
+2 "0s" 0 0 0 0 0 -1  E E E
+14 20
+"TEXT_FIELD1"
+""
+1 150 735 E E E 1 E 1 E N "_WindowText" E N "_Window" E E
+ E E
+20 0 0 0 0 0
+E E E
+0
+1
+LANG:10000 0 
+
+1
+"layoutAlignment" "AlignNone"
+2
+LANG:10000 43 Noto Sans,-1,16,5,400,0,0,0,0,0,0,0,0,0,0,1
+LANG:10001 43 Noto Sans,-1,16,5,400,0,0,0,0,0,0,0,0,0,0,1
+0  148 728 482 762
+2 "0s" 0 0 0 0 0 -1  E "main()
+{
+  Splash::initInterface();
+  dpConnect(\"work\", \"_Splash.command\");
+}
+
+work(string s, string cmd)
+{
+  this.text = cmd;
+  if( patternMatch(spSplash.sCmdFinished + \"*\", cmd) )
+  {
+    if (!isAnswer())
+      reactOnFinish();
+  }
+
+  triggerEvent(self.splashStateChange, spSplash.getStateFromString(cmd));
+}
+" 0
+ E
+14 21
+"txtParams"
+""
+1 140 695 E E E 1 E 1 E N "_WindowText" E N "_Window" E E
+ E E
+21 0 0 0 0 0
+E E E
+0
+1
+LANG:10000 0 
+
+1
+"layoutAlignment" "AlignNone"
+2
+LANG:10000 43 Noto Sans,-1,16,5,400,0,0,0,0,0,0,0,0,0,0,1
+LANG:10001 43 Noto Sans,-1,16,5,400,0,0,0,0,0,0,0,0,0,0,1
+0  138 688 242 722
+3 "0s" 0 0 0 0 0 -1  E E E
+0
+LAYER, 1 
+0
+0
+LAYER, 2 
+0
+0
+LAYER, 3 
+0
+0
+LAYER, 4 
+0
+0
+LAYER, 5 
+0
+0
+LAYER, 6 
+0
+0
+LAYER, 7 
+0
+0
+4 0 "LAYOUT_GROUP1" -1
+6 0 
+14 15 16 17 19 21 
+
+"S 14" "1 0 1 1"
+"S 15" "4 0 1 1"
+"S 16" "0 0 1 1"
+"S 17" "3 0 1 1"
+"S 19" "5 0 1 1"
+"S 21" "2 0 1 1"
+"" ""
+0 1 0 0
+4 1 "LAYOUT_GROUP2" -1
+5 0 
+11 12 13 18 20 
+
+"S 11" "0 0 1 1"
+"S 12" "3 0 1 1"
+"S 13" "4 0 1 1"
+"S 18" "1 0 1 1"
+"S 20" "2 0 1 1"
+"" ""
+0 1 0 0
+4 2 "LAYOUT_GROUP3" -1
+1 0 
+9 
+
+"S 9" "0 0 1 1"
+"" ""
+0 1 0 0
+0
