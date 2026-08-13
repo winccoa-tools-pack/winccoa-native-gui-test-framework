@@ -1,0 +1,17 @@
+name: Docs
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  placeholder:
+    name: Placeholder docs scaffold
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      - name: Placeholder step
+        run: echo "Docs build and help publishing workflow will be added here."

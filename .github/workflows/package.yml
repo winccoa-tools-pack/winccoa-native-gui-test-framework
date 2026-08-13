@@ -1,0 +1,17 @@
+name: Package
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+
+jobs:
+  placeholder:
+    name: Placeholder package scaffold
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      - name: Placeholder step
+        run: echo "Release packaging for the WinCC OA subproject will be added here."

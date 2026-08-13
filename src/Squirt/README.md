@@ -13,6 +13,14 @@ is a framework to test WinCC OA native panels (GUI) provided in the .pnl or .xml
 + bind tests into WinCC OA test frameworks
 + ...
 
+Squirt GUI tests are based on the WinCC OA `OaTest` class and therefore follow the WinCC OA Test concept.
+
+Execution options:
+
++ run in GEDI with HSP (High-Speed Programming) for local user tests in the WinCC OA IDE
++ run from command line
++ run fully automated in WinCC OA TestFramework for CI/CD
+
 ----
 ## Configuration
 
@@ -22,6 +30,19 @@ TBD
 ## Examples
 
 TBD
+
+----
+## Roadmap
+
++ VS Code integration is coming soon.
++ AI repository instructions are available in [../../.github/copilot-instructions.md](../../.github/copilot-instructions.md).
++ GitHub Actions integration is coming soon.
++ GitHub Actions overview plan:
+  + Phase 1: repository checks (lint/format checks and basic documentation validation).
+  + Phase 2: automated test execution (WinCC OA test runs and result publishing).
+  + Phase 3: release packaging of the final WinCC OA subproject artifact.
+  + Phase 4: publish package through standard GitHub Releases.
+  + Phase 5: publish built help in two targets: inside the package for local use and on GitHub Pages from the latest main branch.
 
 ----
 ## Contributing
@@ -37,7 +58,7 @@ TBD
 ----
 ## License
 
-TBD
+MIT License. See [../../LICENSE](../../LICENSE).
 
 ## Limitation
 

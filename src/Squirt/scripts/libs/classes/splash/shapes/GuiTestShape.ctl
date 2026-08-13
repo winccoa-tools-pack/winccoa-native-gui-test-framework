@@ -70,14 +70,18 @@ class GuiTestShape
     int x, y;
     getValue(this.testShape, "position", x, y);
 
+    DebugTN("position", x, y);
+
 //      DebugN("ÖÖÖÖÖÖÖÖÖÖÖÖÖÖÖÖÖÖÖÖÖÖ pos 120/100 ?????",x,y);
 
     getValue(this.testShape, "refPoint", x, y);
+    DebugTN("refPoint", x, y);
 
 //      DebugN("ÖÖÖÖÖÖÖÖÖÖÖÖÖÖÖÖÖÖÖÖÖÖ pos 120/100 ????? ref",x,y);
 //     center of the shape
     int w, h;
     getValue(this.testShape, "size", w, h);
+    DebugTN("size", w, h);
     x += w / 2;
     y += h / 2;
 //  DebugN("ÖÖÖÖÖÖÖÖÖÖÖÖÖÖÖÖÖÖÖÖÖÖ pos 120/100",x,y);
@@ -95,9 +99,11 @@ class GuiTestShape
 
     int w, h;
     getValue(shEwo, "size", w, h);
+
+    DebugTN("size ewo", w, h);
     float f;
     getZoomFactor(f, panel.moduleName);
-    shEwo.position((x / f) /* - (w / 2)*/, (y / f) /*- (h / 2)*/);
+    shEwo.position(x, y);
     shEwo.start();
 
     if (state == "OK")

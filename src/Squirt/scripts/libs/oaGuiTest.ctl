@@ -156,20 +156,6 @@ public string getNamePathOfShape(const shape &_shape)
   return res;
 }
 
-/// seems to be not used. We have similar function GuiTestShape.ctl
-public void showAttention2(string module, shape shPanel, int x, int y)
-{
-  shape shEwo = addShape(shPanel, 8, "AttentionEffect_ewo", "recordInspection");
-  int w, h;
-  getValue(shEwo, "size", w, h);
-  float f;
-  getZoomFactor(f, module);
-  shEwo.position((x / f) - (w / 2), (y / f) - (h / 2));
-  shEwo.start();
-  delay(0, 500);
-  removeShape(shEwo);
-}
-
 public void showRecordReplayBorder(uint mode = cRecord)
 {
   DebugTN("function correctly called", mode);
