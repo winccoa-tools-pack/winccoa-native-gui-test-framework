@@ -35,10 +35,22 @@ jobs:
           DOCKER_IMAGE: ${{ secrets.DOCKER_IMAGE }}
         run: |
           set -euo pipefail
+          default_image="ghcr.io/winccoa-tools-pack/winccoa:v3.21.3-debian12-all"
+
           if [ -n "${DOCKER_IMAGE:-}" ]; then
-            echo "value=${DOCKER_IMAGE}" >> "$GITHUB_OUTPUT"
+            image="${DOCKER_IMAGE}"
+
+            # If secret has no explicit tag or digest, avoid implicit :latest.
+            if [[ "$image" != *@* ]]; then
+              last_segment="${image##*/}"
+              if [[ "$last_segment" != *:* ]]; then
+                image="${image}:v3.21.3-debian12-all"
+              fi
+            fi
+
+            echo "value=${image}" >> "$GITHUB_OUTPUT"
           else
-            echo "value=ghcr.io/winccoa-tools-pack/winccoa:v3.21.3-debian12-all" >> "$GITHUB_OUTPUT"
+            echo "value=${default_image}" >> "$GITHUB_OUTPUT"
           fi
 
       - name: Login to GHCR
