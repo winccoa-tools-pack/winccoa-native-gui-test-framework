@@ -100,12 +100,35 @@ When behavior or workflows change, update relevant docs in the same change:
 - GitHub Actions are intended to automate tests, documentation, and packaging steps.
 - All build, test, documentation, and packaging jobs should run in Docker containers based on a WinCC OA Debian installation.
 - Supported WinCC OA versions are 3.21 and 3.22 when available. 3.20 shall work but is not a primary target.
+- TODO: Add repository settings as code via `.github/repository.settings.yml`
+  and manage branch protections through versioned GitHub rulesets.
+- TODO: Add a workflow to apply repository settings and rulesets from YAML,
+  using a dry-run mode and an authenticated apply mode.
+- TODO: Replace the placeholder CI workflow with CTL-focused quality gates,
+  including CtrlPPCheck, Markdown footer validation, docs validation, and
+  automated test execution where practical.
 - TODO: Migrate `devTools/ctlCoverageReport` from
   https://github.com/siemens/CtrlppCheck/tree/main/devTools/ctlCoverageReport
   into a dedicated external repository, then integrate it in this repository
   to check CTL code coverage in local workflows and CI.
 - TODO: Add markdownlint to validate Markdown documentation style and
   formatting in local workflows and CI.
+- TODO: Add Dependabot or Renovate configuration for GitHub Actions and other
+  maintainable dependency ecosystems used by this repository.
+- TODO: Add automated changelog generation and validation for releases,
+  including checks that release-targeted changes update the expected
+  changelog content.
+- TODO: Add GitFlow-oriented release automation for feature branches merging
+  into `develop`, promotion from `develop` to `main`, and required back-merges
+  from `main` or release/hotfix branches back into `develop`.
+- TODO: Replace Markdown issue templates with structured GitHub issue forms
+  that capture WinCC OA version, execution mode, environment, and
+  reproduction details.
+- TODO: Review whether dedicated pull request templates are needed for
+  feature and release changes, instead of a single generic template.
+- TODO: Replace the placeholder packaging workflow with WinCC OA release
+  automation that builds and publishes the subproject artifact and bundled
+  documentation.
 - The final package is a WinCC OA subproject artifact published as a standard GitHub Release.
 - Built help is published in two places: inside the package for local use and to GitHub Pages from the latest `main` branch.
 - The branch `main` should be protected.
