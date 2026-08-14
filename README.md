@@ -72,6 +72,9 @@ Tests can be executed in multiple ways:
 
 Contribution guidelines are in [CONTRIBUTING.md](CONTRIBUTING.md).
 
+Maintainers setting up docs publishing should also enable repository GitHub
+Pages with `Source = GitHub Actions` as documented in [CONTRIBUTING.md](CONTRIBUTING.md).
+
 ---
 
 ## License

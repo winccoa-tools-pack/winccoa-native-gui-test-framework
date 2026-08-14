@@ -66,6 +66,10 @@ Repository secrets:
 Pages deployment requirements:
 
 - Repository Pages must be enabled.
+- In repository settings, open `Settings -> Pages`.
+- Under `Build and deployment`, set `Source` to `GitHub Actions`.
+- The first docs deployment can fail with `Get Pages site failed` until this
+  repository-level Pages setting is enabled.
 - The workflow uses the built-in `GITHUB_TOKEN` for Pages deploy.
 - Required workflow permissions are set in `.github/workflows/docs.yml`
   (`pages: write`, `id-token: write`, `contents: read`).
@@ -93,6 +97,10 @@ Typical failures and fixes:
 - Error: WinCC OA tools fail due to missing project DB/config
 - Fix: verify the workflow still creates the temporary config and runs
   `WCCOAtoolCreateDbSQLite` before `WCCOActrl`.
+
+- Error: `Get Pages site failed` or Pages API returns `Not Found`
+- Fix: enable repository Pages and configure the source as `GitHub Actions`
+  under `Settings -> Pages`.
 
 ## Reporting issues
 

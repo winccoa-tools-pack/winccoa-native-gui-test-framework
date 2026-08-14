@@ -1,0 +1,46 @@
+HAVE_DOT               = YES
+DOT_PATH               =
+QHP_NAMESPACE          = "winccoa_%WINCCOA_VERSION%_squirt_en"
+QHP_VIRTUAL_FOLDER     = "doc" 
+
+QHP_SECT_FILTER_ATTRS = "winccoa squirt %WINCCOA_VERSION% en de"
+CLASS_GRAPH            = NO
+COLLABORATION_GRAPH    = NO
+GROUP_GRAPHS           = NO
+INCLUDE_GRAPH           = NO
+INCLUDED_BY_GRAPH = NO
+CALL_GRAPH = NO
+CALLER_GRAPH = NO
+GRAPHICAL_HIERARCHY = NO
+DIRECTORY_GRAPH = NO
+GENERATE_LEGEND = NO
+IMAGE_PATH =
+             
+PROJECT_NAME           = "Squirt  %WINCCOA_VERSION%"
+PROJECT_NUMBER         = ""
+                         
+GENERATE_BUGLIST = NO
+#SHOW_FILES = NO
+GENERATE_TODOLIST = NO
+
+
+
+COLS_IN_ALPHA_INDEX    = 10
+
+DISABLE_INDEX = YES
+GENERATE_TREEVIEW = NO
+
+ALIASES += synchronized="@attention  Synchronized reason:^^"
+ALIASES += synopsis="<b>Synopsis:</b>^^"
+ALIASES += var_type="<strong>Variable type:</strong>^^"
+ALIASES += exampleDescription="<strong>Example:</strong>^^"
+ALIASES += NoExternalUse="@li Do not use in extern application. Allowed only to be used inside the @doxyconfig PROJECT_NAME"
+ALIASES += AllowInTestScope="@li Allowed to be used inside OaTest scope."
+ALIASES += Restricted="@attention Restricted usage:^^"
+ALIASES += AIgeneratedHelpContent="@attention This documentation is created with the help of an artificial intelligence."
+
+# eliminate many warnings
+# TODO fix it
+WARN_IF_UNDOCUMENTED = NO
+WARN_IF_INCOMPLETE_DOC = NO
+WARN_NO_PARAMDOC = NO

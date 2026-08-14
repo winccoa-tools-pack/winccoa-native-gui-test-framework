@@ -51,6 +51,7 @@ runs:
         OA_PATH="/opt/WinCC_OA/${OA_VERSION}"
         PROJ_PATH="/workspace/${PROJECT_PATH_NORM}"
         CONFIG_TMP="$PROJ_PATH/config/config"
+        DOC_CONFIG="$PROJ_PATH/data/projectDocu/advanced_doxygenConfig.txt"
 
         mkdir -p "$PROJ_PATH/log"
         mkdir -p "$PROJ_PATH/help"
@@ -71,6 +72,10 @@ runs:
           apt-get --assume-yes install -f doxygen graphviz
         else
           echo "::warning::apt-get not available in image; assuming doxygen and graphviz are preinstalled"
+        fi
+
+        if [ -f "$DOC_CONFIG" ]; then
+          sed -i "s|%WINCCOA_VERSION%|${OA_VERSION}|g" "$DOC_CONFIG"
         fi
 
         "$OA_PATH/bin/WCCILpmon" \
