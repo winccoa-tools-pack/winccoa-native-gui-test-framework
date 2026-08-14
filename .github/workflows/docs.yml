@@ -25,50 +25,74 @@ jobs:
   build-help:
     name: Build help
     runs-on: ubuntu-latest
-    container:
-      image: ghcr.io/winccoa-tools-pack/winccoa:latest
-      options: --user root
-      credentials:
-        username: ${{ secrets.GHCR_USERNAME }}
-        password: ${{ secrets.GHCR_READ_TOKEN }}
+    env:
+      WINCCOA_IMAGE: ghcr.io/winccoa-tools-pack/winccoa:latest
+      WORKDIR: /workdir
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
 
+      - name: Login to GHCR
+        shell: bash
+        env:
+          DOCKER_USER: ${{ secrets.DOCKER_USER }}
+          DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+        run: |
+          echo "${DOCKER_PASSWORD}" | docker login ghcr.io \
+            -u "${DOCKER_USER}" --password-stdin
+
+      - name: Pull WinCC OA image
+        run: docker pull "${WINCCOA_IMAGE}"
+
+      - name: Start WinCC OA container
+        shell: bash
+        run: |
+          docker run -d --name winccoa-docs \
+            --user root \
+            -v "${GITHUB_WORKSPACE}":"${WORKDIR}":rw \
+            "${WINCCOA_IMAGE}" \
+            tail -f /dev/null
+
       - name: Install doxygen
         run: |
-          apt-get update
-          apt-get --assume-yes install -f doxygen
+          docker exec winccoa-docs bash -c '
+            apt-get update -qq
+            apt-get --assume-yes install -f doxygen
+          '
 
       - name: Register Squirt project
         shell: bash
         run: |
-          project_dir="${GITHUB_WORKSPACE}/${PROJECT_PATH}"
-
-          mkdir -p "${project_dir}/config"
-          mkdir -p "${project_dir}/log"
-
-          cat > "${project_dir}/config/config" <<EOF
+          docker exec winccoa-docs bash -c "
+            project_dir=\"${WORKDIR}/${PROJECT_PATH}\"
+            mkdir -p \"\${project_dir}/config\"
+            mkdir -p \"\${project_dir}/log\"
+            cat > \"\${project_dir}/config/config\" <<EOF
           [general]
-          pvss_path = "${WINCCOA_ROOT}"
-          proj_path = "${project_dir}"
-          proj_version = "3.21"
-          langs = "en_US.utf8"
+          pvss_path = \"${WINCCOA_ROOT}\"
+          proj_path = \"\${project_dir}\"
+          proj_version = \"3.21\"
+          langs = \"en_US.utf8\"
           pmonPort = 5999
           EOF
-
-          "${WINCCOA_ROOT}/bin/WCCILpmon" \
-            -config "${project_dir}/config/config" \
-            -n -autofreg -status -log +stderr || true
+            ${WINCCOA_ROOT}/bin/WCCILpmon \
+              -config \"\${project_dir}/config/config\" \
+              -n -autofreg -status -log +stderr || true
+          "
 
       - name: Generate help
-        shell: bash
         run: |
-          "${WINCCOA_ROOT}/bin/WCCOActrl" \
-            -proj "${PROJECT_NAME}" \
-            -n doxygen.ctl \
-            -log +stderr \
-            -lang en_US.utf8
+          docker exec winccoa-docs bash -c "
+            ${WINCCOA_ROOT}/bin/WCCOActrl \
+              -proj ${PROJECT_NAME} \
+              -n doxygen.ctl \
+              -log +stderr \
+              -lang en_US.utf8
+          "
+
+      - name: Stop container
+        if: always()
+        run: docker rm -f winccoa-docs || true
 
       - name: Configure GitHub Pages
         uses: actions/configure-pages@v5
