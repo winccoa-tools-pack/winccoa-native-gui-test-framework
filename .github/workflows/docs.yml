@@ -6,12 +6,87 @@ on:
       - main
   workflow_dispatch:
 
+permissions:
+  contents: read
+  packages: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+env:
+  WINCCOA_ROOT: /opt/WinCC_OA/3.21
+  PROJECT_NAME: Squirt
+  PROJECT_PATH: src/Squirt
+  IMAGE: ghcr.io/winccoa-tools-pack/winccoa:latest
+
 jobs:
-  placeholder:
-    name: Placeholder docs scaffold
+  build-help:
+    name: Build help
     runs-on: ubuntu-latest
+    container:
+      image: ${{ env.IMAGE }}
+      options: --user root
+      credentials:
+        username: ${{ github.actor }}
+        password: ${{ secrets.GITHUB_TOKEN }}
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
-      - name: Placeholder step
-        run: echo "Docs build and help publishing workflow will be added here."
+
+      - name: Install doxygen
+        run: |
+          apt-get update
+          apt-get --assume-yes install -f doxygen
+
+      - name: Register Squirt project
+        shell: bash
+        run: |
+          project_dir="${GITHUB_WORKSPACE}/${PROJECT_PATH}"
+
+          mkdir -p "${project_dir}/config"
+          mkdir -p "${project_dir}/log"
+
+          cat > "${project_dir}/config/config" <<EOF
+          [general]
+          pvss_path = "${WINCCOA_ROOT}"
+          proj_path = "${project_dir}"
+          proj_version = "3.21"
+          langs = "en_US.utf8"
+          pmonPort = 5999
+          EOF
+
+          "${WINCCOA_ROOT}/bin/WCCILpmon" \
+            -config "${project_dir}/config/config" \
+            -n -autofreg -status -log +stderr || true
+
+      - name: Generate help
+        shell: bash
+        run: |
+          "${WINCCOA_ROOT}/bin/WCCOActrl" \
+            -proj "${PROJECT_NAME}" \
+            -n doxygen.ctl \
+            -log +stderr \
+            -lang en_US.utf8
+
+      - name: Configure GitHub Pages
+        uses: actions/configure-pages@v5
+
+      - name: Upload pages artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: ${{ github.workspace }}/${{ env.PROJECT_PATH }}/help/html
+
+  deploy-pages:
+    name: Deploy GitHub Pages
+    needs: build-help
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
