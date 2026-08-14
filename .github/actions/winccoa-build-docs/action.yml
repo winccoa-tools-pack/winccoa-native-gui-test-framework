@@ -20,6 +20,14 @@ inputs:
     description: "Path (relative to workspace) where extracted warnings are written."
     required: false
     default: ".artifacts/doxygen-warnings.txt"
+  annotate-warnings:
+    description: "Emit parsed warnings as GitHub annotations."
+    required: false
+    default: "true"
+  max-annotations:
+    description: "Maximum number of warning annotations to emit."
+    required: false
+    default: "200"
 
 outputs:
   warning-count:
@@ -41,6 +49,8 @@ runs:
         DOCKER_IMAGE: ${{ inputs.docker-image }}
         COMPANY_NAME_INPUT: ${{ inputs.company-name }}
         WARNING_OUTPUT_FILE: ${{ inputs.warning-output-file }}
+        ANNOTATE_WARNINGS: ${{ inputs.annotate-warnings }}
+        MAX_ANNOTATIONS: ${{ inputs.max-annotations }}
       run: |
         set -euo pipefail
 
@@ -153,6 +163,55 @@ runs:
         WARNING_COUNT=$(wc -l < "$WARNING_OUTPUT_FILE" | tr -d '[:space:]')
         echo "warning-count=$WARNING_COUNT" >> "$GITHUB_OUTPUT"
         echo "warning-file=$WARNING_OUTPUT_FILE" >> "$GITHUB_OUTPUT"
+
+        if [ "${ANNOTATE_WARNINGS}" = "true" ] && [ -f "$WARNING_OUTPUT_FILE" ]; then
+          annotation_count=0
+          truncated=0
+
+          while IFS= read -r warning_line; do
+            [ -z "$warning_line" ] && continue
+
+            if [ "$annotation_count" -ge "$MAX_ANNOTATIONS" ]; then
+              truncated=1
+              break
+            fi
+
+            if [[ "$warning_line" =~ ^([^:]+):([0-9]+):([0-9]+):[[:space:]]*(.*)$ ]]; then
+              file_path="${BASH_REMATCH[1]#/workspace/}"
+              line_no="${BASH_REMATCH[2]}"
+              col_no="${BASH_REMATCH[3]}"
+              message="${BASH_REMATCH[4]}"
+            elif [[ "$warning_line" =~ ^([^:]+):([0-9]+):[[:space:]]*(.*)$ ]]; then
+              file_path="${BASH_REMATCH[1]#/workspace/}"
+              line_no="${BASH_REMATCH[2]}"
+              col_no=""
+              message="${BASH_REMATCH[3]}"
+            else
+              file_path=""
+              line_no=""
+              col_no=""
+              message="$warning_line"
+            fi
+
+            message="${message//'%'/'%25'}"
+            message="${message//$'\r'/'%0D'}"
+            message="${message//$'\n'/'%0A'}"
+
+            if [ -n "$file_path" ] && [ -n "$line_no" ] && [ -n "$col_no" ]; then
+              echo "::warning file=$file_path,line=$line_no,col=$col_no::$message"
+            elif [ -n "$file_path" ] && [ -n "$line_no" ]; then
+              echo "::warning file=$file_path,line=$line_no::$message"
+            else
+              echo "::warning::$message"
+            fi
+
+            annotation_count=$((annotation_count + 1))
+          done < "$WARNING_OUTPUT_FILE"
+
+          if [ "$truncated" -eq 1 ]; then
+            echo "::notice::Warning annotations truncated at ${MAX_ANNOTATIONS} items"
+          fi
+        fi
 
         if [ "$EXIT_CODE" -ne 0 ]; then
           echo "::error::Docs build failed with exit code $EXIT_CODE"
