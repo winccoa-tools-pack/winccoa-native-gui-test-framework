@@ -12,16 +12,30 @@ inputs:
   docker-image:
     description: "Container image used for docs generation."
     required: true
+  warning-output-file:
+    description: "Path (relative to workspace) where extracted warnings are written."
+    required: false
+    default: ".artifacts/doxygen-warnings.txt"
+
+outputs:
+  warning-count:
+    description: "Count of extracted warning lines from the docs build output."
+    value: ${{ steps.build.outputs.warning-count }}
+  warning-file:
+    description: "Workspace-relative path to extracted warning lines."
+    value: ${{ steps.build.outputs.warning-file }}
 
 runs:
   using: "composite"
   steps:
     - name: Build help in container
+      id: build
       shell: bash
       env:
         PROJECT_PATH: ${{ inputs.path }}
         OA_VERSION: ${{ inputs.winccoa-version }}
         DOCKER_IMAGE: ${{ inputs.docker-image }}
+        WARNING_OUTPUT_FILE: ${{ inputs.warning-output-file }}
       run: |
         set -euo pipefail
 
@@ -71,7 +85,10 @@ runs:
         BASH
         )
 
-        docker run --rm \
+        mkdir -p "$(dirname "$WARNING_OUTPUT_FILE")"
+
+        set +e
+        OUTPUT=$(docker run --rm \
           --user root \
           --shm-size=2g \
           -v "$GITHUB_WORKSPACE":"$WORKDIR":rw \
@@ -79,4 +96,20 @@ runs:
           -e OA_VERSION="$OA_VERSION" \
           -e PROJECT_PATH_NORM="$PROJECT_PATH_NORM" \
           "$DOCKER_IMAGE" \
-          bash -lc "$CONTAINER_SCRIPT"
+          bash -lc "$CONTAINER_SCRIPT" 2>&1)
+        EXIT_CODE=$?
+        set -e
+
+        echo "$OUTPUT"
+
+        # Keep only warnings relevant for quality gates.
+        echo "$OUTPUT" | grep -E "[Ww]arning:|\bWARNING\b|\bSEVERE\b|\bFATAL\b" > "$WARNING_OUTPUT_FILE" || true
+
+        WARNING_COUNT=$(wc -l < "$WARNING_OUTPUT_FILE" | tr -d '[:space:]')
+        echo "warning-count=$WARNING_COUNT" >> "$GITHUB_OUTPUT"
+        echo "warning-file=$WARNING_OUTPUT_FILE" >> "$GITHUB_OUTPUT"
+
+        if [ "$EXIT_CODE" -ne 0 ]; then
+          echo "::error::Docs build failed with exit code $EXIT_CODE"
+          exit "$EXIT_CODE"
+        fi

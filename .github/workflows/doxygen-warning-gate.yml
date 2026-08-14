@@ -1,0 +1,107 @@
+name: Doxygen Warning Gate
+
+on:
+  pull_request:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  packages: read
+
+jobs:
+  warning-diff:
+    name: No New Doxygen Warnings
+    runs-on: ubuntu-latest
+    env:
+      WINCCOA_VERSION: 3.21
+      WINCCOA_IMAGE: ghcr.io/winccoa-tools-pack/winccoa:v3.21.3-debian12-all
+    steps:
+      - name: Checkout PR head
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Checkout base ref
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event_name == 'pull_request' && github.event.pull_request.base.sha || 'main' }}
+          path: base
+
+      - name: Login to GHCR
+        # Required if your WinCC OA image is private.
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GHCR_PAT != '' && secrets.GHCR_PAT || secrets.GITHUB_TOKEN }}
+
+      - name: Pull WinCC OA image
+        run: docker pull "$WINCCOA_IMAGE"
+
+      - name: Build docs on base
+        id: base
+        uses: ./.github/actions/winccoa-build-docs
+        with:
+          path: base/src/Squirt
+          winccoa-version: ${{ env.WINCCOA_VERSION }}
+          docker-image: ${{ env.WINCCOA_IMAGE }}
+          warning-output-file: .artifacts/base-doxygen-warnings.txt
+
+      - name: Build docs on PR head
+        id: head
+        uses: ./.github/actions/winccoa-build-docs
+        with:
+          path: src/Squirt
+          winccoa-version: ${{ env.WINCCOA_VERSION }}
+          docker-image: ${{ env.WINCCOA_IMAGE }}
+          warning-output-file: .artifacts/head-doxygen-warnings.txt
+
+      - name: Compare warning sets
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p .artifacts
+
+          sort -u .artifacts/base-doxygen-warnings.txt > .artifacts/base-unique.txt || true
+          sort -u .artifacts/head-doxygen-warnings.txt > .artifacts/head-unique.txt || true
+
+          comm -13 .artifacts/base-unique.txt .artifacts/head-unique.txt > .artifacts/new-warnings.txt || true
+
+          BASE_COUNT=$(wc -l < .artifacts/base-unique.txt | tr -d '[:space:]')
+          HEAD_COUNT=$(wc -l < .artifacts/head-unique.txt | tr -d '[:space:]')
+          NEW_COUNT=$(wc -l < .artifacts/new-warnings.txt | tr -d '[:space:]')
+
+          {
+            echo "## Doxygen warning gate"
+            echo
+            echo "- Base unique warnings: ${BASE_COUNT}"
+            echo "- PR unique warnings: ${HEAD_COUNT}"
+            echo "- New warnings introduced: ${NEW_COUNT}"
+            echo
+          } >> "$GITHUB_STEP_SUMMARY"
+
+          if [ "$NEW_COUNT" -gt 0 ]; then
+            {
+              echo "### New warnings"
+              echo
+              echo "```text"
+              cat .artifacts/new-warnings.txt
+              echo "```"
+            } >> "$GITHUB_STEP_SUMMARY"
+            echo "::error::Doxygen warning gate failed: ${NEW_COUNT} new warning(s) introduced"
+            exit 1
+          fi
+
+      - name: Upload warning artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: doxygen-warning-gate
+          path: |
+            .artifacts/base-doxygen-warnings.txt
+            .artifacts/head-doxygen-warnings.txt
+            .artifacts/base-unique.txt
+            .artifacts/head-unique.txt
+            .artifacts/new-warnings.txt

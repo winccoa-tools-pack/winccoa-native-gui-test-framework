@@ -19,6 +19,8 @@ Thank you for contributing to this repository.
 - Run relevant GUI tests for impacted panels/shapes.
 - For behavior changes, include at least one reproducible validation step.
 - When possible, update or add VP data and screenshots for changed behavior.
+- Pull requests are expected to pass the Doxygen warning gate without
+  introducing new warnings compared to the base branch.
 
 ## Commit and PR guidance
 
