@@ -40,6 +40,7 @@ runs:
 
         mkdir -p "$PROJ_PATH/log"
         mkdir -p "$PROJ_PATH/help"
+        mkdir -p "$PROJ_PATH/config"
 
         cat > "$CONFIG_TMP" <<EOF
         [general]
