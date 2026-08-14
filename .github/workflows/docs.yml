@@ -29,8 +29,8 @@ jobs:
       image: ghcr.io/winccoa-tools-pack/winccoa:latest
       options: --user root
       credentials:
-        username: ${{ github.actor }}
-        password: ${{ secrets.GITHUB_TOKEN }}
+        username: ${{ secrets.GHCR_USERNAME }}
+        password: ${{ secrets.GHCR_READ_TOKEN }}
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
