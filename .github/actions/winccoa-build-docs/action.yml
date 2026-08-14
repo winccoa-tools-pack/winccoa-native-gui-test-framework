@@ -37,7 +37,6 @@ runs:
         OA_PATH="/opt/WinCC_OA/${OA_VERSION}"
         PROJ_PATH="/workspace/${PROJECT_PATH_NORM}"
         CONFIG_TMP="/tmp/squirt-docs.config"
-      #REATE_DB_BIN="$OA_PATH/bin/WCCOAtoolCreateDbSQLite"
 
         mkdir -p "$PROJ_PATH/log"
         mkdir -p "$PROJ_PATH/help"
@@ -57,12 +56,6 @@ runs:
         else
           echo "::warning::apt-get not available in image; assuming doxygen is preinstalled"
         fi
-
-   #    if [ -x "$CREATE_DB_BIN" ]; then
-   #      "$CREATE_DB_BIN" -config "$CONFIG_TMP" -empty -yes
-   #    else
-   #      echo "::warning::WCCOAtoolCreateDbSQLite not found at $CREATE_DB_BIN; skipping DB creation"
-   #    fi
 
         "$OA_PATH/bin/WCCILpmon" \
           -config "$CONFIG_TMP" \
