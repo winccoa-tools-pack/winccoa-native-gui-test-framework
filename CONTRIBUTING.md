@@ -31,42 +31,47 @@ Thank you for contributing to this repository.
 ## CI/CD maintainer setup (Docs workflow)
 
 The Docs workflow pulls a WinCC OA helper image from GHCR and deploys help to
-GitHub Pages. Maintainers must configure repository secrets before first use.
+GitHub Pages.
 
-Required repository secrets:
+Current expected setup:
 
-- `GHCR_USERNAME`: service account username used to read the GHCR package.
-- `GHCR_READ_TOKEN`: PAT for that account.
+- The WinCC OA image should be published as a public GHCR package.
+- The workflow currently pulls
+  `ghcr.io/winccoa-tools-pack/winccoa:v3.21.3-debian12-all`.
+- If the published image tag changes, update `.github/workflows/docs.yml`.
 
-Required PAT scope:
+Repository secrets:
 
-- `read:packages`
-
-Recommended token strategy:
-
-- Use a dedicated bot/service account instead of personal accounts.
-- If your organization enforces SSO, authorize the PAT for the org.
-
-GHCR package access requirements:
-
-- Grant read access for the service account on package
-  `ghcr.io/winccoa-tools-pack/winccoa`.
-- If package visibility is private/internal, verify org and repository access
-  alignment in package settings.
+- No repository secret is required for image pull when the package is public.
 
 Pages deployment requirements:
 
 - Repository Pages must be enabled.
 - The workflow uses the built-in `GITHUB_TOKEN` for Pages deploy.
-- Required workflow permissions are set in
-  `.github/workflows/docs.yml` (`pages: write`, `id-token: write`,
-  `contents: read`, `packages: read`).
+- Required workflow permissions are set in `.github/workflows/docs.yml`
+  (`pages: write`, `id-token: write`, `contents: read`).
 
-Typical failure and fix:
+Image/runtime requirements:
+
+- The image must contain a WinCC OA 3.21 installation at
+  `/opt/WinCC_OA/3.21`.
+- The workflow installs `doxygen` inside the container if `apt-get` is
+  available.
+- The workflow creates a temporary WinCC OA config and initializes SQLite
+  before running `doxygen.ctl`.
+
+Typical failures and fixes:
 
 - Error: `docker pull ... denied`
-- Fix: verify `GHCR_USERNAME` / `GHCR_READ_TOKEN`, PAT scope, and package read
-  permissions for the service account.
+- Fix: make the GHCR package public, or reintroduce authenticated image pulls.
+
+- Error: `doxygen: command not found`
+- Fix: ensure the image supports `apt-get`, or preinstall `doxygen` in the
+  published WinCC OA image.
+
+- Error: WinCC OA tools fail due to missing project DB/config
+- Fix: verify the workflow still creates the temporary config and runs
+  `WCCOAtoolCreateDbSQLite` before `WCCOActrl`.
 
 ## Reporting issues
 

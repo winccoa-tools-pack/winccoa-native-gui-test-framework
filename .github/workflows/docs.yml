@@ -8,7 +8,6 @@ on:
 
 permissions:
   contents: read
-  packages: read
   pages: write
   id-token: write
 
@@ -17,7 +16,7 @@ concurrency:
   cancel-in-progress: true
 
 env:
-  WINCCOA_ROOT: /opt/WinCC_OA/3.21
+  WINCCOA_VERSION: 3.21
   PROJECT_NAME: Squirt
   PROJECT_PATH: src/Squirt
 
@@ -26,73 +25,74 @@ jobs:
     name: Build help
     runs-on: ubuntu-latest
     env:
-      WINCCOA_IMAGE: ghcr.io/winccoa-tools-pack/winccoa:latest
-      WORKDIR: /workdir
+      WINCCOA_IMAGE: ghcr.io/winccoa-tools-pack/winccoa:v3.21.3-debian12-all
+      WORKDIR: /workspace
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Login to GHCR
-        shell: bash
-        env:
-          DOCKER_USER: ${{ secrets.DOCKER_USER }}
-          DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
-        run: |
-          echo "${DOCKER_PASSWORD}" | docker login ghcr.io \
-            -u "${DOCKER_USER}" --password-stdin
-
       - name: Pull WinCC OA image
         run: docker pull "${WINCCOA_IMAGE}"
 
-      - name: Start WinCC OA container
+      - name: Build Squirt help in container
         shell: bash
         run: |
-          docker run -d --name winccoa-docs \
-            --user root \
-            -v "${GITHUB_WORKSPACE}":"${WORKDIR}":rw \
-            "${WINCCOA_IMAGE}" \
-            tail -f /dev/null
+          set -euo pipefail
+          CONTAINER_SCRIPT=$(cat <<'BASH'
+          set -euo pipefail
 
-      - name: Install doxygen
-        run: |
-          docker exec winccoa-docs bash -c '
-            apt-get update -qq
-            apt-get --assume-yes install -f doxygen
-          '
+          OA_PATH="/opt/WinCC_OA/${WINCCOA_VERSION}"
+          PROJ_PATH="${WORKDIR}/${PROJECT_PATH}"
+          CONFIG_TMP="/tmp/squirt-docs.config"
+          CREATE_DB_BIN="$OA_PATH/bin/WCCOAtoolCreateDbSQLite"
 
-      - name: Register Squirt project
-        shell: bash
-        run: |
-          docker exec winccoa-docs bash -c "
-            project_dir=\"${WORKDIR}/${PROJECT_PATH}\"
-            mkdir -p \"\${project_dir}/config\"
-            mkdir -p \"\${project_dir}/log\"
-            cat > \"\${project_dir}/config/config\" <<EOF
+          mkdir -p "$PROJ_PATH/log"
+          mkdir -p "$PROJ_PATH/help"
+
+          cat > "$CONFIG_TMP" <<EOF
           [general]
-          pvss_path = \"${WINCCOA_ROOT}\"
-          proj_path = \"\${project_dir}\"
-          proj_version = \"3.21\"
-          langs = \"en_US.utf8\"
+          pvss_path = "$OA_PATH"
+          proj_path = "$PROJ_PATH"
+          proj_version = "${WINCCOA_VERSION}"
+          langs = "en_US.utf8"
           pmonPort = 5999
           EOF
-            ${WINCCOA_ROOT}/bin/WCCILpmon \
-              -config \"\${project_dir}/config/config\" \
-              -n -autofreg -status -log +stderr || true
-          "
 
-      - name: Generate help
-        run: |
-          docker exec winccoa-docs bash -c "
-            ${WINCCOA_ROOT}/bin/WCCOActrl \
-              -proj ${PROJECT_NAME} \
-              -n doxygen.ctl \
-              -log +stderr \
-              -lang en_US.utf8
-          "
+          if command -v apt-get >/dev/null 2>&1; then
+            apt-get update -qq
+            apt-get --assume-yes install -f doxygen
+          else
+            echo "::warning::apt-get not available in image; assuming doxygen is preinstalled"
+          fi
 
-      - name: Stop container
-        if: always()
-        run: docker rm -f winccoa-docs || true
+          if [ -x "$CREATE_DB_BIN" ]; then
+            "$CREATE_DB_BIN" -config "$CONFIG_TMP" -empty -yes
+          else
+            echo "::warning::WCCOAtoolCreateDbSQLite not found at $CREATE_DB_BIN; skipping DB creation"
+          fi
+
+          "$OA_PATH/bin/WCCILpmon" \
+            -config "$CONFIG_TMP" \
+            -n -autofreg -status -log +stderr || true
+
+          "$OA_PATH/bin/WCCOActrl" \
+            -config "$CONFIG_TMP" \
+            -n doxygen.ctl \
+            -log +stderr \
+            -lang en_US.utf8
+          BASH
+          )
+
+          docker run --rm \
+            --user root \
+            --shm-size=2g \
+            -v "${GITHUB_WORKSPACE}":"${WORKDIR}":rw \
+            -w "${WORKDIR}" \
+            -e WINCCOA_VERSION="${WINCCOA_VERSION}" \
+            -e PROJECT_PATH="${PROJECT_PATH}" \
+            -e WORKDIR="${WORKDIR}" \
+            "${WINCCOA_IMAGE}" \
+            bash -lc "$CONTAINER_SCRIPT"
 
       - name: Configure GitHub Pages
         uses: actions/configure-pages@v5
