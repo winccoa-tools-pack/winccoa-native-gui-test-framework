@@ -87,12 +87,23 @@ When behavior or workflows change, update relevant docs in the same change:
 - [README.md](../README.md)
 - [src/Squirt/README.md](../src/Squirt/README.md)
 - [CONTRIBUTING.md](../CONTRIBUTING.md)
+- Every Markdown documentation file (`*.md`) must end with this footer:
+
+  ```markdown
+  ---
+
+  <center>Made with ❤️ for and by the WinCC OA community</center>
+  ```
 
 ## CI, release, and packaging direction
 
 - GitHub Actions are intended to automate tests, documentation, and packaging steps.
 - All build, test, documentation, and packaging jobs should run in Docker containers based on a WinCC OA Debian installation.
 - Supported WinCC OA versions are 3.21 and 3.22 when available. 3.20 shall work but is not a primary target.
+- TODO: Migrate `devTools/ctlCoverageReport` from
+  https://github.com/siemens/CtrlppCheck/tree/main/devTools/ctlCoverageReport
+  into a dedicated external repository, then integrate it in this repository
+  to check CTL code coverage in local workflows and CI.
 - The final package is a WinCC OA subproject artifact published as a standard GitHub Release.
 - Built help is published in two places: inside the package for local use and to GitHub Pages from the latest `main` branch.
 - The branch `main` should be protected.
