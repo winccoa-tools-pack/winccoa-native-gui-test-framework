@@ -36,7 +36,7 @@ runs:
 
         OA_PATH="/opt/WinCC_OA/${OA_VERSION}"
         PROJ_PATH="/workspace/${PROJECT_PATH_NORM}"
-        CONFIG_TMP="/tmp/squirt-docs.config"
+        CONFIG_TMP="$PROJ_PATH/config/config"
 
         mkdir -p "$PROJ_PATH/log"
         mkdir -p "$PROJ_PATH/help"
@@ -46,6 +46,7 @@ runs:
         pvss_path = "$OA_PATH"
         proj_path = "$PROJ_PATH"
         proj_version = "${OA_VERSION}"
+        langs = "da_AT.utf8"
         langs = "en_US.utf8"
         pmonPort = 5999
         EOF
