@@ -68,9 +68,9 @@ runs:
 
         if command -v apt-get >/dev/null 2>&1; then
           apt-get update -qq
-          apt-get --assume-yes install -f doxygen
+          apt-get --assume-yes install -f doxygen graphviz
         else
-          echo "::warning::apt-get not available in image; assuming doxygen is preinstalled"
+          echo "::warning::apt-get not available in image; assuming doxygen and graphviz are preinstalled"
         fi
 
         "$OA_PATH/bin/WCCILpmon" \
