@@ -104,6 +104,8 @@ When behavior or workflows change, update relevant docs in the same change:
   https://github.com/siemens/CtrlppCheck/tree/main/devTools/ctlCoverageReport
   into a dedicated external repository, then integrate it in this repository
   to check CTL code coverage in local workflows and CI.
+- TODO: Add markdownlint to validate Markdown documentation style and
+  formatting in local workflows and CI.
 - The final package is a WinCC OA subproject artifact published as a standard GitHub Release.
 - Built help is published in two places: inside the package for local use and to GitHub Pages from the latest `main` branch.
 - The branch `main` should be protected.
