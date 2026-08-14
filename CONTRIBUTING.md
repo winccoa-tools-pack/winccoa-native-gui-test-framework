@@ -35,14 +35,18 @@ GitHub Pages.
 
 Current expected setup:
 
-- The WinCC OA image should be published as a public GHCR package.
-- The workflow currently pulls
+- The workflow resolves image from `DOCKER_IMAGE` secret first.
+- If `DOCKER_IMAGE` is not set, it falls back to
   `ghcr.io/winccoa-tools-pack/winccoa:v3.21.3-debian12-all`.
-- If the published image tag changes, update `.github/workflows/docs.yml`.
+- If the published image tag changes, update the fallback value in
+  `.github/workflows/docs.yml`.
 
 Repository secrets:
 
-- No repository secret is required for image pull when the package is public.
+- `DOCKER_USER` and `DOCKER_PASSWORD` are used when present for GHCR login.
+- `DOCKER_IMAGE` can be used to centrally manage the image reference.
+- If `DOCKER_USER` and `DOCKER_PASSWORD` are not set, the workflow falls back
+  to `GITHUB_TOKEN` login.
 
 Pages deployment requirements:
 
@@ -63,7 +67,9 @@ Image/runtime requirements:
 Typical failures and fixes:
 
 - Error: `docker pull ... denied`
-- Fix: make the GHCR package public, or reintroduce authenticated image pulls.
+- Fix: verify package access for the token/account used by GHCR login, and
+  ensure `DOCKER_USER` / `DOCKER_PASSWORD` are available when private package
+  access is required.
 
 - Error: `doxygen: command not found`
 - Fix: ensure the image supports `apt-get`, or preinstall `doxygen` in the

@@ -18,19 +18,28 @@ concurrency:
 
 env:
   WINCCOA_VERSION: 3.21
-  PROJECT_NAME: Squirt
   PROJECT_PATH: src/Squirt
 
 jobs:
   build-help:
     name: Build help
     runs-on: ubuntu-latest
-    env:
-      WINCCOA_IMAGE: ghcr.io/winccoa-tools-pack/winccoa:v3.21.3-debian12-all
-      WORKDIR: /workspace
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+
+      - name: Resolve WinCC OA image
+        id: image
+        shell: bash
+        env:
+          DOCKER_IMAGE: ${{ secrets.DOCKER_IMAGE }}
+        run: |
+          set -euo pipefail
+          if [ -n "${DOCKER_IMAGE:-}" ]; then
+            echo "value=${DOCKER_IMAGE}" >> "$GITHUB_OUTPUT"
+          else
+            echo "value=ghcr.io/winccoa-tools-pack/winccoa:v3.21.3-debian12-all" >> "$GITHUB_OUTPUT"
+          fi
 
       - name: Detect GHCR auth mode
         id: ghcr_auth
@@ -67,67 +76,14 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          docker pull "${WINCCOA_IMAGE}"
+          docker pull "${{ steps.image.outputs.value }}"
 
-      - name: Build Squirt help in container
-        shell: bash
-        run: |
-          set -euo pipefail
-          CONTAINER_SCRIPT=$(cat <<'BASH'
-          set -euo pipefail
-
-          OA_PATH="/opt/WinCC_OA/${WINCCOA_VERSION}"
-          PROJ_PATH="${WORKDIR}/${PROJECT_PATH}"
-          CONFIG_TMP="/tmp/squirt-docs.config"
-          CREATE_DB_BIN="$OA_PATH/bin/WCCOAtoolCreateDbSQLite"
-
-          mkdir -p "$PROJ_PATH/log"
-          mkdir -p "$PROJ_PATH/help"
-
-          cat > "$CONFIG_TMP" <<EOF
-          [general]
-          pvss_path = "$OA_PATH"
-          proj_path = "$PROJ_PATH"
-          proj_version = "${WINCCOA_VERSION}"
-          langs = "en_US.utf8"
-          pmonPort = 5999
-          EOF
-
-          if command -v apt-get >/dev/null 2>&1; then
-            apt-get update -qq
-            apt-get --assume-yes install -f doxygen
-          else
-            echo "::warning::apt-get not available in image; assuming doxygen is preinstalled"
-          fi
-
-          if [ -x "$CREATE_DB_BIN" ]; then
-            "$CREATE_DB_BIN" -config "$CONFIG_TMP" -empty -yes
-          else
-            echo "::warning::WCCOAtoolCreateDbSQLite not found at $CREATE_DB_BIN; skipping DB creation"
-          fi
-
-          "$OA_PATH/bin/WCCILpmon" \
-            -config "$CONFIG_TMP" \
-            -n -autofreg -status -log +stderr || true
-
-          "$OA_PATH/bin/WCCOActrl" \
-            -config "$CONFIG_TMP" \
-            -n doxygen.ctl \
-            -log +stderr \
-            -lang en_US.utf8
-          BASH
-          )
-
-          docker run --rm \
-            --user root \
-            --shm-size=2g \
-            -v "${GITHUB_WORKSPACE}":"${WORKDIR}":rw \
-            -w "${WORKDIR}" \
-            -e WINCCOA_VERSION="${WINCCOA_VERSION}" \
-            -e PROJECT_PATH="${PROJECT_PATH}" \
-            -e WORKDIR="${WORKDIR}" \
-            "${WINCCOA_IMAGE}" \
-            bash -lc "$CONTAINER_SCRIPT"
+      - name: Build Squirt help
+        uses: ./.github/actions/winccoa-build-docs
+        with:
+          path: ${{ env.PROJECT_PATH }}
+          winccoa-version: ${{ env.WINCCOA_VERSION }}
+          docker-image: ${{ steps.image.outputs.value }}
 
       - name: Configure GitHub Pages
         uses: actions/configure-pages@v5

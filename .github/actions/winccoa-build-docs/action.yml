@@ -1,0 +1,87 @@
+name: "WinCC OA Build Docs"
+description: "Build WinCC OA help documentation in a containerized project context."
+
+inputs:
+  path:
+    description: "Path to WinCC OA project root (relative to repository root)."
+    required: false
+    default: "src/Squirt"
+  winccoa-version:
+    description: "WinCC OA install directory version (major.minor), e.g. 3.21."
+    required: true
+  docker-image:
+    description: "Container image used for docs generation."
+    required: true
+
+runs:
+  using: "composite"
+  steps:
+    - name: Build help in container
+      shell: bash
+      env:
+        PROJECT_PATH: ${{ inputs.path }}
+        OA_VERSION: ${{ inputs.winccoa-version }}
+        DOCKER_IMAGE: ${{ inputs.docker-image }}
+      run: |
+        set -euo pipefail
+
+        WORKDIR=/workspace
+        PROJECT_PATH_NORM="${PROJECT_PATH#./}"
+        if [ -z "$PROJECT_PATH_NORM" ]; then
+          PROJECT_PATH_NORM="."
+        fi
+
+        CONTAINER_SCRIPT=$(cat <<'BASH'
+        set -euo pipefail
+
+        OA_PATH="/opt/WinCC_OA/${OA_VERSION}"
+        PROJ_PATH="/workspace/${PROJECT_PATH_NORM}"
+        CONFIG_TMP="/tmp/squirt-docs.config"
+        CREATE_DB_BIN="$OA_PATH/bin/WCCOAtoolCreateDbSQLite"
+
+        mkdir -p "$PROJ_PATH/log"
+        mkdir -p "$PROJ_PATH/help"
+
+        cat > "$CONFIG_TMP" <<EOF
+        [general]
+        pvss_path = "$OA_PATH"
+        proj_path = "$PROJ_PATH"
+        proj_version = "${OA_VERSION}"
+        langs = "en_US.utf8"
+        pmonPort = 5999
+        EOF
+
+        if command -v apt-get >/dev/null 2>&1; then
+          apt-get update -qq
+          apt-get --assume-yes install -f doxygen
+        else
+          echo "::warning::apt-get not available in image; assuming doxygen is preinstalled"
+        fi
+
+        if [ -x "$CREATE_DB_BIN" ]; then
+          "$CREATE_DB_BIN" -config "$CONFIG_TMP" -empty -yes
+        else
+          echo "::warning::WCCOAtoolCreateDbSQLite not found at $CREATE_DB_BIN; skipping DB creation"
+        fi
+
+        "$OA_PATH/bin/WCCILpmon" \
+          -config "$CONFIG_TMP" \
+          -n -autofreg -status -log +stderr || true
+
+        "$OA_PATH/bin/WCCOActrl" \
+          -config "$CONFIG_TMP" \
+          -n doxygen.ctl \
+          -log +stderr \
+          -lang en_US.utf8
+        BASH
+        )
+
+        docker run --rm \
+          --user root \
+          --shm-size=2g \
+          -v "$GITHUB_WORKSPACE":"$WORKDIR":rw \
+          -w "$WORKDIR" \
+          -e OA_VERSION="$OA_VERSION" \
+          -e PROJECT_PATH_NORM="$PROJECT_PATH_NORM" \
+          "$DOCKER_IMAGE" \
+          bash -lc "$CONTAINER_SCRIPT"
