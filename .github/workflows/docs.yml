@@ -32,8 +32,17 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Login to GHCR
-        # Required if the WinCC OA image is private
+      - name: Login to GHCR with PAT
+        if: ${{ secrets.DOCKER_USER != '' && secrets.DOCKER_PASSWORD != '' }}
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ secrets.DOCKER_USER }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+
+      - name: Login to GHCR with GITHUB_TOKEN fallback
+        if: ${{ !(secrets.DOCKER_USER != '' && secrets.DOCKER_PASSWORD != '') }}
+        # Works only when this repository is allowed to read the package.
         uses: docker/login-action@v3
         with:
           registry: ghcr.io
@@ -41,7 +50,10 @@ jobs:
           password: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Pull WinCC OA image
-        run: docker pull "${WINCCOA_IMAGE}"
+        shell: bash
+        run: |
+          set -euo pipefail
+          docker pull "${WINCCOA_IMAGE}"
 
       - name: Build Squirt help in container
         shell: bash
