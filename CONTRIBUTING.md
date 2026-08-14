@@ -33,6 +33,19 @@ Thank you for contributing to this repository.
 The Docs workflow pulls a WinCC OA helper image from GHCR and deploys help to
 GitHub Pages.
 
+IMPORTANT - most frequent time sink:
+
+- If GHCR login succeeds but `docker pull` fails with `denied`, the problem is
+  usually package authorization, not workflow syntax.
+- Repository `GITHUB_TOKEN` is repository-scoped. It can log in, but still
+  cannot pull a package unless that repository has package read access.
+- This access is managed in the package settings of
+  `ghcr.io/winccoa-tools-pack/winccoa` (organization package settings).
+- Symptom differences:
+  - `manifest ... latest not found`: wrong or missing image tag.
+  - `denied` after successful login: token/repository has no package read
+    authorization.
+
 Current expected setup:
 
 - The workflow resolves image from `DOCKER_IMAGE` secret first.

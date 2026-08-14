@@ -100,6 +100,14 @@ When behavior or workflows change, update relevant docs in the same change:
 - GitHub Actions are intended to automate tests, documentation, and packaging steps.
 - All build, test, documentation, and packaging jobs should run in Docker containers based on a WinCC OA Debian installation.
 - Supported WinCC OA versions are 3.21 and 3.22 when available. 3.20 shall work but is not a primary target.
+- Important GHCR troubleshooting:
+  - If `docker/login-action` reports success but `docker pull` fails with
+    `denied`, treat this as package authorization issue first.
+  - In this case, the repository token can authenticate, but the repository is
+    not authorized to read the package.
+  - Check org package access settings for
+    `ghcr.io/winccoa-tools-pack/winccoa` before changing workflow logic.
+  - If error says `manifest ... latest not found`, fix the image tag first.
 - TODO: Add repository settings as code via `.github/repository.settings.yml`
   and manage branch protections through versioned GitHub rulesets.
 - TODO: Add a workflow to apply repository settings and rulesets from YAML,
