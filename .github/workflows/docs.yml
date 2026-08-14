@@ -20,14 +20,13 @@ env:
   WINCCOA_ROOT: /opt/WinCC_OA/3.21
   PROJECT_NAME: Squirt
   PROJECT_PATH: src/Squirt
-  IMAGE: ghcr.io/winccoa-tools-pack/winccoa:latest
 
 jobs:
   build-help:
     name: Build help
     runs-on: ubuntu-latest
     container:
-      image: ${{ env.IMAGE }}
+      image: ghcr.io/winccoa-tools-pack/winccoa:latest
       options: --user root
       credentials:
         username: ${{ github.actor }}
