@@ -1,0 +1,35 @@
+
+# .github/labeler.yml  — actions/labeler v6 schema
+
+frontend:
+  - changed-files:
+      - any-glob-to-any-file: 'src/Squirt/panels/**'
+
+
+backend:
+  - changed-files:
+      - any-glob-to-any-file: 'src/Squirt/scripts/**'
+      - any-glob-to-any-file: 'src/Squirt/dplist/**'
+
+      
+localization:
+  - changed-files:
+      - any-glob-to-any-file: 'src/Squirt/msg/**'
+
+ci:
+  - changed-files:
+      - any-glob-to-any-file: '.github/workflows/**'
+
+docs:
+  - changed-files:
+      - any-glob-to-any-file: 'README.md'
+      - any-glob-to-any-file: '**/*.md'
+      - any-glob-to-any-file: 'docs/**'
+
+tests:
+  - changed-files:
+      - any-glob-to-any-file: 'tests/**'
+
+API:
+  - changed-files:
+      - any-glob-to-any-file: 'src/Squirt/data/hsp/**'
