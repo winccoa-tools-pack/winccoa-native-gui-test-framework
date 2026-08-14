@@ -162,6 +162,11 @@ runs:
           echo "::endgroup::"
 
           grep -E "[Ww]arning:|\bWARNING\b|\bSEVERE\b|\bFATAL\b" "$DOXYGEN_STDERR" > "$WARNING_OUTPUT_FILE" || true
+
+          if [ ! -s "$WARNING_OUTPUT_FILE" ] && [ -f "$DOXYGEN_STDOUT" ]; then
+            echo "::notice::No warnings found in stderr; falling back to doxygen stdout log at $DOXYGEN_STDOUT"
+            grep -E "[Ww]arning:|\bWARNING\b|\bSEVERE\b|\bFATAL\b" "$DOXYGEN_STDOUT" > "$WARNING_OUTPUT_FILE" || true
+          fi
         else
           # Fallback when WinCC OA log files are unavailable.
           echo "$OUTPUT" | grep -E "[Ww]arning:|\bWARNING\b|\bSEVERE\b|\bFATAL\b" > "$WARNING_OUTPUT_FILE" || true
