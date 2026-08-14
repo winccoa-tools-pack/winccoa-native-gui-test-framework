@@ -81,7 +81,7 @@ Image/runtime requirements:
 - The workflow installs `doxygen` inside the container if `apt-get` is
   available.
 - The workflow creates a temporary WinCC OA config and initializes SQLite
-  before running `doxygen.ctl`.
+  before running `buildHelp.ctl`.
 
 Typical failures and fixes:
 

@@ -12,6 +12,10 @@ inputs:
   docker-image:
     description: "Container image used for docs generation."
     required: true
+  company-name:
+    description: "Company/organization label used by buildHelp.ctl; default resolves to org name, then repo name."
+    required: false
+    default: ""
   warning-output-file:
     description: "Path (relative to workspace) where extracted warnings are written."
     required: false
@@ -35,9 +39,25 @@ runs:
         PROJECT_PATH: ${{ inputs.path }}
         OA_VERSION: ${{ inputs.winccoa-version }}
         DOCKER_IMAGE: ${{ inputs.docker-image }}
+        COMPANY_NAME_INPUT: ${{ inputs.company-name }}
         WARNING_OUTPUT_FILE: ${{ inputs.warning-output-file }}
       run: |
         set -euo pipefail
+
+        COMPANY_NAME="${COMPANY_NAME_INPUT}"
+        if [ -z "$COMPANY_NAME" ]; then
+          REPO_FULL="${GITHUB_REPOSITORY:-}"
+          ORG_NAME="${REPO_FULL%%/*}"
+          REPO_NAME="${REPO_FULL##*/}"
+
+          if [ -n "$ORG_NAME" ] && [ "$ORG_NAME" != "$REPO_FULL" ]; then
+            COMPANY_NAME="$ORG_NAME"
+          elif [ -n "$REPO_NAME" ]; then
+            COMPANY_NAME="$REPO_NAME"
+          else
+            COMPANY_NAME="WinCC OA community"
+          fi
+        fi
 
         WORKDIR=/workspace
         PROJECT_PATH_NORM="${PROJECT_PATH#./}"
@@ -52,6 +72,7 @@ runs:
         PROJ_PATH="/workspace/${PROJECT_PATH_NORM}"
         CONFIG_TMP="$PROJ_PATH/config/config"
         DOC_CONFIG="$PROJ_PATH/data/projectDocu/advanced_doxygenConfig.txt"
+        HELPER_CTL="/workspace/.github/actions/winccoa-build-docs/buildHelp.ctl"
 
         mkdir -p "$PROJ_PATH/log"
         mkdir -p "$PROJ_PATH/help"
@@ -78,13 +99,18 @@ runs:
           sed -i "s|%WINCCOA_VERSION%|${OA_VERSION}|g" "$DOC_CONFIG"
         fi
 
+        if [ ! -f "$HELPER_CTL" ]; then
+          echo "::error::Missing helper script: $HELPER_CTL"
+          exit 2
+        fi
+
         "$OA_PATH/bin/WCCILpmon" \
           -config "$CONFIG_TMP" \
           -n -autofreg -status -log +stderr || true
 
         "$OA_PATH/bin/WCCOActrl" \
           -config "$CONFIG_TMP" \
-          -n doxygen.ctl \
+          -n "$HELPER_CTL" "${COMPANY_NAME}" \
           -log +stderr \
           -lang en_US.utf8
         BASH
@@ -99,6 +125,7 @@ runs:
           -v "$GITHUB_WORKSPACE":"$WORKDIR":rw \
           -w "$WORKDIR" \
           -e OA_VERSION="$OA_VERSION" \
+          -e COMPANY_NAME="$COMPANY_NAME" \
           -e PROJECT_PATH_NORM="$PROJECT_PATH_NORM" \
           "$DOCKER_IMAGE" \
           bash -lc "$CONTAINER_SCRIPT" 2>&1)
