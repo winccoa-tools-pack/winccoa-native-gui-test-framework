@@ -14,16 +14,20 @@
 
 //--------------------------------------------------------------------------------
 /**
+  @brief Captures screenshots from the current test panel.
+  @AIgeneratedHelpContent
 */
 class OaGuiTestScreenCapture
 {
 //--------------------------------------------------------------------------------
 //@public members
 //--------------------------------------------------------------------------------
+  /** Active panel shape used for capture requests. */
   public shape/*<"PANEL">*/ currentPanel = 0;
 
   //------------------------------------------------------------------------------
   /** The Default Constructor.
+    @param testCaseId Relative test case path for capture storage.
   */
   public OaGuiTestScreenCapture(const string testCaseId = "")
   {
@@ -31,7 +35,10 @@ class OaGuiTestScreenCapture
   }
 
   //------------------------------------------------------------------------------
-  public clearCaptures()
+  /**
+    @brief Deletes all captures for the current test case.
+  */
+  public void clearCaptures()
   {
     rmdir(this.getImagesDir(), true);
 
@@ -45,6 +52,10 @@ class OaGuiTestScreenCapture
   }
 
   //------------------------------------------------------------------------------
+  /**
+    @brief Stores a screenshot of the current panel.
+    @param suffix File name suffix, for example latest-success.
+  */
   public void takeScreen(const string &suffix)
   {
     if (!shapeExists(currentPanel))
@@ -62,6 +73,9 @@ class OaGuiTestScreenCapture
   }
 
   //------------------------------------------------------------------------------
+  /**
+    @brief Logs the latest capture path as an informational message.
+  */
   public void printLastLocation()
   {
     throwError(makeError("", PRIO_INFO, ERR_CONTROL, 0, tr("Current panel has been captured into $1").subst(imagePath)));
@@ -71,10 +85,16 @@ class OaGuiTestScreenCapture
 //--------------------------------------------------------------------------------
 //@protected members
 //--------------------------------------------------------------------------------
+  /** Relative test case path used to organize captures. */
   protected string testCaseId;
+  /** Absolute path of the latest created image. */
   protected string imagePath;
 
   //------------------------------------------------------------------------------
+  /**
+    @brief Returns the capture directory for the current test case.
+    @return Absolute directory path.
+  */
   protected string getImagesDir()
   {
     return PROJ_PATH + DATA_REL_PATH + "splash/captures/" + testCaseId + "/";

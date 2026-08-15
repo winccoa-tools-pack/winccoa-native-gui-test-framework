@@ -14,10 +14,16 @@
 
 //--------------------------------------------------------------------------------
 /**
+  @brief Runtime helper script for Splash recording sessions.
+  @AIgeneratedHelpContent
 */
 
+/** Shared Splash controller used by this script process. */
 global shared_ptr<Splash> spSplash;
 
+/**
+  @brief Script entry point that starts panel watcher and recording mode.
+*/
 void main()
 {
   startThread("threadGetRootPanel");
@@ -26,6 +32,9 @@ void main()
   DebugTN("spSplash prepared for recording", spSplash);
 }
 
+/**
+  @brief Tracks the active root panel and injects close callback script.
+*/
 threadGetRootPanel()
 {
   string sLastModuleName, sLastPanelName;
@@ -80,6 +89,11 @@ threadGetRootPanel()
   }
 }
 
+/**
+  @brief Receives process exit notification callback.
+  @param event Trigger event name.
+  @param exitCode Process exit code.
+*/
 workCB_exit(string event, int exitCode)
 {
   DebugN("exit requested **************************+");

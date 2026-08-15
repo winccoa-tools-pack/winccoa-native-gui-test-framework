@@ -13,6 +13,9 @@
 
 //--------------------------------------------------------------------------------
 // Variables and Constants
+/**
+  @brief Splash runtime mode used for record/playback coordination.
+*/
 enum eSplash
 {
   stop,
@@ -24,14 +27,21 @@ enum eSplash
 
 //--------------------------------------------------------------------------------
 /**
+  @brief Controls recording and playback orchestration for Splash test scripts.
+  @AIgeneratedHelpContent
 */
 class Splash
 {
 //--------------------------------------------------------------------------------
 //@public members
 //--------------------------------------------------------------------------------
+  /** Root directory where generated Splash scripts are stored. */
   public static string sTestScriptPath; // = getPath(SCRIPTS_REL_PATH, "tests/splash"); will be set in constuctor to have option of creating folder
 
+  /**
+    @brief Initializes Splash datapoints when missing.
+    @return 0 on success.
+  */
   public static int initInterface()
   {
     if (!dpExists("_Splash"))
@@ -40,6 +50,8 @@ class Splash
 
   //------------------------------------------------------------------------------
   /** The Default Constructor.
+    @param bPlayback Enables playback command handling.
+    @param bRecord Enables recording command handling.
   */
   public Splash(bool bPlayback = FALSE, bool bRecord = FALSE)
   {
@@ -50,6 +62,11 @@ class Splash
       dpConnectUserData(this, this.reactOnCommands, bPlayback ? eSplash::play : eSplash::record, true, "_Splash.command", "_Splash.response");
     }
   }
+
+  /**
+    @brief Returns and creates the Splash script directory if needed.
+    @return Absolute script directory path.
+  */
   public synchronized string getScriptPath()
   {
     if (sTestScriptPath == "")
@@ -69,7 +86,15 @@ class Splash
     return sTestScriptPath;
   }
 
-  reactOnCommands(eSplash splashMode, string sDP, string sCommand, string sDP2, string sResponse)
+  /**
+    @brief Handles incoming Splash commands for play and record workflows.
+    @param splashMode Current command mode.
+    @param sDP Triggering datapoint.
+    @param sCommand Received command payload.
+    @param sDP2 Response datapoint.
+    @param sResponse Response payload.
+  */
+  void reactOnCommands(eSplash splashMode, string sDP, string sCommand, string sDP2, string sResponse)
   {
     DebugTN("wait for command", splashMode);
 
@@ -219,7 +244,13 @@ class Splash
     }
   }
 
-  public record(string sTestCase, string sPanelFile, string sParams = "")
+  /**
+    @brief Starts recording mode and launches UI process.
+    @param sTestCase Test case identifier.
+    @param sPanelFile Panel to record.
+    @param sParams Additional startup parameters.
+  */
+  public void record(string sTestCase, string sPanelFile, string sParams = "")
   {
     splashState = eSplash::play;
 
@@ -256,7 +287,13 @@ class Splash
     }
   }
 
-  public stop(string sTestCase, string sPanel, string sParams)
+  /**
+    @brief Stops recording and optionally writes script to panel/testcase path.
+    @param sTestCase Test case identifier.
+    @param sPanel Panel file name.
+    @param sParams Additional command parameters.
+  */
+  public void stop(string sTestCase, string sPanel, string sParams)
   {
     string sCommand = sCmdStop;
 
@@ -278,7 +315,13 @@ class Splash
 //squirt_test_panel_1_tc#1111.ctl", "squirt_test_panel_1.pnl", "");
 
   //start UI and playTestCase
-  public play(string sTestCase, string sPanelFile, string startParams = "")
+  /**
+    @brief Starts playback by launching the UI manager.
+    @param sTestCase Test case script.
+    @param sPanelFile Panel file to open.
+    @param startParams Optional playback parameters.
+  */
+  public void play(string sTestCase, string sPanelFile, string startParams = "")
   {
     startManager(sTestCase, sPanelFile, startParams);
     // playTestCase(sTestCase, sPanelFile);
@@ -303,7 +346,13 @@ class Splash
 //   }
 
   //start playback ui, test script will give inform us wit sCmdReadyPlay and will wait for our command sCmdPlay
-  public startManager(string sTestCase, string sPanelFile, string startParams = "")
+  /**
+    @brief Starts UI process for playback execution.
+    @param sTestCase Test case script.
+    @param sPanelFile Panel file to open.
+    @param startParams Optional startup parameters.
+  */
+  public void startManager(string sTestCase, string sPanelFile, string startParams = "")
   {
     splashState = eSplash::play;
 
@@ -337,12 +386,21 @@ class Splash
 //     DebugTN("run system cmd for test - finished", options);
   }
 
-  private static setCommandOnDP(string sCommand)
+  /**
+    @brief Writes a command to Splash command/response datapoints.
+    @param sCommand Command payload.
+  */
+  private static void setCommandOnDP(string sCommand)
   {
     // wait, because for possible exit command
     dpSetWait("_Splash.command", sCommand,
               "_Splash.response", "");
   }
+
+  /**
+    @brief Reads current command payload from Splash datapoint.
+    @return Current Splash command string.
+  */
   private static string getCommandFromDP()
   {
     string sCommand;
@@ -350,7 +408,11 @@ class Splash
 
     return sCommand;
   }
-  public static onClose()
+
+  /**
+    @brief Converts active record command to stop when panel is closing.
+  */
+  public static void onClose()
   {
     string sCommand = getCommandFromDP();
 
@@ -362,6 +424,11 @@ class Splash
     }
   }
 
+  /**
+    @brief Converts textual Splash command to enum state.
+    @param sCommand Command payload string.
+    @return Matching splash state.
+  */
   public static eSplash getStateFromString(const string &sCommand)
   {
     eSplash splashState = eSplash::stop;;
@@ -388,6 +455,11 @@ class Splash
   }
 
 
+  /**
+    @brief Reads optional parameter line from a test script header.
+    @param sScriptFile Script file path.
+    @return Extracted parameter string or empty string.
+  */
   public string getParamsFromScript(string sScriptFile)
   {
     string sParams;

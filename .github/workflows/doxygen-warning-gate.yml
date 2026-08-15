@@ -18,7 +18,7 @@ jobs:
     env:
       WINCCOA_VERSION: 3.21
       WINCCOA_IMAGE: ghcr.io/winccoa-tools-pack/winccoa:v3.21.3-debian12-all
-      MAX_WARNING_COUNT: -1
+      MAX_WARNING_COUNT: 0
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4

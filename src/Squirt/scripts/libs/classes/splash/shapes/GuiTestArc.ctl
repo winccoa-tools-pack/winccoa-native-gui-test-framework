@@ -9,6 +9,10 @@ class GuiTestArc : GuiTestShape
 //@public members
 //-----------------------------------------------------------------------------
   //---------------------------------------------------------------------------
+  /**
+    @brief Creates a wrapper for one panel shape instance.
+    @param testShape Shape object to inspect and validate.
+  */
   public GuiTestArc(const shape/*<"ARC">*/ &testShape)
   {
     this.testShape = testShape;
@@ -16,6 +20,7 @@ class GuiTestArc : GuiTestShape
 
   //---------------------------------------------------------------------------
   /** Returns current values of usefull attributes.
+    @return Mapping with current shape attributes.
     @note key must be string and values string|number|bools
   */
   public mapping getCurrentAttributes()

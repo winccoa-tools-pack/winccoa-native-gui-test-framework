@@ -2,6 +2,7 @@
 
 //-----------------------------------------------------------------------------
 /** Abstract class to test shapes in a panel.
+  @AIgeneratedHelpContent
 */
 class GuiTestShape
 {
@@ -11,7 +12,11 @@ class GuiTestShape
 //-----------------------------------------------------------------------------
 
   //---------------------------------------------------------------------------
-  /** Function checks if the current tate of the shape matched with given atrributes.
+  /**
+    @brief Checks whether current shape attributes match reference attributes.
+    @param referenceAttributes Expected shape attributes.
+    @param fails Collected mismatch messages.
+    @return 0 when all attributes match, otherwise -1.
   */
   public int assertAttributes(const mapping &referenceAttributes, dyn_string &fails)
   {
@@ -53,6 +58,10 @@ class GuiTestShape
   }
 
   //---------------------------------------------------------------------------
+  /**
+    @brief Returns a readable shape identifier for logs and assertions.
+    @return Shape name with optional name path.
+  */
   public string toString()
   {
     string str = this.testShape.name;
@@ -64,6 +73,10 @@ class GuiTestShape
   }
 
   //---------------------------------------------------------------------------
+  /**
+    @brief Shows a temporary visual attention marker for the test shape.
+    @param state Visual state indicator, e.g. OK or FAIL.
+  */
   public void showAttention(const string &state)
   {
 
@@ -116,6 +129,10 @@ class GuiTestShape
 
 
   //---------------------------------------------------------------------------
+  /**
+    @brief Returns the current attributes of the wrapped shape.
+    @return Mapping containing current shape attributes.
+  */
   public mapping getCurrentAttributes() = 0;
 
 //-----------------------------------------------------------------------------

@@ -11,9 +11,9 @@
 */
 main(const string &companyName)
 {
-  // GlobalStorage storage;
-  // storage.setValue("doxygen/advancedConfig", 1);
-  // storage.setValue("company/name", companyName);
+  GlobalStorage storage;
+  storage.setValue("doxygen/advancedConfig", 1);
+  storage.setValue("company/name", companyName);
 
   DoxygenGenerator doxy;
   doxy.createAll();

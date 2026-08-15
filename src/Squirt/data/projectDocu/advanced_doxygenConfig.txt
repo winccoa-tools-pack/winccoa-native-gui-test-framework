@@ -39,8 +39,3 @@ ALIASES += AllowInTestScope="@li Allowed to be used inside OaTest scope."
 ALIASES += Restricted="@attention Restricted usage:^^"
 ALIASES += AIgeneratedHelpContent="@attention This documentation is created with the help of an artificial intelligence."
 
-# eliminate many warnings
-# TODO fix it
-WARN_IF_UNDOCUMENTED = NO
-WARN_IF_INCOMPLETE_DOC = NO
-WARN_NO_PARAMDOC = NO
