@@ -1,0 +1,57 @@
+name: WinCC OA Syntax Check
+
+on:
+  pull_request:
+    branches:
+      - main
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  packages: read
+
+jobs:
+  syntax-check:
+    name: Syntax check (Squirt)
+    runs-on: ubuntu-latest
+    env:
+      WINCCOA_VERSION: 3.21
+      PROJECT_PATH: src/Squirt
+      WINCCOA_IMAGE: ghcr.io/winccoa-tools-pack/winccoa:v3.21.3-debian12-all
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Login to GHCR
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GHCR_PAT != '' && secrets.GHCR_PAT || secrets.GITHUB_TOKEN }}
+
+      - name: Pull WinCC OA image
+        run: docker pull "$WINCCOA_IMAGE"
+
+      - name: Run syntax check
+        id: syntax
+        uses: winccoa-tools-pack/github-actions-winccoa/actions/syntax-check@main
+        with:
+          path: ${{ env.PROJECT_PATH }}
+          winccoa-version: ${{ env.WINCCOA_VERSION }}
+          docker-image: ${{ env.WINCCOA_IMAGE }}
+          fail-on-error: "true"
+          mode: all
+
+      - name: Summarize syntax result
+        if: always()
+        shell: bash
+        run: |
+          {
+            echo "## Syntax check result"
+            echo
+            echo "- Project path: ${{ env.PROJECT_PATH }}"
+            echo "- Error count: ${{ steps.syntax.outputs.error-count }}"
+          } >> "$GITHUB_STEP_SUMMARY"
