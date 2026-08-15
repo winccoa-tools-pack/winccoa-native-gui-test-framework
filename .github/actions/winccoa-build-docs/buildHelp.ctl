@@ -18,16 +18,16 @@ main(const string &companyName)
   DoxygenGenerator doxy;
   doxy.createAll();
 
-  // // Register and open the Online Help.
-  // OnlineHelp help;
-  // DoxygenSettings doxySettings;
-  // help.adjustReferences(doxySettings.getOutputDirectory());
-  // help.generateCustomHelp(doxySettings.getOutputDirectory());
+  // Register and open the Online Help.
+  OnlineHelp help;
+  DoxygenSettings doxySettings;
+  help.adjustReferences(doxySettings.getOutputDirectory());
+  help.generateCustomHelp(doxySettings.getOutputDirectory());
 
-  // if (myManType() == UI_MAN)
-  // {
-  //   help.open(doxySettings.getVirtualFolder() + "/index.html", "", doxySettings.getQhpNameSpace());
-  //   // delay(30);
-  //   // exit(0);
-  // }
+  if (myManType() == UI_MAN)
+  {
+    help.open(doxySettings.getVirtualFolder() + "/index.html", "", doxySettings.getQhpNameSpace());
+    // delay(30);
+    // exit(0);
+  }
 }
