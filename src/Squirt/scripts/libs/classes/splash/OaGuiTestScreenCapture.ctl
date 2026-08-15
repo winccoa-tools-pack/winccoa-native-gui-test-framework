@@ -27,6 +27,7 @@ class OaGuiTestScreenCapture
 
   //------------------------------------------------------------------------------
   /** The Default Constructor.
+    @param testCaseId Relative test case path for capture storage.
   */
   public OaGuiTestScreenCapture(const string testCaseId = "")
   {
@@ -37,7 +38,7 @@ class OaGuiTestScreenCapture
   /**
     @brief Deletes all captures for the current test case.
   */
-  public clearCaptures()
+  public void clearCaptures()
   {
     rmdir(this.getImagesDir(), true);
 

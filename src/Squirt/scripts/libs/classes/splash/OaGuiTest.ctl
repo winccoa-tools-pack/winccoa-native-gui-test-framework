@@ -113,7 +113,7 @@ class OaGuiTest : OaTest
     @brief Sets a VP prefix used for reference lookup.
     @param vpPrefix Prefix prepended to VP identifiers.
   */
-  protected setVpPrefix(const string &vpPrefix) { this.vpPrefix = vpPrefix; }
+  protected void setVpPrefix(const string &vpPrefix) { this.vpPrefix = vpPrefix; }
 
   /**
     @brief Validates all panel shapes against a stored VP reference.
@@ -301,7 +301,7 @@ class OaGuiTest : OaTest
   /**
     @brief Waits for initial panel state to be ready before assertions run.
   */
-  protected waitForPanelInit()
+  protected void waitForPanelInit()
   {
     delay(2);
   }

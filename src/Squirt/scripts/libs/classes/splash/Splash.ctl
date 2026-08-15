@@ -94,7 +94,7 @@ class Splash
     @param sDP2 Response datapoint.
     @param sResponse Response payload.
   */
-  reactOnCommands(eSplash splashMode, string sDP, string sCommand, string sDP2, string sResponse)
+  void reactOnCommands(eSplash splashMode, string sDP, string sCommand, string sDP2, string sResponse)
   {
     DebugTN("wait for command", splashMode);
 
@@ -250,7 +250,7 @@ class Splash
     @param sPanelFile Panel to record.
     @param sParams Additional startup parameters.
   */
-  public record(string sTestCase, string sPanelFile, string sParams = "")
+  public void record(string sTestCase, string sPanelFile, string sParams = "")
   {
     splashState = eSplash::play;
 
@@ -293,7 +293,7 @@ class Splash
     @param sPanel Panel file name.
     @param sParams Additional command parameters.
   */
-  public stop(string sTestCase, string sPanel, string sParams)
+  public void stop(string sTestCase, string sPanel, string sParams)
   {
     string sCommand = sCmdStop;
 
@@ -321,7 +321,7 @@ class Splash
     @param sPanelFile Panel file to open.
     @param startParams Optional playback parameters.
   */
-  public play(string sTestCase, string sPanelFile, string startParams = "")
+  public void play(string sTestCase, string sPanelFile, string startParams = "")
   {
     startManager(sTestCase, sPanelFile, startParams);
     // playTestCase(sTestCase, sPanelFile);
@@ -352,7 +352,7 @@ class Splash
     @param sPanelFile Panel file to open.
     @param startParams Optional startup parameters.
   */
-  public startManager(string sTestCase, string sPanelFile, string startParams = "")
+  public void startManager(string sTestCase, string sPanelFile, string startParams = "")
   {
     splashState = eSplash::play;
 
@@ -386,12 +386,21 @@ class Splash
 //     DebugTN("run system cmd for test - finished", options);
   }
 
-  private static setCommandOnDP(string sCommand)
+  /**
+    @brief Writes a command to Splash command/response datapoints.
+    @param sCommand Command payload.
+  */
+  private static void setCommandOnDP(string sCommand)
   {
     // wait, because for possible exit command
     dpSetWait("_Splash.command", sCommand,
               "_Splash.response", "");
   }
+
+  /**
+    @brief Reads current command payload from Splash datapoint.
+    @return Current Splash command string.
+  */
   private static string getCommandFromDP()
   {
     string sCommand;
@@ -399,7 +408,11 @@ class Splash
 
     return sCommand;
   }
-  public static onClose()
+
+  /**
+    @brief Converts active record command to stop when panel is closing.
+  */
+  public static void onClose()
   {
     string sCommand = getCommandFromDP();
 

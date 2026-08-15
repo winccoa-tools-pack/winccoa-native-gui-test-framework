@@ -30,6 +30,7 @@ class HspScript
   //--------------------------------------------------------------------------------
   //@public members
   //--------------------------------------------------------------------------------
+  /** TRUE when script execution should use GUI test mode (UI manager). */
   public bool guiTest;
 
   /**
@@ -486,7 +487,8 @@ D    @return string file A CTRL script file name with an extension.
 
   //------------------------------------------------------------------------------
   /**
-    TBD
+    @brief Returns the default GUI test directory for the current panel file.
+    @return Relative GUI test path ending with slash.
   */
   public string getGuiTestRelPath()
   {
@@ -500,7 +502,8 @@ D    @return string file A CTRL script file name with an extension.
 
   //------------------------------------------------------------------------------
   /**
-    TBD
+    @brief Returns all GUI test script paths for the current panel.
+    @return Full paths of discovered GUI test scripts.
   */
   public dyn_string getGuiTestFullPaths()
   {
@@ -524,7 +527,8 @@ D    @return string file A CTRL script file name with an extension.
 
   //------------------------------------------------------------------------------
   /**
-    TBD
+    @brief Checks whether at least one GUI test exists for the current panel.
+    @return TRUE if GUI test scripts are available, otherwise FALSE.
   */
   public bool guiTestExist()
   {
@@ -618,7 +622,10 @@ D    @return string file A CTRL script file name with an extension.
 
   //------------------------------------------------------------------------------
   /**
-    TBD
+    @brief Starts one or all GUI tests for the current panel.
+    @param relPath Optional relative/full path to one GUI test script.
+    @param addOptions Additional process options.
+    @return 0 on success, otherwise error code from startGuiTest().
   */
   public int startGuiTests(string relPath = "", string addOptions = "")
   {
@@ -642,6 +649,12 @@ DebugTN(__FUNCTION__, fullPathes);
   }
 
   //------------------------------------------------------------------------------
+  /**
+    @brief Starts a single GUI test script.
+    @param relPath Relative or full path to GUI test script.
+    @param addOptions Additional process options.
+    @return 0 on success, otherwise an error code.
+  */
   private int startGuiTest(string relPath, string addOptions)
   {
     const string covFilePath = getCoverageReportPath();
@@ -824,6 +837,9 @@ DebugTN(__FUNCTION__, fullPathes);
     @brief The function starts the system call with the given script path and options.
     @details The system call contains a WCCOActrl.exe, 'given script path'
     and 'given options'.
+    @param relPath Relative or full script path to start.
+    @param addOptions Additional command-line options.
+    @param doCoverage Enables coverage options when TRUE.
     @return int rc The function returns 0 on success.
     The function returns -1 if no argument was specified,
     a new process could not be created or if the started process was
