@@ -24,6 +24,9 @@
 
 //--------------------------------------------------------------------------------
 /**
+  @brief Base class for Splash GUI test cases.
+  @details Provides common setup and shape attribute assertions for panel tests.
+  @AIgeneratedHelpContent
 */
 class OaGuiTest : OaTest
 {
@@ -39,6 +42,10 @@ class OaGuiTest : OaTest
   }
 
   //------------------------------------------------------------------------------
+  /**
+    @brief Initializes the test runtime before each test suite.
+    @return 0 on success, -1 on setup failure.
+  */
   public int setUp()
   {
     if (OaTest::setUp())
@@ -53,6 +60,11 @@ class OaGuiTest : OaTest
   }
 
   //------------------------------------------------------------------------------
+  /**
+    @brief Prepares per-test-case capture output and delegates to OaTest hook.
+    @param testCaseId Logical test case identifier.
+    @return Return code from OaTest::beforeTc().
+  */
   public int beforeTc(const string &testCaseId)
   {
     string tcRelDir;
@@ -78,6 +90,10 @@ class OaGuiTest : OaTest
   }
 
   //------------------------------------------------------------------------------
+  /**
+    @brief Finalizes the test runtime after each test suite.
+    @return Return code from OaTest::tearDown().
+  */
   public int tearDown()
   {
     int rc = OaTest::tearDown();
@@ -93,8 +109,20 @@ class OaGuiTest : OaTest
   }
 
 
+  /**
+    @brief Sets a VP prefix used for reference lookup.
+    @param vpPrefix Prefix prepended to VP identifiers.
+  */
   protected setVpPrefix(const string &vpPrefix) { this.vpPrefix = vpPrefix; }
 
+  /**
+    @brief Validates all panel shapes against a stored VP reference.
+    @param vpId VP identifier relative to configured prefix.
+    @param shapes Shapes expected on the current panel.
+    @param note Optional assertion note for reporting.
+    @param timeout Maximum wait time per shape verification.
+    @return 0 if all shapes match, -1 on first mismatch.
+  */
   protected int assertVP(const string &vpId, const vector<shape> &shapes, const string note = "", float timeout = 2.0)
   {
 //     DebugN(classInfo(this));
@@ -129,6 +157,14 @@ class OaGuiTest : OaTest
   }
 
   //------------------------------------------------------------------------------
+  /**
+    @brief Verifies one panel shape against expected attributes.
+    @param shapeName Relative name path of the shape.
+    @param testAttributes Expected attribute/value map.
+    @param note Optional assertion note for reporting.
+    @param timeout Maximum wait time for delayed UI updates.
+    @return 0 if attributes match, otherwise abort/fail handling is triggered.
+  */
   public int assertAttributes(const string &shapeName, const mapping &testAttributes, const string note = "", float timeout = 2.0)
   {
     this._fillTcData(note);
@@ -216,6 +252,10 @@ class OaGuiTest : OaTest
     return rc;
   }
 
+  /**
+    @brief Stores the root script path used to resolve per-test assets.
+    @param rootTestFileName Absolute script file name.
+  */
   public void setFileScript(string rootTestFileName)
   {
     if (rootTestFileName.startsWith("["))
@@ -228,23 +268,39 @@ class OaGuiTest : OaTest
   }
 
   //------------------------------------------------------------------------------
+  /**
+    @brief Executes the concrete test logic.
+    @return 0 on success.
+  */
   public int play() = 0;
 
 //--------------------------------------------------------------------------------
 //@protected members
 //--------------------------------------------------------------------------------
+  /** Player wrapper used to drive GUI input events. */
   protected SquirtInputEventPlayer player;
+  /** Screen capture helper for evidence on pass/fail. */
   protected OaGuiTestScreenCapture capture;
+  /** Path to the source script file for this test instance. */
   protected string rootTestFileName;
+  /** Prefix used for VP identifiers. */
   protected string vpPrefix;
 
   //------------------------------------------------------------------------------
+  /**
+    @brief Checks whether a function descriptor matches a runnable test method.
+    @param func Reflection metadata entry from class inspection.
+    @return TRUE for public int functions starting with "play".
+  */
   protected bool isTestFunction(const mapping &func)
   {
     return func.value("name", "").startsWith("play") && (func.value("access", "") == "public") && (func.value("returns", "") == "int");
   }
 
   //------------------------------------------------------------------------------
+  /**
+    @brief Waits for initial panel state to be ready before assertions run.
+  */
   protected waitForPanelInit()
   {
     delay(2);

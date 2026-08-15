@@ -35,6 +35,7 @@ Support and evolve the WinCC OA native GUI test framework in this repository, wi
 - Use `@deprecated` for deprecated behavior.
 - Use `@test` to describe test scenarios.
 - Use `@todo`, `@fixme`, and `@clarify` sparingly.
+- When AI assists in writing Doxygen text, include `@AIgeneratedHelpContent` in the related documentation block.
 - Keep `#uses` directives sorted in alphanumerical order.
 - Keep lines at or below 80 characters where practical.
 - Do not add trailing spaces or trailing blank lines.
