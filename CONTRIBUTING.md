@@ -74,6 +74,17 @@ Pages deployment requirements:
 - Required workflow permissions are set in `.github/workflows/docs.yml`
   (`pages: write`, `id-token: write`, `contents: read`).
 
+Shared action requirements:
+
+- Docs workflows now use the shared action
+  `winccoa-tools-pack/github-actions-winccoa/actions/winccoa-build-docs@main`.
+- If the shared action repository is private or internal, allow this repository
+  to use actions from that repository in org/repository Actions settings.
+- If workflow validation reports "repository or version not found" for that
+  action, verify:
+  - the action path exists on `main` in `github-actions-winccoa`
+  - this repository has access to run actions from that repository
+
 Image/runtime requirements:
 
 - The image must contain a WinCC OA 3.21 installation at
