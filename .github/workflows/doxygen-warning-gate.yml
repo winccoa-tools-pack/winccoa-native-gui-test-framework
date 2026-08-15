@@ -18,6 +18,7 @@ jobs:
     env:
       WINCCOA_VERSION: 3.21
       WINCCOA_IMAGE: ghcr.io/winccoa-tools-pack/winccoa:v3.21.3-debian12-all
+      MAX_WARNING_COUNT: -1
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -41,6 +42,7 @@ jobs:
           winccoa-version: ${{ env.WINCCOA_VERSION }}
           docker-image: ${{ env.WINCCOA_IMAGE }}
           warning-output-file: .artifacts/doxygen-warnings.txt
+          max-warning-count: ${{ env.MAX_WARNING_COUNT }}
 
       - name: Write warning summary
         shell: bash
@@ -48,15 +50,37 @@ jobs:
           set -euo pipefail
           WARNING_COUNT="${{ steps.docs.outputs.warning-count }}"
           WARNING_FILE="${{ steps.docs.outputs.warning-file }}"
+          MAX_WARNING_COUNT="${{ env.MAX_WARNING_COUNT }}"
 
           {
             echo "## Doxygen warning report"
             echo
             echo "- Warning count: ${WARNING_COUNT}"
+            echo "- Max warning count: ${MAX_WARNING_COUNT} (-1 means disabled)"
             echo "- Warning file: ${WARNING_FILE}"
             echo
-            echo "Use the job log groups for stderr/stdout previews and the uploaded artifact for raw files."
+            echo "Use the job log groups for stderr/stdout previews and the uploaded artifacts for raw files and HTML preview."
           } >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Upload warning artifacts
+        id: upload_warning_artifact
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: doxygen-warning-report
+          path: |
+            ${{ steps.docs.outputs.warning-file }}
+            src/Squirt/log/doxygen_stdErr.txt
+            src/Squirt/log/doxygen_stdOut.txt
+
+      - name: Upload docs preview artifact
+        id: upload_docs_preview_artifact
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: doxygen-html-preview
+          path: src/Squirt/help/html
+          if-no-files-found: warn
 
       - name: Comment warning count on PR
         if: ${{ github.event_name == 'pull_request' }}
@@ -65,15 +89,29 @@ jobs:
           script: |
             const marker = '<!-- doxygen-warning-report -->';
             const warningCount = `${{ steps.docs.outputs.warning-count }}`;
+            const maxWarningCount = `${{ env.MAX_WARNING_COUNT }}`;
             const warningFile = `${{ steps.docs.outputs.warning-file }}`;
             const runUrl = `${context.serverUrl}/${context.repo.owner}/${context.repo.repo}/actions/runs/${context.runId}`;
+
+            const warningArtifactId = `${{ steps.upload_warning_artifact.outputs.artifact-id }}`;
+            const docsPreviewArtifactId = `${{ steps.upload_docs_preview_artifact.outputs.artifact-id }}`;
+
+            const warningArtifactUrl = warningArtifactId
+              ? `${runUrl}/artifacts/${warningArtifactId}`
+              : `${runUrl}#artifacts`;
+            const docsPreviewArtifactUrl = docsPreviewArtifactId
+              ? `${runUrl}/artifacts/${docsPreviewArtifactId}`
+              : `${runUrl}#artifacts`;
 
             const body = [
               marker,
               '## Doxygen warning report',
               '',
               `- Warning count: ${warningCount}`,
+              `- Max warning count: ${maxWarningCount} (-1 means disabled)`,
               `- Warning file: ${warningFile}`,
+              `- Docs preview artifact: ${docsPreviewArtifactUrl}`,
+              `- Warning report artifact: ${warningArtifactUrl}`,
               `- Run logs/artifacts: ${runUrl}`
             ].join('\n');
 
@@ -104,13 +142,3 @@ jobs:
                 body,
               });
             }
-
-      - name: Upload warning artifacts
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: doxygen-warning-report
-          path: |
-            ${{ steps.docs.outputs.warning-file }}
-            src/Squirt/log/doxygen_stdErr.txt
-            src/Squirt/log/doxygen_stdOut.txt
