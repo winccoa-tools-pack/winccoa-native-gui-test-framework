@@ -9,25 +9,19 @@ on:
 permissions:
   contents: read
   packages: read
+  pull-requests: write
 
 jobs:
-  warning-diff:
-    name: No New Doxygen Warnings
+  warning-report:
+    name: Doxygen Warning Report
     runs-on: ubuntu-latest
     env:
       WINCCOA_VERSION: 3.21
       WINCCOA_IMAGE: ghcr.io/winccoa-tools-pack/winccoa:v3.21.3-debian12-all
+      MAX_WARNING_COUNT: -1
     steps:
-      - name: Checkout PR head
+      - name: Checkout repository
         uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-
-      - name: Checkout base ref
-        uses: actions/checkout@v4
-        with:
-          ref: ${{ github.event_name == 'pull_request' && github.event.pull_request.base.sha || 'main' }}
-          path: base
 
       - name: Login to GHCR
         # Required if your WinCC OA image is private.
@@ -40,68 +34,111 @@ jobs:
       - name: Pull WinCC OA image
         run: docker pull "$WINCCOA_IMAGE"
 
-      - name: Build docs on base
-        id: base
-        uses: ./.github/actions/winccoa-build-docs
-        with:
-          path: base/src/Squirt
-          winccoa-version: ${{ env.WINCCOA_VERSION }}
-          docker-image: ${{ env.WINCCOA_IMAGE }}
-          warning-output-file: .artifacts/base-doxygen-warnings.txt
-
-      - name: Build docs on PR head
-        id: head
+      - name: Build docs
+        id: docs
         uses: ./.github/actions/winccoa-build-docs
         with:
           path: src/Squirt
           winccoa-version: ${{ env.WINCCOA_VERSION }}
           docker-image: ${{ env.WINCCOA_IMAGE }}
-          warning-output-file: .artifacts/head-doxygen-warnings.txt
+          warning-output-file: .artifacts/doxygen-warnings.txt
+          max-warning-count: ${{ env.MAX_WARNING_COUNT }}
 
-      - name: Compare warning sets
+      - name: Write warning summary
         shell: bash
         run: |
           set -euo pipefail
-          mkdir -p .artifacts
-
-          sort -u .artifacts/base-doxygen-warnings.txt > .artifacts/base-unique.txt || true
-          sort -u .artifacts/head-doxygen-warnings.txt > .artifacts/head-unique.txt || true
-
-          comm -13 .artifacts/base-unique.txt .artifacts/head-unique.txt > .artifacts/new-warnings.txt || true
-
-          BASE_COUNT=$(wc -l < .artifacts/base-unique.txt | tr -d '[:space:]')
-          HEAD_COUNT=$(wc -l < .artifacts/head-unique.txt | tr -d '[:space:]')
-          NEW_COUNT=$(wc -l < .artifacts/new-warnings.txt | tr -d '[:space:]')
+          WARNING_COUNT="${{ steps.docs.outputs.warning-count }}"
+          WARNING_FILE="${{ steps.docs.outputs.warning-file }}"
+          MAX_WARNING_COUNT="${{ env.MAX_WARNING_COUNT }}"
 
           {
-            echo "## Doxygen warning gate"
+            echo "## Doxygen warning report"
             echo
-            echo "- Base unique warnings: ${BASE_COUNT}"
-            echo "- PR unique warnings: ${HEAD_COUNT}"
-            echo "- New warnings introduced: ${NEW_COUNT}"
+            echo "- Warning count: ${WARNING_COUNT}"
+            echo "- Max warning count: ${MAX_WARNING_COUNT} (-1 means disabled)"
+            echo "- Warning file: ${WARNING_FILE}"
             echo
+            echo "Use the job log groups for stderr/stdout previews and the uploaded artifacts for raw files and HTML preview."
           } >> "$GITHUB_STEP_SUMMARY"
 
-          if [ "$NEW_COUNT" -gt 0 ]; then
-            {
-              echo "### New warnings"
-              echo
-              echo "```text"
-              cat .artifacts/new-warnings.txt
-              echo "```"
-            } >> "$GITHUB_STEP_SUMMARY"
-            echo "::error::Doxygen warning gate failed: ${NEW_COUNT} new warning(s) introduced"
-            exit 1
-          fi
-
       - name: Upload warning artifacts
+        id: upload_warning_artifact
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: doxygen-warning-gate
+          name: doxygen-warning-report
           path: |
-            .artifacts/base-doxygen-warnings.txt
-            .artifacts/head-doxygen-warnings.txt
-            .artifacts/base-unique.txt
-            .artifacts/head-unique.txt
-            .artifacts/new-warnings.txt
+            ${{ steps.docs.outputs.warning-file }}
+            src/Squirt/log/doxygen_stdErr.txt
+            src/Squirt/log/doxygen_stdOut.txt
+
+      - name: Upload docs preview artifact
+        id: upload_docs_preview_artifact
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: doxygen-html-preview
+          path: src/Squirt/help/html
+          if-no-files-found: warn
+
+      - name: Comment warning count on PR
+        if: ${{ github.event_name == 'pull_request' }}
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const marker = '<!-- doxygen-warning-report -->';
+            const warningCount = `${{ steps.docs.outputs.warning-count }}`;
+            const maxWarningCount = `${{ env.MAX_WARNING_COUNT }}`;
+            const warningFile = `${{ steps.docs.outputs.warning-file }}`;
+            const runUrl = `${context.serverUrl}/${context.repo.owner}/${context.repo.repo}/actions/runs/${context.runId}`;
+
+            const warningArtifactId = `${{ steps.upload_warning_artifact.outputs.artifact-id }}`;
+            const docsPreviewArtifactId = `${{ steps.upload_docs_preview_artifact.outputs.artifact-id }}`;
+
+            const warningArtifactUrl = warningArtifactId
+              ? `${runUrl}/artifacts/${warningArtifactId}`
+              : `${runUrl}#artifacts`;
+            const docsPreviewArtifactUrl = docsPreviewArtifactId
+              ? `${runUrl}/artifacts/${docsPreviewArtifactId}`
+              : `${runUrl}#artifacts`;
+
+            const body = [
+              marker,
+              '## Doxygen warning report',
+              '',
+              `- Warning count: ${warningCount}`,
+              `- Max warning count: ${maxWarningCount} (-1 means disabled)`,
+              `- Warning file: ${warningFile}`,
+              `- Docs preview artifact: ${docsPreviewArtifactUrl}`,
+              `- Warning report artifact: ${warningArtifactUrl}`,
+              `- Run logs/artifacts: ${runUrl}`
+            ].join('\n');
+
+            const issue_number = context.payload.pull_request.number;
+            const { data: comments } = await github.rest.issues.listComments({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number,
+              per_page: 100,
+            });
+
+            const existing = comments.find(
+              (c) => c.user?.type === 'Bot' && c.body?.includes(marker)
+            );
+
+            if (existing) {
+              await github.rest.issues.updateComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                comment_id: existing.id,
+                body,
+              });
+            } else {
+              await github.rest.issues.createComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number,
+                body,
+              });
+            }

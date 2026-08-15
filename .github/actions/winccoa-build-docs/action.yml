@@ -24,6 +24,10 @@ inputs:
     description: "Emit parsed warnings as GitHub annotations."
     required: false
     default: "true"
+  max-warning-count:
+    description: "Maximum allowed warning count; -1 disables threshold enforcement."
+    required: false
+    default: "-1"
   max-annotations:
     description: "Maximum number of warning annotations to emit."
     required: false
@@ -50,6 +54,7 @@ runs:
         COMPANY_NAME_INPUT: ${{ inputs.company-name }}
         WARNING_OUTPUT_FILE: ${{ inputs.warning-output-file }}
         ANNOTATE_WARNINGS: ${{ inputs.annotate-warnings }}
+        MAX_WARNING_COUNT: ${{ inputs.max-warning-count }}
         MAX_ANNOTATIONS: ${{ inputs.max-annotations }}
       run: |
         set -euo pipefail
@@ -162,6 +167,11 @@ runs:
           echo "::endgroup::"
 
           grep -E "[Ww]arning:|\bWARNING\b|\bSEVERE\b|\bFATAL\b" "$DOXYGEN_STDERR" > "$WARNING_OUTPUT_FILE" || true
+
+          if [ ! -s "$WARNING_OUTPUT_FILE" ] && [ -f "$DOXYGEN_STDOUT" ]; then
+            echo "::notice::No warnings found in stderr; falling back to doxygen stdout log at $DOXYGEN_STDOUT"
+            grep -E "[Ww]arning:|\bWARNING\b|\bSEVERE\b|\bFATAL\b" "$DOXYGEN_STDOUT" > "$WARNING_OUTPUT_FILE" || true
+          fi
         else
           # Fallback when WinCC OA log files are unavailable.
           echo "$OUTPUT" | grep -E "[Ww]arning:|\bWARNING\b|\bSEVERE\b|\bFATAL\b" > "$WARNING_OUTPUT_FILE" || true
@@ -174,6 +184,11 @@ runs:
         WARNING_COUNT=$(wc -l < "$WARNING_OUTPUT_FILE" | tr -d '[:space:]')
         echo "warning-count=$WARNING_COUNT" >> "$GITHUB_OUTPUT"
         echo "warning-file=$WARNING_OUTPUT_FILE" >> "$GITHUB_OUTPUT"
+
+        if ! [[ "$MAX_WARNING_COUNT" =~ ^-?[0-9]+$ ]]; then
+          echo "::error::Invalid max-warning-count value '$MAX_WARNING_COUNT'. Use an integer, e.g. -1, 0, 10."
+          exit 2
+        fi
 
         if [ "${ANNOTATE_WARNINGS}" = "true" ] && [ -f "$WARNING_OUTPUT_FILE" ]; then
           annotation_count=0
@@ -222,6 +237,11 @@ runs:
           if [ "$truncated" -eq 1 ]; then
             echo "::notice::Warning annotations truncated at ${MAX_ANNOTATIONS} items"
           fi
+        fi
+
+        if [ "$MAX_WARNING_COUNT" -ge 0 ] && [ "$WARNING_COUNT" -gt "$MAX_WARNING_COUNT" ]; then
+          echo "::error::Doxygen warning count $WARNING_COUNT exceeds configured max-warning-count $MAX_WARNING_COUNT"
+          exit 3
         fi
 
         if [ "$EXIT_CODE" -ne 0 ]; then

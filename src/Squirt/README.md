@@ -3,6 +3,7 @@
 is a framework to test WinCC OA native panels (GUI) provided in the .pnl or .xml format.
 
 ----
+
 ## Usage
 
 + provide tests by macro recording
@@ -22,16 +23,19 @@ Execution options:
 + run fully automated in WinCC OA TestFramework for CI/CD
 
 ----
+
 ## Configuration
 
 TBD
 
 ----
+
 ## Examples
 
 TBD
 
 ----
+
 ## Roadmap
 
 + VS Code integration is coming soon.
@@ -45,6 +49,7 @@ TBD
   + Phase 5: publish built help in two targets: inside the package for local use and on GitHub Pages from the latest main branch.
 
 ----
+
 ## Contributing
 
 ### Code Style
@@ -56,6 +61,7 @@ TBD
 TBD
 
 ----
+
 ## License
 
 MIT License. See [../../LICENSE](../../LICENSE).
