@@ -36,7 +36,7 @@ jobs:
 
       - name: Build docs
         id: docs
-        uses: ./.github/actions/winccoa-build-docs
+        uses: winccoa-tools-pack/github-actions-winccoa/actions/winccoa-build-docs@main
         with:
           path: src/Squirt
           winccoa-version: ${{ env.WINCCOA_VERSION }}

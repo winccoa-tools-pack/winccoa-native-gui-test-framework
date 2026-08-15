@@ -45,7 +45,7 @@ jobs:
           docker pull "${WINCCOA_IMAGE}"
 
       - name: Build Squirt help
-        uses: ./.github/actions/winccoa-build-docs
+        uses: winccoa-tools-pack/github-actions-winccoa/actions/winccoa-build-docs@main
         with:
           path: ${{ env.PROJECT_PATH }}
           winccoa-version: ${{ env.WINCCOA_VERSION }}
