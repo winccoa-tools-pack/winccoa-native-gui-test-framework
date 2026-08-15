@@ -37,7 +37,7 @@ jobs:
 
       - name: Run syntax check
         id: syntax
-        uses: winccoa-tools-pack/github-actions-winccoa/actions/syntax-check@879ccbae32465372369ea1dd5de189943b0c26b3
+        uses: winccoa-tools-pack/github-actions-winccoa/actions/syntax-check@4c119d82ab24300182e3e727e76c7dfc1454f8b4
         with:
           path: ${{ env.PROJECT_PATH }}
           winccoa-version: ${{ env.WINCCOA_VERSION }}
