@@ -18,6 +18,7 @@ env:
   PROJECT_PATH: src/Squirt
   TEST_PROJECT_PATH: tests/WinCC_OA_Test
   WINCCOA_IMAGE: ghcr.io/winccoa-tools-pack/winccoa:v3.21.3-debian12-all
+  LANGUAGES: en_US.utf8 de_AT.utf8
 
 jobs:
   test-squirt:
@@ -30,13 +31,6 @@ jobs:
         username: ${{ github.actor }}
         password: ${{ secrets.GHCR_PAT != '' && secrets.GHCR_PAT || secrets.GITHUB_TOKEN }}
     
-    strategy:
-      fail-fast: false
-      matrix:
-        language:
-          - en_US.utf8
-          - de_AT.utf8
-    
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -46,7 +40,7 @@ jobs:
         uses: winccoa-tools-pack/github-actions-winccoa/actions/winccoa-create-project-config@main
         with:
           project-path: ${{ env.PROJECT_PATH }}
-          languages: ${{ matrix.language }}
+          languages: ${{ env.LANGUAGES }}
           winccoa-version: ${{ env.WINCCOA_VERSION }}
 
       - name: Run WinCC OA tests
@@ -55,8 +49,8 @@ jobs:
         with:
           project-path: ${{ env.PROJECT_PATH }}
           test-project-path: ${{ env.TEST_PROJECT_PATH }}
-          test-run-id: Squirt-regression-${{ matrix.language }}
-          language: ${{ matrix.language }}
+          test-run-id: Squirt-regression
+          languages: ${{ env.LANGUAGES }}
           winccoa-version: ${{ env.WINCCOA_VERSION }}
 
       - name: Convert test results to jUnit format
@@ -66,18 +60,18 @@ jobs:
           set -euo pipefail
           WINCCOA_BIN="/opt/WinCC_OA/${{ env.WINCCOA_VERSION }}/bin"
           
-          echo "Converting test results to jUnit format for language: ${{ matrix.language }}"
+          echo "Converting test results to jUnit format"
           "${WINCCOA_BIN}/WCCOActrl" \
             -proj SquirtTestFramework \
             -n oaTestParsers/jsonToJUnit.ctl \
             -log +stderr \
-            -lang "${{ matrix.language }}" || true
+            -lang en_US.utf8 || true
 
       - name: Upload failed test projects
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: failed-tests-${{ matrix.language }}
+          name: failed-tests
           path: ${{ github.workspace }}/${{ env.TEST_PROJECT_PATH }}/Projects/Stored/Failed/
           if-no-files-found: ignore
 
@@ -85,7 +79,7 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: test-results-${{ matrix.language }}
+          name: test-results
           path: ${{ github.workspace }}/${{ env.TEST_PROJECT_PATH }}/Results/
           if-no-files-found: warn
 
