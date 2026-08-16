@@ -5,13 +5,98 @@ on:
     branches:
       - main
   pull_request:
+  workflow_dispatch:
+    inputs:
+      languages:
+        description: 'Languages to test (comma-separated, e.g., en_US.utf8,de_AT.utf8)'
+        required: false
+        default: 'en_US.utf8,de_AT.utf8'
+
+permissions:
+  contents: read
+  packages: read
+  checks: write
+  pull-requests: write
+
+env:
+  WINCCOA_VERSION: 3.21
+  PROJECT_PATH: src/Squirt
+  TEST_PROJECT_PATH: tests/WinCC_OA_Test
+  WINCCOA_IMAGE: ghcr.io/winccoa-tools-pack/winccoa:v3.21.3-debian12-all
 
 jobs:
-  placeholder:
-    name: Placeholder CI scaffold
+  test-squirt:
+    name: WinCC OA TestFramework - Squirt Tests
     runs-on: ubuntu-latest
+    container:
+      image: ${{ env.WINCCOA_IMAGE }}
+      options: --user root
+      credentials:
+        username: ${{ github.actor }}
+        password: ${{ secrets.GHCR_PAT != '' && secrets.GHCR_PAT || secrets.GITHUB_TOKEN }}
+    
+    strategy:
+      fail-fast: false
+      matrix:
+        language: ${{ fromJson(format('[{0}]', format('"{0}"', join(split(github.event.inputs.languages || 'en_US.utf8,de_AT.utf8', ','), '","')))) }}
+    
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
-      - name: Placeholder step
-        run: echo "CI workflow scaffold for WinCC OA tests will be added here."
+
+      - name: Create project config
+        id: config
+        uses: winccoa-tools-pack/github-actions-winccoa/actions/winccoa-create-project-config@main
+        with:
+          project-path: ${{ env.PROJECT_PATH }}
+          languages: ${{ matrix.language }}
+          winccoa-version: ${{ env.WINCCOA_VERSION }}
+
+      - name: Run WinCC OA tests
+        id: tests
+        uses: winccoa-tools-pack/github-actions-winccoa/actions/winccoa-run-tests@main
+        with:
+          project-path: ${{ env.PROJECT_PATH }}
+          test-project-path: ${{ env.TEST_PROJECT_PATH }}
+          test-run-id: Squirt-regression-${{ matrix.language }}
+          language: ${{ matrix.language }}
+          winccoa-version: ${{ env.WINCCOA_VERSION }}
+
+      - name: Convert test results to jUnit format
+        if: always()
+        shell: bash
+        run: |
+          set -euo pipefail
+          WINCCOA_BIN="/opt/WinCC_OA/${{ env.WINCCOA_VERSION }}/bin"
+          
+          echo "Converting test results to jUnit format for language: ${{ matrix.language }}"
+          "${WINCCOA_BIN}/WCCOActrl" \
+            -proj SquirtTestFramework \
+            -n oaTestParsers/jsonToJUnit.ctl \
+            -log +stderr \
+            -lang "${{ matrix.language }}" || true
+
+      - name: Upload failed test projects
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: failed-tests-${{ matrix.language }}
+          path: ${{ github.workspace }}/${{ env.TEST_PROJECT_PATH }}/Projects/Stored/Failed/
+          if-no-files-found: ignore
+
+      - name: Upload test results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-results-${{ matrix.language }}
+          path: ${{ github.workspace }}/${{ env.TEST_PROJECT_PATH }}/Results/
+          if-no-files-found: warn
+
+      - name: Publish test report
+        if: always()
+        uses: mikepenz/action-junit-report@v4
+        with:
+          fail_on_failure: true
+          require_tests: true
+          report_paths: ${{ github.workspace }}/${{ env.TEST_PROJECT_PATH }}/Results/jUnit*.xml
+          detailed_summary: true
