@@ -37,7 +37,7 @@ jobs:
 
       - name: Create project config
         id: config
-        uses: winccoa-tools-pack/github-actions-winccoa/actions/winccoa-create-project-config@main
+        uses: winccoa-tools-pack/github-actions-winccoa/actions/winccoa-create-project-config@feature/add-winccoa-test-actions
         with:
           project-path: ${{ env.PROJECT_PATH }}
           languages: ${{ env.LANGUAGES }}
@@ -45,7 +45,7 @@ jobs:
 
       - name: Run WinCC OA tests
         id: tests
-        uses: winccoa-tools-pack/github-actions-winccoa/actions/winccoa-run-tests@main
+        uses: winccoa-tools-pack/github-actions-winccoa/actions/winccoa-run-tests@feature/add-winccoa-test-actions
         with:
           project-path: ${{ env.PROJECT_PATH }}
           test-project-path: ${{ env.TEST_PROJECT_PATH }}
