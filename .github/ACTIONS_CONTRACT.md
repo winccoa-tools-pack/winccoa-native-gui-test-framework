@@ -49,6 +49,8 @@ This document describes the required GitHub Actions that the CI pipeline depends
 | `test-run-id` | yes | string | Unique test run identifier (e.g., `Squirt-regression`) |
 | `languages` | yes | string | Test languages, space-separated full locale names (e.g., `en_US.utf8 de_AT.utf8`) |
 | `winccoa-version` | yes | string | WinCC OA version (e.g., `3.21`) |
+| `upload-artifacts` | no | boolean | Upload failed tests and results as artifacts (default: `true`) |
+| `publish-junit-report` | no | boolean | Publish jUnit report as GitHub check (default: `true`) |
 
 ### Behavior
 
@@ -57,6 +59,10 @@ This document describes the required GitHub Actions that the CI pipeline depends
 - Pass test run parameters: `{'testRunId': '{test-run-id}', ...}`
 - Run tests for all languages in the same project database
 - Ensure results are written to `{test-project-path}/Results/`
+- **Convert test results to jUnit format** using `oaTestParsers/jsonToJUnit.ctl`
+- **Upload failed test projects** artifact (if `upload-artifacts: true`)
+- **Upload test results** artifact (if `upload-artifacts: true`)
+- **Publish jUnit report** as GitHub check via `mikepenz/action-junit-report` (if `publish-junit-report: true`)
 
 ### Exit Code
 
@@ -64,10 +70,22 @@ This document describes the required GitHub Actions that the CI pipeline depends
 - `1`: Test failures detected in any language
 - `!= 0`: Setup or execution error
 
-### Output Artifacts (expected by workflow)
+### Outputs
 
-- Test results: `{test-project-path}/Results/jUnit*.xml`
-- Failed projects: `{test-project-path}/Projects/Stored/Failed/`
+| Output | Type | Description |
+|--------|------|-------------|
+| `test-count` | number | Total number of tests executed |
+| `failure-count` | number | Number of test failures |
+| `error-count` | number | Number of test errors |
+| `junit-report-file` | string | Path to generated jUnit XML file (if conversion succeeded) |
+| `failed-projects-path` | string | Path to failed projects directory (if any failures exist) |
+
+### Output Artifacts
+
+Generated and uploaded automatically (when enabled via inputs):
+
+- **Artifact: `test-results`** — Test results directory with jUnit XML and logs
+- **Artifact: `failed-tests`** — Failed test projects directory (uploaded only if failures exist)
 
 ---
 
