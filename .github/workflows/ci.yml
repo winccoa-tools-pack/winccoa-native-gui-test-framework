@@ -6,11 +6,6 @@ on:
       - main
   pull_request:
   workflow_dispatch:
-    inputs:
-      languages:
-        description: 'Languages to test (comma-separated, e.g., en_US.utf8,de_AT.utf8)'
-        required: false
-        default: 'en_US.utf8,de_AT.utf8'
 
 permissions:
   contents: read
@@ -38,7 +33,9 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        language: ${{ fromJson(format('[{0}]', format('"{0}"', join(split(github.event.inputs.languages || 'en_US.utf8,de_AT.utf8', ','), '","')))) }}
+        language:
+          - en_US.utf8
+          - de_AT.utf8
     
     steps:
       - name: Checkout repository
