@@ -71,10 +71,4 @@ This document describes the required GitHub Actions that the CI pipeline depends
 
 ---
 
-## Implementation Reference
-
-See [CtrlppCheck createBundle.yml](https://github.com/mPokornyETM/CtrlppCheck/blob/b10e38d2437e360bbd37484bba95703474ad25e7/.github/workflows/createBundle.yml) for the original pattern these actions are based on.
-
----
-
 <center>Made with ❤️ for and by the WinCC OA community</center>
