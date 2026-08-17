@@ -17,6 +17,7 @@ env:
   WINCCOA_VERSION: 3.21
   PROJECT_PATH: src/Squirt
   TEST_PROJECT_PATH: tests/WinCC_OA_Test
+  TEST_RUNNER_PROJECT: TfCustomizedSquirt
   WINCCOA_IMAGE: ghcr.io/winccoa-tools-pack/winccoa:v3.21.3-debian12-all
   LANGUAGES: en_US.utf8 de_AT.utf8
 
@@ -51,11 +52,44 @@ jobs:
           cat "${CONFIG}"
 
       - name: Run WinCC OA tests
-        id: tests
-        uses: winccoa-tools-pack/github-actions-winccoa/actions/winccoa-run-tests@feature/add-winccoa-test-actions
-        with:
-          project-path: ${{ env.PROJECT_PATH }}
-          test-project-path: ${{ env.TEST_PROJECT_PATH }}
-          test-run-id: Squirt-regression
-          languages: ${{ env.LANGUAGES }}
-          winccoa-version: ${{ env.WINCCOA_VERSION }}
+        shell: bash
+        env:
+          TEST_RUN_ID: ${{ github.event_name == 'pull_request' && 'Regression-tests' || 'Squirt-regression' }}
+        run: |
+          set -euo pipefail
+
+          WINCCOA_BIN="/opt/WinCC_OA/${{ env.WINCCOA_VERSION }}/bin"
+          FIRST_LANG="${{ env.LANGUAGES }}"
+          FIRST_LANG="${FIRST_LANG%% *}"
+
+          TEST_PARAMS="{'testRunId':'${TEST_RUN_ID}','registerGlobalProject':true,'registerAllTools':true,'registerAllTemplates':true,'showLogViewer':false,'TfTestManager.checkForPossibleFreezeTests':true}"
+
+          echo "Running test runner project: ${{ env.TEST_RUNNER_PROJECT }}"
+          echo "Using test run ID: ${TEST_RUN_ID}"
+          echo "Using language: ${FIRST_LANG}"
+
+          cd "${WINCCOA_BIN}"
+          ./WCCOActrl \
+            -proj "${{ env.TEST_RUNNER_PROJECT }}" \
+            -n testRunner.ctl "${TEST_PARAMS}" \
+            -log +stderr \
+            -lang "${FIRST_LANG}"
+
+      - name: Convert test results to jUnit format
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          WINCCOA_BIN="/opt/WinCC_OA/${{ env.WINCCOA_VERSION }}/bin"
+          FIRST_LANG="${{ env.LANGUAGES }}"
+          FIRST_LANG="${FIRST_LANG%% *}"
+
+          cd "${WINCCOA_BIN}"
+          ./WCCOActrl \
+            -proj "${{ env.TEST_RUNNER_PROJECT }}" \
+            -n oaTestParsers/jsonToJUnit.ctl \
+            -log +stderr \
+            -lang "${FIRST_LANG}" || {
+            EXIT_CODE=$?
+            echo "::warning::jUnit conversion exited with code ${EXIT_CODE}"
+          }
