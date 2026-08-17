@@ -25,7 +25,7 @@ jobs:
     name: WinCC OA TestFramework - Squirt Tests
     runs-on: ubuntu-latest
     container:
-      image: ${{ env.WINCCOA_IMAGE }}
+      image: ghcr.io/winccoa-tools-pack/winccoa:v3.21.3-debian12-all
       options: --user root
       credentials:
         username: ${{ github.actor }}
