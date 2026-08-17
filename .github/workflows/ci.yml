@@ -43,6 +43,13 @@ jobs:
           languages: ${{ env.LANGUAGES }}
           winccoa-version: ${{ env.WINCCOA_VERSION }}
 
+      - name: Show project config
+        shell: bash
+        run: |
+          CONFIG="${GITHUB_WORKSPACE}/${{ env.PROJECT_PATH }}/config/config"
+          echo "=== ${CONFIG} ==="
+          cat "${CONFIG}"
+
       - name: Run WinCC OA tests
         id: tests
         uses: winccoa-tools-pack/github-actions-winccoa/actions/winccoa-run-tests@feature/add-winccoa-test-actions
