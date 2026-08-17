@@ -36,20 +36,53 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Create project config
-        id: config
-        uses: winccoa-tools-pack/github-actions-winccoa/actions/winccoa-create-project-config@feature/add-winccoa-test-actions
-        with:
-          project-path: ${{ env.PROJECT_PATH }}
-          languages: ${{ env.LANGUAGES }}
-          winccoa-version: ${{ env.WINCCOA_VERSION }}
-
-      - name: Show project config
+      - name: Create and register test runner config
         shell: bash
         run: |
-          CONFIG="${GITHUB_WORKSPACE}/${{ env.PROJECT_PATH }}/config/config"
+          set -euo pipefail
+
+          WINCCOA_BIN="/opt/WinCC_OA/${{ env.WINCCOA_VERSION }}/bin"
+          TEST_ROOT="${GITHUB_WORKSPACE}/${{ env.TEST_PROJECT_PATH }}"
+          RUNNER_PROJECT_PATH="${TEST_ROOT}/Projects/${{ env.TEST_RUNNER_PROJECT }}"
+          CONFIG_DIR="${RUNNER_PROJECT_PATH}/config"
+          CONFIG="${CONFIG_DIR}/config"
+
+          mkdir -p "${CONFIG_DIR}"
+          mkdir -p "${RUNNER_PROJECT_PATH}/log"
+
+          cat > "${CONFIG}" <<EOF
+          [general]
+          pvss_path = "/opt/WinCC_OA/${{ env.WINCCOA_VERSION }}"
+          proj_path = "${GITHUB_WORKSPACE}/${{ env.PROJECT_PATH }}"
+          proj_path = "/opt/WinCC_OA/${{ env.WINCCOA_VERSION }}/TestFramework_${{ env.WINCCOA_VERSION }}"
+          proj_path = "${TEST_ROOT}/Projects/Global"
+          proj_path = "${RUNNER_PROJECT_PATH}"
+          proj_version = "${{ env.WINCCOA_VERSION }}"
+          EOF
+
+          for lang in ${{ env.LANGUAGES }}; do
+            echo "langs = \"${lang}\"" >> "${CONFIG}"
+          done
+
+          cat >> "${CONFIG}" <<EOF
+          pmonPort = 5999
+          [testFramework]
+          installPath = "${TEST_ROOT}/"
+          EOF
+
           echo "=== ${CONFIG} ==="
           cat "${CONFIG}"
+
+          cd "${RUNNER_PROJECT_PATH}"
+          "${WINCCOA_BIN}/WCCILpmon" \
+            -config "${CONFIG}" \
+            -n \
+            -autofreg \
+            -status \
+            -log +stderr || {
+            EXIT_CODE=$?
+            echo "::warning::WCCILpmon exited with code ${EXIT_CODE}. This may be expected if the system manager is not running."
+          }
 
       - name: Run WinCC OA tests
         shell: bash
