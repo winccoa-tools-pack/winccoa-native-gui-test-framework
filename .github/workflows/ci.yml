@@ -47,6 +47,11 @@ jobs:
           CONFIG_DIR="${RUNNER_PROJECT_PATH}/config"
           CONFIG="${CONFIG_DIR}/config"
 
+          echo "=== ls -la /opt/WinCCOA/${{ env.WINCCOA_VERSION }} ==="
+          ls -la "/opt/WinCCOA/${{ env.WINCCOA_VERSION }}" || true
+          echo "=== ls -la /opt/WinCC_OA/${{ env.WINCCOA_VERSION }} ==="
+          ls -la "/opt/WinCC_OA/${{ env.WINCCOA_VERSION }}" || true
+
           mkdir -p "${CONFIG_DIR}"
           mkdir -p "${RUNNER_PROJECT_PATH}/log"
 
@@ -70,9 +75,6 @@ jobs:
           installPath = "${TEST_ROOT}/"
           EOF
 
-          echo "=== ${CONFIG} ==="
-          cat "${CONFIG}"
-
           cd "${RUNNER_PROJECT_PATH}"
           "${WINCCOA_BIN}/WCCILpmon" \
             -config "${CONFIG}" \
@@ -83,6 +85,9 @@ jobs:
             EXIT_CODE=$?
             echo "::warning::WCCILpmon exited with code ${EXIT_CODE}. This may be expected if the system manager is not running."
           }
+
+          echo "=== ${CONFIG} ==="
+          cat "${CONFIG}"
 
       - name: Run WinCC OA tests
         shell: bash
