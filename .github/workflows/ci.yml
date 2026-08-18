@@ -5,13 +5,129 @@ on:
     branches:
       - main
   pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  packages: read
+  checks: write
+  pull-requests: write
+
+env:
+  WINCCOA_VERSION: 3.21
+  PROJECT_PATH: src/Squirt
+  TEST_PROJECT_PATH: tests/WinCC_OA_Test
+  TEST_RUNNER_PROJECT: TfCustomizedSquirt
+  WINCCOA_IMAGE: ghcr.io/winccoa-tools-pack/winccoa:v3.21.3-debian12-all
+  LANGUAGES: en_US.utf8 de_AT.utf8
 
 jobs:
-  placeholder:
-    name: Placeholder CI scaffold
+  test-squirt:
+    name: WinCC OA TestFramework - Squirt Tests
     runs-on: ubuntu-latest
+    container:
+      image: ghcr.io/winccoa-tools-pack/winccoa:v3.21.3-debian12-all
+      options: --user root
+      credentials:
+        username: ${{ github.actor }}
+        password: ${{ secrets.GHCR_PAT != '' && secrets.GHCR_PAT || secrets.GITHUB_TOKEN }}
+    
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
-      - name: Placeholder step
-        run: echo "CI workflow scaffold for WinCC OA tests will be added here."
+
+      - name: Create and register test runner config
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          WINCCOA_BIN="/opt/WinCC_OA/${{ env.WINCCOA_VERSION }}/bin"
+          TEST_ROOT="${GITHUB_WORKSPACE}/${{ env.TEST_PROJECT_PATH }}"
+          RUNNER_PROJECT_PATH="${TEST_ROOT}/Projects/${{ env.TEST_RUNNER_PROJECT }}"
+          CONFIG_DIR="${RUNNER_PROJECT_PATH}/config"
+          CONFIG="${CONFIG_DIR}/config"
+
+          echo "=== ls -la /opt/WinCCOA/${{ env.WINCCOA_VERSION }} ==="
+          ls -la "/opt/WinCCOA/${{ env.WINCCOA_VERSION }}" || true
+          echo "=== ls -la /opt/WinCC_OA/${{ env.WINCCOA_VERSION }} ==="
+          ls -la "/opt/WinCC_OA/${{ env.WINCCOA_VERSION }}" || true
+
+          mkdir -p "${CONFIG_DIR}"
+          mkdir -p "${RUNNER_PROJECT_PATH}/log"
+
+          cat > "${CONFIG}" <<EOF
+          [general]
+          pvss_path = "/opt/WinCC_OA/${{ env.WINCCOA_VERSION }}"
+          proj_path = "${GITHUB_WORKSPACE}/${{ env.PROJECT_PATH }}"
+          proj_path = "/opt/WinCC_OA/${{ env.WINCCOA_VERSION }}/TestFramework_${{ env.WINCCOA_VERSION }}"
+          proj_path = "${TEST_ROOT}/Projects/Global"
+          proj_path = "${RUNNER_PROJECT_PATH}"
+          proj_version = "${{ env.WINCCOA_VERSION }}"
+          EOF
+
+          for lang in ${{ env.LANGUAGES }}; do
+            echo "langs = \"${lang}\"" >> "${CONFIG}"
+          done
+
+          cat >> "${CONFIG}" <<EOF
+          pmonPort = 5999
+          [testFramework]
+          installPath = "${TEST_ROOT}/"
+          EOF
+
+          cd "${RUNNER_PROJECT_PATH}"
+          "${WINCCOA_BIN}/WCCILpmon" \
+            -config "${CONFIG}" \
+            -n \
+            -autofreg \
+            -status \
+            -log +stderr || {
+            EXIT_CODE=$?
+            echo "::warning::WCCILpmon exited with code ${EXIT_CODE}. This may be expected if the system manager is not running."
+          }
+
+          echo "=== ${CONFIG} ==="
+          cat "${CONFIG}"
+
+      - name: Run WinCC OA tests
+        shell: bash
+        env:
+          TEST_RUN_ID: ${{ github.event_name == 'pull_request' && 'Regression-tests' || 'Squirt-regression' }}
+        run: |
+          set -euo pipefail
+
+          WINCCOA_BIN="/opt/WinCC_OA/${{ env.WINCCOA_VERSION }}/bin"
+          FIRST_LANG="${{ env.LANGUAGES }}"
+          FIRST_LANG="${FIRST_LANG%% *}"
+
+          TEST_PARAMS="{'testRunId':'${TEST_RUN_ID}','registerGlobalProject':true,'registerAllTools':true,'registerAllTemplates':true,'showLogViewer':false,'TfTestManager.checkForPossibleFreezeTests':true}"
+
+          echo "Running test runner project: ${{ env.TEST_RUNNER_PROJECT }}"
+          echo "Using test run ID: ${TEST_RUN_ID}"
+          echo "Using language: ${FIRST_LANG}"
+
+          cd "${WINCCOA_BIN}"
+          ./WCCOActrl \
+            -proj "${{ env.TEST_RUNNER_PROJECT }}" \
+            -n testRunner.ctl "${TEST_PARAMS}" \
+            -log +stderr \
+            -lang "${FIRST_LANG}"
+
+      - name: Convert test results to jUnit format
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          WINCCOA_BIN="/opt/WinCC_OA/${{ env.WINCCOA_VERSION }}/bin"
+          FIRST_LANG="${{ env.LANGUAGES }}"
+          FIRST_LANG="${FIRST_LANG%% *}"
+
+          cd "${WINCCOA_BIN}"
+          ./WCCOActrl \
+            -proj "${{ env.TEST_RUNNER_PROJECT }}" \
+            -n oaTestParsers/jsonToJUnit.ctl \
+            -log +stderr \
+            -lang "${FIRST_LANG}" || {
+            EXIT_CODE=$?
+            echo "::warning::jUnit conversion exited with code ${EXIT_CODE}"
+          }
