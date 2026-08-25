@@ -57,7 +57,8 @@ class HookTfTestRunner : TfTestRunner
       return 0;
     }
 
-    squirtSubProj.setInstallDir(dirName(TfFileSys::getTestInstallPath()));
+    // Register Squirt sub project to be able to use its libraries
+    squirtSubProj.setInstallDir(dirName(dirName(TfFileSys::getTestInstallPath())) + makeNativePath("/Squirt/"));
     squirtSubProj.setRunnable(false);
     squirtSubProj.registerProj();
     return 0;
