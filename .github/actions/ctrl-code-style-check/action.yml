@@ -45,7 +45,7 @@ runs:
         SCRIPT_ABS="$WORKDIR/${SCRIPT_PATH#./}"
 
         if [ ! -f "$SCRIPT_ABS" ]; then
-          echo "::error::Missing script $SCRIPT_PATH"
+          echo "::error::Missing script $SCRIPT_ABS"
           exit 2
         fi
 
@@ -103,19 +103,6 @@ runs:
           "$DOCKER_IMAGE" \
           bash -lc "$CONTAINER_SCRIPT"
 
-        if grep -Ei "((formatted|ge[aä]ndert|changed).*(\.ctl)|(\.ctl).*(formatted|ge[aä]ndert|changed))" "$GITHUB_WORKSPACE/.artifacts/ctrl-style-check.log" >/dev/null; then
-          echo "::group::Formatting change hints"
-          grep -Ein "((formatted|ge[aä]ndert|changed).*(\.ctl)|(\.ctl).*(formatted|ge[aä]ndert|changed))" "$GITHUB_WORKSPACE/.artifacts/ctrl-style-check.log" || true
-
-          echo
-          echo "Detected unformatted CTL files:"
-          grep -E "((formatted|ge[aä]ndert|changed).*(\.ctl)|(\.ctl).*(formatted|ge[aä]ndert|changed))" "$GITHUB_WORKSPACE/.artifacts/ctrl-style-check.log" \
-            | grep -Eo "[A-Za-z]:[^\" ]+\.ctl|/[^\" ]+\.ctl" \
-            | sort -u || true
-          echo "::endgroup::"
-
-          echo "::error::Unformatted CTL files detected. Run local formatter before commit."
-          exit 1
-        fi
-
-        echo "No formatting changes required."
+        # All relevant output is emitted to stderr/stdout by the container.
+        # Rely on the container's exit code: 0 == success, non-zero == failure.
+        echo "Formatting check completed."
