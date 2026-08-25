@@ -45,7 +45,7 @@ class OaGuiTestScreenCapture
     string rootDir = dirName(this.getImagesDir());
     dyn_string rootCaptures = getFileNames(rootDir);
 
-    for(int i = 1; i <= rootCaptures.count(); i++)
+    for (int i = 1; i <= rootCaptures.count(); i++)
     {
       remove(rootDir + rootCaptures[i]);
     }

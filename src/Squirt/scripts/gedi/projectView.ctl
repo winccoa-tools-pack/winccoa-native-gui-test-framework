@@ -116,15 +116,15 @@ private int _startTest(string fileName, bool noWarnings, bool guiTest)
   string unitTestPath = guiTest ? myScript.getGuiTestRelPath() : makeDynString(myScript.getUnitTestRelPath());
 
 
-    if (unitTestPath.startsWith("tests/tests/") && getPath(SCRIPTS_REL_PATH, unitTestPath) == "")
-      unitTestPath.remove(0, strlen("tests/"));
+  if (unitTestPath.startsWith("tests/tests/") && getPath(SCRIPTS_REL_PATH, unitTestPath) == "")
+    unitTestPath.remove(0, strlen("tests/"));
 
-    // stop script if it is running
-    if (myScript.isRunning(unitTestPath))
-    {
-      myScript.stopRunningScript(unitTestPath);
-      return 0;
-    }
+  // stop script if it is running
+  if (myScript.isRunning(unitTestPath))
+  {
+    myScript.stopRunningScript(unitTestPath);
+    return 0;
+  }
 
 
   int err;
@@ -294,7 +294,7 @@ void navigateToGuiTest(string fileName)
 
   dyn_string pathes = myScript.getGuiTestFullPaths();
 
-  for(int i = 0; i < pathes.count(); i++)
+  for (int i = 0; i < pathes.count(); i++)
   {
     startThread("_scriptEditor", pathes.at(i));
   }

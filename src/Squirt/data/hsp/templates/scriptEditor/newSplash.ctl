@@ -21,7 +21,7 @@ class TestReplay : OaGuiTest
 {
 
   //----------------------------------------------------------------------------
-  public play(){}
+  public play() {}
 };
 
 
@@ -32,7 +32,7 @@ class TestReplay : OaGuiTest
 */
 void main()
 {
-	TestReplay test;
+  TestReplay test;
   test.setFileScript(__FILE__);
   test.startAll();
   exit(0);

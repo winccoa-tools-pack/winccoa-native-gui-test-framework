@@ -44,7 +44,7 @@ class GuiTestPushButton : GuiTestShape
              "toggleState", toggleState,
              "updatesEnabled", updatesEnabled,
              "buttonType", buttonType,
-            // "cursor", cursor,
+             // "cursor", cursor,
              "borderStyle", borderStyle,
              "fill", fill,
              "textPosition", textPosition,

@@ -60,7 +60,7 @@ class OaTestProjectView
     mapping menu;
 
     //PopUp for unit tests.
-    menu = makeMapping("icon", "" , "inSubproject", TRUE, "category", "CAT_LIBS|CAT_SCRIPTS");
+    menu = makeMapping("icon", "", "inSubproject", TRUE, "category", "CAT_LIBS|CAT_SCRIPTS");
     pvAddSubMenu(getCatStr(HspGediExt::MSG_CAT, "unitTests"), "unitTests", menu);
     pvConnect("startTest",          getCatStr(HspGediExt::MSG_CAT, "startTest"),          makeMapping("parent", "unitTests", "filesOnly", TRUE, "category", "CAT_LIBS", "inSubproject", true));
     pvConnect("startTest",          getCatStr(HspGediExt::MSG_CAT, "startTest"),          makeMapping("parent", "unitTests", "filesOnly", TRUE, "category", "CAT_SCRIPTS", "inSubproject", true));
@@ -68,7 +68,7 @@ class OaTestProjectView
     pvConnect("startTestRecursive", getCatStr(HspGediExt::MSG_CAT, "startTestRecursive"), makeMapping("parent", "unitTests", "filesOnly", FALSE, "category", "CAT_LIBS|CAT_SCRIPTS", "inSubproject", true));
 
     //PopUp for GUI tests
-    menu = makeMapping("icon", "" , "inSubproject", TRUE, "category", "CAT_PANELS");
+    menu = makeMapping("icon", "", "inSubproject", TRUE, "category", "CAT_PANELS");
     pvAddSubMenu(getCatStr("squirt/hsp", "guiTests"), "guiTests", menu);
     pvConnect("startGuiTest",          getCatStr("squirt/hsp", "startGuiTest"),          makeMapping("parent", "guiTests", "filesOnly", TRUE, "category", "CAT_PANELS", "inSubproject", true));
     pvConnect("navigateToGuiTest",     getCatStr("squirt/hsp", "navigateToGuiTest"),     makeMapping("parent", "guiTests", "filesOnly", TRUE, "category", "CAT_PANELS", "inSubproject", true));
@@ -159,24 +159,29 @@ class OaTestProjectView
     const string cmd = map["cmd"];
     string path = makeNativePath(map["path"]);
 
-    switch(cmd)
+    switch (cmd)
     {
       case "showSUT":
       {
-        if ( dynContains(sutThreads, path) <= 0 )
+        if (dynContains(sutThreads, path) <= 0)
         {
           dynAppend(sutThreads, path);
           startThread("showSUT_cb", path);
         }
+
         break;
       }
+
       case "hideSUT":
       {
         int idx = dynContains(sutThreads, path);
-        if ( idx > 0 )
+
+        if (idx > 0)
           dynRemove(sutThreads, idx);
+
         break;
       }
+
       case "updateStatisic":
       {
         OaTestResultStatistic stat;
@@ -202,9 +207,10 @@ class OaTestProjectView
   //------------------------------------------------------------------------------
   public static void updateScriptState(string scriptPath, bool state)
   {
-    if ( state )
+    if (state)
     {
       string points;
+
       for (int i = 1; i <= 10; i++)
       {
         points += ".";
@@ -231,16 +237,18 @@ class OaTestProjectView
   //------------------------------------------------------------------------------
   protected showSUT_cb(string scriptPath)
   {
-    while( dynContains(sutThreads, scriptPath) > 0 )
+    while (dynContains(sutThreads, scriptPath) > 0)
     {
       string points;
-      for( int i = 1; i <= 10; i++ )
+
+      for (int i = 1; i <= 10; i++)
       {
         points += ".";
         pvSetItemText(scriptPath, colIdxResultState, STATE_TEXT + " " + points);
         delay(0, 100);
       }
     }
+
     time t = getCurrentTime();
     string state = formatTime("%Y.%m.%d %H:%M:%S", t);
     pvSetItemText(scriptPath, colIdxResultState, state);
@@ -253,12 +261,12 @@ class OaTestProjectView
   //------------------------------------------------------------------------------
   private static string getPrc(float f1, float f2)
   {
-    if( f2 == 0 )
+    if (f2 == 0)
       return "0%";
 
     float f = f1 / f2;
 
-    f = ( float )100 / f;
+    f = (float)100 / f;
 
     string str;
 

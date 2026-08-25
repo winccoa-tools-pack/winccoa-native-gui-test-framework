@@ -30,7 +30,7 @@ class GuiTestSlider : GuiTestShape
     bool invertedAppearance, invertedControls, isActiveWindow, sliderDown, tracking, updatesEnabled, windowModified, focus;
     int x1, y1, w, h;
     int cursor, height, lineStep, maximum, maxValue, minimum, minValue, pageStep, singleStep, sliderPosition, tickInterval, toolTipDuration,
-    value, Value, width, x, y, BorderWidth;
+        value, Value, width, x, y, BorderWidth;
     string accessibleDescription, accessibleName, contextMenuPolicy, inputMethodHints, layoutDirection, orientation, statusTip,
            styleSheet, tickPosition;
     float windowOpacity;

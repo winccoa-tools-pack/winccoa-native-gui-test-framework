@@ -76,7 +76,7 @@ class HspScript
   //------------------------------------------------------------------------------
   /**
     @brief The function returns the file name of a CTRL script.
-D    @return string file A CTRL script file name with an extension.
+    @return string file A CTRL script file name with an extension.
   */
   public string getFileName()
   {
@@ -120,7 +120,7 @@ D    @return string file A CTRL script file name with an extension.
   */
   public int setFilePath(const string &path)
   {
-    if ( (path == ""))
+    if ((path == ""))
       return -1;
 
     scriptFilePath = path;
@@ -161,12 +161,12 @@ D    @return string file A CTRL script file name with an extension.
 
     string templFile = getPath("", templateRelPath);
 
-    if ( (templFile == "") && isfile(templateRelPath) )
+    if ((templFile == "") && isfile(templateRelPath))
     {
       templFile = templateRelPath;
     }
 
-    if( ( templFile != "" ) && isfile(templFile) )
+    if ((templFile != "") && isfile(templFile))
     {
       fileToString(templFile, script);
 
@@ -179,12 +179,12 @@ D    @return string file A CTRL script file name with an extension.
 
       string subStr = "";
 
-      if ( isPartOf(SCRIPTS_REL_PATH + "examples/libs/") )
+      if (isPartOf(SCRIPTS_REL_PATH + "examples/libs/"))
         subStr = SCRIPTS_REL_PATH + "examples/libs/";
-      else if ( isPartOf(SCRIPTS_REL_PATH + "tests/libs/") )
+      else if (isPartOf(SCRIPTS_REL_PATH + "tests/libs/"))
         subStr = SCRIPTS_REL_PATH + "tests/libs/";
 
-      if ( subStr != "" )
+      if (subStr != "")
       {
         replaceKey("$origLibRelPathWithoutExtension", substr(makeUnixPath(delExt(getFileRelPath())), strlen(subStr)));
         replaceKey("$origLibRelPath", substr(makeUnixPath(getFileRelPath()), strlen(subStr)));
@@ -243,7 +243,7 @@ D    @return string file A CTRL script file name with an extension.
   public bool isPartOf(const string &scriptType)
   {
     string location = makeNativePath(this.getFilePath());
-    return strpos(location, makeNativePath(scriptType) ) > 0;
+    return strpos(location, makeNativePath(scriptType)) > 0;
   }
 
   //------------------------------------------------------------------------------
@@ -261,7 +261,8 @@ D    @return string file A CTRL script file name with an extension.
     {
       string line = lines[i];
       string purifedLine = strrtrim(line, " ");
-      if ( purifedLine == line )
+
+      if (purifedLine == line)
         continue;
 
       lines[i] = purifedLine;
@@ -287,7 +288,8 @@ D    @return string file A CTRL script file name with an extension.
     {
       string line = lines[i];
       string purifedLine = strltrim(line, " ");
-      if ( purifedLine == line )
+
+      if (purifedLine == line)
         continue;
 
       lines[i] = purifedLine;
@@ -309,7 +311,7 @@ D    @return string file A CTRL script file name with an extension.
   {
     string delim = "//--------------------------------------------------------------------------------";
 
-    if ( spaces <= 0 )
+    if (spaces <= 0)
       return delim;
 
     return substr(delim, 0, strlen(delim) - spaces);
@@ -336,7 +338,7 @@ D    @return string file A CTRL script file name with an extension.
   */
   public string getExampleFullPath()
   {
-    if ( isfile(getPath(SCRIPTS_REL_PATH, getExampleRelPath())) )
+    if (isfile(getPath(SCRIPTS_REL_PATH, getExampleRelPath())))
       return getPath(SCRIPTS_REL_PATH, getExampleRelPath());
     else
       return "";
@@ -368,16 +370,17 @@ D    @return string file A CTRL script file name with an extension.
   */
   public int createExample()
   {
-    if ( exampleExist() )
+    if (exampleExist())
     {
-      showErrMsg(makeError("", PRIO_WARNING, ERR_CONTROL, 0, "Exmaple exist : " + getExampleFullPath()) );
+      showErrMsg(makeError("", PRIO_WARNING, ERR_CONTROL, 0, "Exmaple exist : " + getExampleFullPath()));
       return -1;
     }
 
     const string relPath = getExampleRelPath();
-    if ( strpos(relPath, "examples/libs/") != 0 )
+
+    if (strpos(relPath, "examples/libs/") != 0)
     {
-      showErrMsg(makeError("", PRIO_WARNING, ERR_CONTROL, 0, "The examples can be created only for scripts located in " + LIBS_REL_PATH + " directory.") );
+      showErrMsg(makeError("", PRIO_WARNING, ERR_CONTROL, 0, "The examples can be created only for scripts located in " + LIBS_REL_PATH + " directory."));
       return -2;
     }
 
@@ -385,16 +388,16 @@ D    @return string file A CTRL script file name with an extension.
     string dir = dirName(fullPath);
     mkdir(dir);
 
-    fclose(fopen(fullPath, "wb+") );
+    fclose(fopen(fullPath, "wb+"));
 
-    if ( !isfile(fullPath) )
+    if (!isfile(fullPath))
     {
-      showErrMsg(makeError("", PRIO_WARNING, ERR_CONTROL, 0, "Could not create example, check the permissions in : " + fullPath) );
+      showErrMsg(makeError("", PRIO_WARNING, ERR_CONTROL, 0, "Could not create example, check the permissions in : " + fullPath));
       return -3;
     }
     else
     {
-      showErrMsg(makeError("", PRIO_INFO, ERR_CONTROL, 0, "Succesfully created example: " + fullPath) );
+      showErrMsg(makeError("", PRIO_INFO, ERR_CONTROL, 0, "Succesfully created example: " + fullPath));
     }
 
     return 0;
@@ -420,7 +423,7 @@ D    @return string file A CTRL script file name with an extension.
   */
   public string getUnitTestFullPath()
   {
-    if ( isfile(getPath(SCRIPTS_REL_PATH, getUnitTestRelPath())) )
+    if (isfile(getPath(SCRIPTS_REL_PATH, getUnitTestRelPath())))
       return getPath(SCRIPTS_REL_PATH, getUnitTestRelPath());
     else
       return "";
@@ -451,16 +454,17 @@ D    @return string file A CTRL script file name with an extension.
   */
   public int createUnitTest()
   {
-    if ( unitTestExist() )
+    if (unitTestExist())
     {
-      showErrMsg(makeError("", PRIO_WARNING, ERR_CONTROL, 0, "Unit-test exist : " + getUnitTestFullPath()) );
+      showErrMsg(makeError("", PRIO_WARNING, ERR_CONTROL, 0, "Unit-test exist : " + getUnitTestFullPath()));
       return -1;
     }
 
     const string relPath = getUnitTestRelPath();
-    if ( !relPath.startsWith("tests/libs/") )
+
+    if (!relPath.startsWith("tests/libs/"))
     {
-      showErrMsg(makeError("", PRIO_WARNING, ERR_CONTROL, 0, "The unit-test can be created only for scripts located in " + LIBS_REL_PATH + " directory.") );
+      showErrMsg(makeError("", PRIO_WARNING, ERR_CONTROL, 0, "The unit-test can be created only for scripts located in " + LIBS_REL_PATH + " directory."));
       return -2;
     }
 
@@ -468,16 +472,16 @@ D    @return string file A CTRL script file name with an extension.
     string dir = dirName(fullPath);
     mkdir(dir);
 
-    fclose(fopen(fullPath, "wb+") );
+    fclose(fopen(fullPath, "wb+"));
 
-    if ( !isfile(fullPath) )
+    if (!isfile(fullPath))
     {
-      showErrMsg(makeError("", PRIO_WARNING, ERR_CONTROL, 0, "Could not create unit-test, check the permissions in : " + fullPath) );
+      showErrMsg(makeError("", PRIO_WARNING, ERR_CONTROL, 0, "Could not create unit-test, check the permissions in : " + fullPath));
       return -3;
     }
     else
     {
-      showErrMsg(makeError("", PRIO_INFO, ERR_CONTROL, 0, "Succesfully created unit-test: " + fullPath) );
+      showErrMsg(makeError("", PRIO_INFO, ERR_CONTROL, 0, "Succesfully created unit-test: " + fullPath));
     }
 
     return 0;
@@ -516,7 +520,7 @@ D    @return string file A CTRL script file name with an extension.
     dyn_string files = getFileNames(dir);
     dyn_string ret;
 
-    for(int i = 0; i < files.count(); i++)
+    for (int i = 0; i < files.count(); i++)
     {
       ret.append(dir + files.at(i));
     }
@@ -552,28 +556,30 @@ D    @return string file A CTRL script file name with an extension.
   */
   public int startExample(string relPath = "", string addOptions = "")
   {
-    if ( relPath == "" )
+    if (relPath == "")
       relPath = getExampleRelPath();
 
-    if ( !isfile(relPath) && !isfile(getPath(SCRIPTS_REL_PATH, relPath)) )
+    if (!isfile(relPath) && !isfile(getPath(SCRIPTS_REL_PATH, relPath)))
       return -1;
 
     const string covFilePath = getCoverageReportPath();
     const string covDir = dirName(PROJ_PATH + LOG_REL_PATH + covFilePath);
-    if ( !isdir(covDir) )
+
+    if (!isdir(covDir))
       mkdir(covDir);
 
     addOptions = covFilePath + " " + addOptions;
     int threadId;
-    if ( (myManType() == UI_MAN) && dynContains(getGediNames(), myModuleName()) )
+
+    if ((myManType() == UI_MAN) && dynContains(getGediNames(), myModuleName()))
       threadId = startThread("updateScriptState", relPath);
 
     int errors = start(relPath, addOptions, TRUE);
 
-    if ( (myManType() == UI_MAN) && dynContains(getGediNames(), myModuleName()) )
+    if ((myManType() == UI_MAN) && dynContains(getGediNames(), myModuleName()))
     {
       stopThread(threadId);
-      OaTestProjectView::updateScriptState(( isfile(relPath) ? relPath : getPath(SCRIPTS_REL_PATH, relPath) ), FALSE);
+      OaTestProjectView::updateScriptState((isfile(relPath) ? relPath : getPath(SCRIPTS_REL_PATH, relPath)), FALSE);
     }
 
     return errors;
@@ -596,12 +602,13 @@ D    @return string file A CTRL script file name with an extension.
   */
   public int startUnitTest(string relPath = "", string addOptions = "")
   {
-    if ( relPath == "" )  // Use default relPath
+    if (relPath == "")    // Use default relPath
       relPath = getUnitTestRelPath();
 
     const string covFilePath = getCoverageReportPath();
     const string covDir = dirName(PROJ_PATH + LOG_REL_PATH + covFilePath);
-    if ( !isdir(covDir) )
+
+    if (!isdir(covDir))
       mkdir(covDir);
 
     OaTestProjectView::showSUT(getFilePath());
@@ -630,14 +637,16 @@ D    @return string file A CTRL script file name with an extension.
   public int startGuiTests(string relPath = "", string addOptions = "")
   {
     dyn_string fullPathes;
-    if ( relPath.isEmpty())  // Use default relPath
+
+    if (relPath.isEmpty())   // Use default relPath
       fullPathes = getGuiTestFullPaths();
     else
       fullPathes = getPath("", relPath);
 
-DebugTN(__FUNCTION__, fullPathes);
+    DebugTN(__FUNCTION__, fullPathes);
     int rc;
-    for(int i = 0; i < fullPathes.count(); i++)
+
+    for (int i = 0; i < fullPathes.count(); i++)
     {
       rc = startGuiTest(fullPathes.at(i), addOptions);
 
@@ -659,7 +668,8 @@ DebugTN(__FUNCTION__, fullPathes);
   {
     const string covFilePath = getCoverageReportPath();
     const string covDir = dirName(PROJ_PATH + LOG_REL_PATH + covFilePath);
-    if ( !isdir(covDir) )
+
+    if (!isdir(covDir))
       mkdir(covDir);
 
     OaTestProjectView::showSUT(getFilePath());
@@ -686,7 +696,7 @@ DebugTN(__FUNCTION__, fullPathes);
   public string getCoverageReportPath()
   {
     string relPath = getFileRelPath();
-    return "coverage/"+ relPath + ".xml";
+    return "coverage/" + relPath + ".xml";
   }
 
   //------------------------------------------------------------------------------
@@ -696,12 +706,12 @@ DebugTN(__FUNCTION__, fullPathes);
   */
   public void showErrMsg(const anytype &msg)
   {
-    if ( isA(msg, DYN_DYN_ERRCLASS_VAR) || isA(msg, DYN_ERRCLASS_VAR) || isA(msg, ERRCLASS_VAR) )
+    if (isA(msg, DYN_DYN_ERRCLASS_VAR) || isA(msg, DYN_ERRCLASS_VAR) || isA(msg, ERRCLASS_VAR))
       throwError(msg);
     else
       ModuleOnWithPanel("WARNING", -1, -1, 0, 0, 1, 1, "",
                         "vision/MessageWarning",
-                        getCatStr("general","warning"), makeDynString(msg));
+                        getCatStr("general", "warning"), makeDynString(msg));
   }
 
   //------------------------------------------------------------------------------
@@ -728,10 +738,11 @@ DebugTN(__FUNCTION__, fullPathes);
     dpGet(OA_TEST_DPE + "Result", runningScripts);
 
     // Check if the list contains the script.
-    if ( dynContains(runningScripts, makeUnixPath(path)) > 0 )
+    if (dynContains(runningScripts, makeUnixPath(path)) > 0)
     {
       hspProcess = Process(getComponentName(guiTest ? UI_COMPONENT : CTRL_COMPONENT), makeUnixPath(path));
-      if ( hspProcess.isRunning() )
+
+      if (hspProcess.isRunning())
         return TRUE;
       else
         removeScriptFromRunning(path);  // script is not running -> remove it from the list
@@ -754,18 +765,19 @@ DebugTN(__FUNCTION__, fullPathes);
   */
   public int stopRunningScript(const string path)
   {
-    if ( path.isEmpty() )
+    if (path.isEmpty())
       return -1;
 
     int rc;
     hspProcess = Process(getComponentName(guiTest ? UI_COMPONENT : CTRL_COMPONENT), makeUnixPath(path));
-    if ( !hspProcess.isRunning() )
+
+    if (!hspProcess.isRunning())
       return -1;
 
     rc = hspProcess.kill();
 
     // remove stopped script from the list
-    if ( rc >= 0 )
+    if (rc >= 0)
       removeScriptFromRunning(path);
     else
       throwError(makeError("hsp_errors", PRIO_WARNING, ERR_CONTROL, 7, makeUnixPath(path)));
@@ -789,7 +801,8 @@ DebugTN(__FUNCTION__, fullPathes);
   protected string stripFromProjPath(string fullPath, const string &relPath)
   {
     string path = ctrlDbgPu_getRelPath(fullPath, relPath);
-    if ( path == "" )
+
+    if (path == "")
       return "";
 
     return substr(path, strlen(makeUnixPath(relPath)));
@@ -804,7 +817,8 @@ DebugTN(__FUNCTION__, fullPathes);
   {
     string str = getFileName();
     int dotPos = strpos(str, ".");
-    if ( dotPos > 0 )
+
+    if (dotPos > 0)
       str = substr(str, 0, dotPos);
 
     string ret;
@@ -814,11 +828,12 @@ DebugTN(__FUNCTION__, fullPathes);
     for (int i = 0; i < _LEN; i++)
     {
       char _char = str[i];
-      if ( ( _char >= '0' && _char <= '9' ) || // digits
-           ( _char >= 'A' && _char <= 'Z' ) || // big Chars
-           ( _char >= 'a' && _char <= 'z' ) )  // small Chars
+
+      if ((_char >= '0' && _char <= '9') ||    // digits
+          (_char >= 'A' && _char <= 'Z') ||   // big Chars
+          (_char >= 'a' && _char <= 'z'))     // small Chars
       {
-        if ( !validStr )
+        if (!validStr)
           _char = strtoupper(_char); // Start each word with an UpperCase.
 
         ret += _char;
@@ -849,7 +864,8 @@ DebugTN(__FUNCTION__, fullPathes);
   {
     string stdOut, stdErr;
     string cmd = makeNativePath(WINCCOA_BIN_PATH) + getComponentName(guiTest ? UI_COMPONENT : CTRL_COMPONENT);
-    if ( _WIN32 )
+
+    if (_WIN32)
       cmd += ".exe";
 
     dyn_string arguments = makeDynString("-proj", PROJ);
@@ -859,10 +875,10 @@ DebugTN(__FUNCTION__, fullPathes);
       arguments.append("-s");
       arguments.append(relPath);
 
-      // string panelPath = stripFromProjPath(relPath, SCRIPTS_REL_PATH + "tests/splash/"); 
+      // string panelPath = stripFromProjPath(relPath, SCRIPTS_REL_PATH + "tests/splash/");
       // // substr(relPath, strlen("tests/splash/"));
       // panelPath = dirName(panelPath);
-      // panelPath = substr(panelPath,0, strlen(panelPath) - 1); // remove last /   
+      // panelPath = substr(panelPath,0, strlen(panelPath) - 1); // remove last /
       arguments.append("-p");
       arguments.append(getFilePath());
     }
@@ -885,25 +901,27 @@ DebugTN(__FUNCTION__, fullPathes);
     mapping options = makeMapping("program", cmd,  "arguments", arguments,  "timeout", -1);
     int rc = system(options, stdOut, stdErr);
 
-    if ( rc < 0 )  // script is not started -> throw error
+    if (rc < 0)    // script is not started -> throw error
     {
       throwError(makeError("hsp_errors", PRIO_WARNING, ERR_CONTROL, 6, makeUnixPath(relPath)));
-      if ( !stdErr.isEmpty() )
+
+      if (!stdErr.isEmpty())
         throwError(makeError("", PRIO_WARNING, ERR_CONTROL, 0, stdErr));
 
-      if ( !stdOut.isEmpty() )
+      if (!stdOut.isEmpty())
         throwError(makeError("", PRIO_INFO, ERR_CONTROL, 0, stdOut));
     }
     else  // script is started -> wait until it is finished
     {
       hspProcess = Process(rc);
       addScriptToRunning(relPath);
-      while ( hspProcess.isRunning() )
+
+      while (hspProcess.isRunning())
         delay(0, 100);
     }
 
     removeScriptFromRunning(relPath);
-    return ( rc < 0 ? -1 : 0);
+    return (rc < 0 ? -1 : 0);
   }
 
   //------------------------------------------------------------------------------
@@ -915,7 +933,8 @@ DebugTN(__FUNCTION__, fullPathes);
   {
     dyn_string runningScripts;
     dpGet(OA_TEST_DPE + "Result", runningScripts);
-    if ( !dynContains(runningScripts, makeUnixPath(path)) )
+
+    if (!dynContains(runningScripts, makeUnixPath(path)))
     {
       dynAppend(runningScripts, makeUnixPath(path));
       dpSetWait(OA_TEST_DPE + "Result", runningScripts);
@@ -942,8 +961,8 @@ DebugTN(__FUNCTION__, fullPathes);
   */
   protected void updateScriptState(string relPath)
   {
-    while ( TRUE )
-      OaTestProjectView::updateScriptState(( isfile(relPath) ? relPath : getPath(SCRIPTS_REL_PATH, relPath) ), isRunning(relPath));
+    while (TRUE)
+      OaTestProjectView::updateScriptState((isfile(relPath) ? relPath : getPath(SCRIPTS_REL_PATH, relPath)), isRunning(relPath));
   }
 
   //--------------------------------------------------------------------------------
