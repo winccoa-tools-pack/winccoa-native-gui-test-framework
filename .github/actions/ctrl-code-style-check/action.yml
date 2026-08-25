@@ -42,10 +42,9 @@ runs:
 
         WORKDIR=/workspace
         RUNNER_PROJECT_ABS="$WORKDIR/${RUNNER_PROJECT_PATH#./}"
-        SCRIPT_ABS="$WORKDIR/${SCRIPT_PATH#./}"
-
+        SCRIPT_ABS="$GITHUB_WORKSPACE/${SCRIPT_PATH#./}"
         if [ ! -f "$SCRIPT_ABS" ]; then
-          echo "::error::Missing script $SCRIPT_ABS"
+          echo "::error::Missing script $SCRIPT_PATH"
           exit 2
         fi
 
