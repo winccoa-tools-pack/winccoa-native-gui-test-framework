@@ -1,0 +1,28 @@
+name: Ctrl Copyright Check
+
+on:
+  pull_request:
+    branches:
+      - main
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  ctrl-copyright-check:
+    name: CtrlCopyrightCheck
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Check copyright and SPDX
+        uses: ./.github/actions/ctrl-copyright-check
+        with:
+          source-paths: "src/Squirt tests/WinCC_OA_Test"
+          expected-owner: "winccoa-tools-pack"
+          expected-spdx: "MIT"

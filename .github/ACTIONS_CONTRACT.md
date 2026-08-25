@@ -92,5 +92,55 @@ Generated and uploaded automatically (when enabled via inputs):
 
 ---
 
+## Action: ctrl-code-style-check
+
+**Location:** `.github/actions/ctrl-code-style-check`
+
+**Purpose:** Validate CTL formatting using
+`OaDevTools/scripts/astyle.ctl`.
+
+### Ctrl Code Style Inputs
+
+| Input | Required | Type | Description |
+| ----- | -------- | ---- | ----------- |
+| `source-paths` | no | string | Space-separated directories to check (default: `src/Squirt tests/WinCC_OA_Test`) |
+| `runner-project-path` | no | string | Path to runner project used for dynamic config creation |
+| `script-path` | no | string | Path to `astyle.ctl` in this repository (default: `OaDevTools/scripts/astyle.ctl`) |
+| `winccoa-version` | yes | string | WinCC OA version |
+| `docker-image` | yes | string | Container image used for execution |
+| `language` | no | string | WinCC OA language for script execution |
+
+### Ctrl Code Style Behavior
+
+- Creates a temporary WinCC OA config dynamically.
+- Registers with `WCCILpmon -autofreg`.
+- Calls `WCCOActrl` with absolute script path to `astyle.ctl`.
+- Fails if log output indicates files would be changed (`formatted`, `geändert`, `changed`).
+
+---
+
+## Action: ctrl-copyright-check
+
+**Location:** `.github/actions/ctrl-copyright-check`
+
+**Purpose:** Validate CTL headers for owner/license mismatches.
+
+### Ctrl Copyright Inputs
+
+| Input | Required | Type | Description |
+| ----- | -------- | ---- | ----------- |
+| `source-paths` | no | string | Space-separated directories to scan |
+| `script-path` | no | string | Path to `copyright.ctl` in this repository (default: `OaDevTools/scripts/copyright.ctl`) |
+| `expected-owner` | no | string | Expected owner string in copyright lines |
+| `expected-spdx` | no | string | Expected SPDX identifier |
+
+### Ctrl Copyright Behavior
+
+- Scans all `*.ctl` files in configured source paths.
+- Fails on legacy `SIEMENS AG` or `GPL-3.0-only` markers.
+- Produces an artifact log file under `.artifacts` for diagnostics.
+
+---
+
 <!-- markdownlint-disable-next-line MD033 -->
 <center>Made with ❤️ for and by the WinCC OA community</center>

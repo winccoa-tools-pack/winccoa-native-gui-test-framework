@@ -5,3 +5,7 @@
 
 pw.cmd
 tests/WinCC_OA_Test/Projects/TfCustomizedSquirt/config/config
+
+# WinCC OA artifacts and logs
+.artifacts/
+*.log

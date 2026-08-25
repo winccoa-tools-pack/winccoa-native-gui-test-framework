@@ -1,0 +1,121 @@
+name: "Ctrl Code Style Check"
+description: "Check CTL formatting via astyle.ctl and fail on unformatted files."
+
+inputs:
+  source-paths:
+    description: "Space-separated source directories to check."
+    required: false
+    default: "src/Squirt tests/WinCC_OA_Test"
+  runner-project-path:
+    description: "Runner project path relative to repository root."
+    required: false
+    default: "tests/WinCC_OA_Test/Projects/TfCustomizedSquirt"
+  script-path:
+    description: "Path to astyle.ctl relative to repository root."
+    required: false
+    default: "OaDevTools/scripts/astyle.ctl"
+  winccoa-version:
+    description: "WinCC OA version (major.minor)."
+    required: true
+  docker-image:
+    description: "Container image for execution."
+    required: true
+  language:
+    description: "Language used for script execution."
+    required: false
+    default: "en_US.utf8"
+
+runs:
+  using: "composite"
+  steps:
+    - name: Run Ctrl code style check
+      shell: bash
+      env:
+        SOURCE_PATHS: ${{ inputs.source-paths }}
+        RUNNER_PROJECT_PATH: ${{ inputs.runner-project-path }}
+        SCRIPT_PATH: ${{ inputs.script-path }}
+        OA_VERSION: ${{ inputs.winccoa-version }}
+        DOCKER_IMAGE: ${{ inputs.docker-image }}
+        OA_LANG: ${{ inputs.language }}
+      run: |
+        set -euo pipefail
+
+        WORKDIR=/workspace
+        RUNNER_PROJECT_ABS="$WORKDIR/${RUNNER_PROJECT_PATH#./}"
+        SCRIPT_ABS="$WORKDIR/${SCRIPT_PATH#./}"
+
+        if [ ! -f "$SCRIPT_ABS" ]; then
+          echo "::error::Missing script $SCRIPT_PATH"
+          exit 2
+        fi
+
+        CONTAINER_SCRIPT=$(cat <<'BASH'
+        set -euo pipefail
+
+        OA_PATH="/opt/WinCC_OA/${OA_VERSION}"
+        OA_BIN="$OA_PATH/bin"
+        CONFIG_DIR="$RUNNER_PROJECT_ABS/config"
+        CONFIG_FILE="$CONFIG_DIR/config"
+
+        mkdir -p "$CONFIG_DIR"
+        mkdir -p "$RUNNER_PROJECT_ABS/log"
+
+        cat > "$CONFIG_FILE" <<EOF
+        [general]
+        pvss_path = "$OA_PATH"
+        proj_path = "$RUNNER_PROJECT_ABS"
+        proj_version = "${OA_VERSION}"
+        langs = "${OA_LANG}"
+        pmonPort = 5999
+        EOF
+
+        "$OA_BIN/WCCILpmon" -config "$CONFIG_FILE" -n -autofreg -status -log +stderr || true
+
+        : > "$WORKDIR/.artifacts/ctrl-style-check.log"
+        for rel in $SOURCE_PATHS; do
+          target="$WORKDIR/${rel#./}"
+          if [ ! -d "$target" ]; then
+            echo "WARNING: source path not found: $rel" | tee -a "$WORKDIR/.artifacts/ctrl-style-check.log"
+            continue
+          fi
+
+          echo "Checking CTL formatting under $target" | tee -a "$WORKDIR/.artifacts/ctrl-style-check.log"
+          "$OA_BIN/WCCOActrl" \
+            -config "$CONFIG_FILE" \
+            -n "$SCRIPT_ABS" "$target" FALSE \
+            -log +stderr \
+            -lang "$OA_LANG" 2>&1 | tee -a "$WORKDIR/.artifacts/ctrl-style-check.log"
+        done
+        BASH
+        )
+
+        mkdir -p "$GITHUB_WORKSPACE/.artifacts"
+
+        docker run --rm \
+          --user root \
+          -v "$GITHUB_WORKSPACE":"$WORKDIR":rw \
+          -w "$WORKDIR" \
+          -e OA_VERSION="$OA_VERSION" \
+          -e OA_LANG="$OA_LANG" \
+          -e SOURCE_PATHS="$SOURCE_PATHS" \
+          -e RUNNER_PROJECT_ABS="$RUNNER_PROJECT_ABS" \
+          -e SCRIPT_ABS="$SCRIPT_ABS" \
+          "$DOCKER_IMAGE" \
+          bash -lc "$CONTAINER_SCRIPT"
+
+        if grep -Ei "((formatted|ge[aä]ndert|changed).*(\.ctl)|(\.ctl).*(formatted|ge[aä]ndert|changed))" "$GITHUB_WORKSPACE/.artifacts/ctrl-style-check.log" >/dev/null; then
+          echo "::group::Formatting change hints"
+          grep -Ein "((formatted|ge[aä]ndert|changed).*(\.ctl)|(\.ctl).*(formatted|ge[aä]ndert|changed))" "$GITHUB_WORKSPACE/.artifacts/ctrl-style-check.log" || true
+
+          echo
+          echo "Detected unformatted CTL files:"
+          grep -E "((formatted|ge[aä]ndert|changed).*(\.ctl)|(\.ctl).*(formatted|ge[aä]ndert|changed))" "$GITHUB_WORKSPACE/.artifacts/ctrl-style-check.log" \
+            | grep -Eo "[A-Za-z]:[^\" ]+\.ctl|/[^\" ]+\.ctl" \
+            | sort -u || true
+          echo "::endgroup::"
+
+          echo "::error::Unformatted CTL files detected. Run local formatter before commit."
+          exit 1
+        fi
+
+        echo "No formatting changes required."

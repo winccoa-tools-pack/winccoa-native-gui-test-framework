@@ -1,0 +1,39 @@
+name: Yearly CTL Copyright Update
+
+on:
+  schedule:
+    - cron: "0 4 1 1 *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  yearly-update:
+    name: Bump copyright year
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Update CTL copyright year
+        shell: pwsh
+        run: ./.github/scripts/bump-ctl-copyright-year.ps1
+
+      - name: Create pull request
+        uses: peter-evans/create-pull-request@v6
+        with:
+          branch: chore/yearly-ctl-copyright-update
+          title: "chore: bump CTL copyright year"
+          commit-message: "chore: bump CTL copyright year"
+          body: |
+            ## Summary
+            - bump CTL copyright year to current year
+            - normalize legacy owner and SPDX markers to repository standards
+
+            ## Validation
+            - updated by yearly automation workflow
+          labels: |
+            dependencies
+            area/build

@@ -1,0 +1,44 @@
+name: Ctrl Code Style Check
+
+on:
+  pull_request:
+    branches:
+      - main
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  packages: read
+
+jobs:
+  ctrl-code-style-check:
+    name: CtrlCodeStyleCheck
+    runs-on: ubuntu-latest
+    env:
+      WINCCOA_VERSION: 3.21
+      WINCCOA_IMAGE: ghcr.io/winccoa-tools-pack/winccoa:v3.21.3-debian12-all
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Login to GHCR
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GHCR_PAT != '' && secrets.GHCR_PAT || secrets.GITHUB_TOKEN }}
+
+      - name: Pull WinCC OA image
+        run: docker pull "$WINCCOA_IMAGE"
+
+      - name: Check CTL formatting
+        uses: ./.github/actions/ctrl-code-style-check
+        with:
+          source-paths: "src/Squirt tests/WinCC_OA_Test"
+          runner-project-path: "tests/WinCC_OA_Test/Projects/TfCustomizedSquirt"
+          winccoa-version: ${{ env.WINCCOA_VERSION }}
+          docker-image: ${{ env.WINCCOA_IMAGE }}
+          language: en_US.utf8

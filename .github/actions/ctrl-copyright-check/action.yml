@@ -1,0 +1,75 @@
+name: "Ctrl Copyright Check"
+description: "Check CTL copyright/license headers for MIT and owner string."
+
+inputs:
+  source-paths:
+    description: "Space-separated source directories to scan."
+    required: false
+    default: "src/Squirt tests/WinCC_OA_Test"
+  script-path:
+    description: "Path to copyright.ctl relative to repository root."
+    required: false
+    default: "OaDevTools/scripts/copyright.ctl"
+  expected-owner:
+    description: "Expected owner string in copyright line."
+    required: false
+    default: "winccoa-tools-pack"
+  expected-spdx:
+    description: "Expected SPDX identifier."
+    required: false
+    default: "MIT"
+
+runs:
+  using: "composite"
+  steps:
+    - name: Check copyright headers
+      shell: bash
+      env:
+        SOURCE_PATHS: ${{ inputs.source-paths }}
+        SCRIPT_PATH: ${{ inputs.script-path }}
+        EXPECTED_OWNER: ${{ inputs.expected-owner }}
+        EXPECTED_SPDX: ${{ inputs.expected-spdx }}
+      run: |
+        set -euo pipefail
+
+        SCRIPT_ABS="$GITHUB_WORKSPACE/${SCRIPT_PATH#./}"
+        if [ ! -f "$SCRIPT_ABS" ]; then
+          echo "::error::Missing script $SCRIPT_PATH"
+          exit 2
+        fi
+
+        mkdir -p "$GITHUB_WORKSPACE/.artifacts"
+        REPORT="$GITHUB_WORKSPACE/.artifacts/ctrl-copyright-check.txt"
+        : > "$REPORT"
+
+        rc=0
+        while IFS= read -r -d '' file; do
+          if ! grep -Eq "@copyright|Copyright" "$file"; then
+            echo "MISSING-COPYRIGHT: ${file#$GITHUB_WORKSPACE/}" >> "$REPORT"
+            rc=1
+          fi
+
+          if grep -Eq "SPDX-License-Identifier:[[:space:]]*GPL-3.0-only" "$file"; then
+            echo "WRONG-SPDX: ${file#$GITHUB_WORKSPACE/}" >> "$REPORT"
+            rc=1
+          fi
+
+          if grep -Eiq "Copyright [0-9]{4} SIEMENS AG" "$file"; then
+            echo "WRONG-OWNER: ${file#$GITHUB_WORKSPACE/}" >> "$REPORT"
+            rc=1
+          fi
+        done < <(
+          for rel in $SOURCE_PATHS; do
+            base="$GITHUB_WORKSPACE/${rel#./}"
+            [ -d "$base" ] || continue
+            find "$base" -type f -name "*.ctl" -print0
+          done
+        )
+
+        if [ "$rc" -ne 0 ]; then
+          echo "::error::Copyright/license mismatches found."
+          cat "$REPORT"
+          exit 1
+        fi
+
+        echo "Copyright and SPDX checks passed."
