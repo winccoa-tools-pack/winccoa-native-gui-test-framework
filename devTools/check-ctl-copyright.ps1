@@ -3,7 +3,7 @@ param(
   [string]$Spdx = "MIT",
   [string]$WinccoaVersion = "3.21",
   [string]$TestProjectPath = "tests/WinCC_OA_Test",
-  [string]$RunnerProject = "TfCustomizedSquirt",
+  [string]$RunnerProject = "OaDevTools",
   [string]$SourcePath = "src/Squirt",
   [string]$WinccoaInstallPath = "",
   [switch]$ApplyChanges
@@ -62,7 +62,7 @@ function Get-WinccoaInstallPath {
 $repoRoot = (Resolve-Path "$PSScriptRoot/..").Path
 $oaPath = Get-WinccoaInstallPath -Version $WinccoaVersion -ExplicitPath $WinccoaInstallPath
 $oaBin = "$oaPath/bin"
-$runnerPath = (Resolve-Path "$repoRoot/$TestProjectPath/Projects/$RunnerProject").Path
+$runnerPath = (Resolve-Path "$repoRoot/OaDevTools").Path
 $configPath = "$runnerPath/config/config"
 $scriptPath = (Resolve-Path "$repoRoot/OaDevTools/scripts/copyright.ctl").Path
 $sourceAbs = (Resolve-Path "$repoRoot/$SourcePath").Path
@@ -74,7 +74,6 @@ New-Item -ItemType Directory -Force -Path "$repoRoot/.artifacts" | Out-Null
 $configContent = @"
 [general]
 pvss_path = "$oaPath"
-proj_path = "$repoRoot/OaDevTools"
 proj_path = "$runnerPath"
 proj_version = "$WinccoaVersion"
 langs = "en_US.utf8"

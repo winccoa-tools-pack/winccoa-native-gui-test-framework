@@ -1,3 +1,8 @@
+/**
+  @copyright Copyright 2026 winccoa-tools-pack
+  SPDX-License-Identifier: MIT
+*/
+
 #uses "classes/TimeOut"
 #uses "classes/json/JsonFile"
 #uses "classes/InputEventPlayer"

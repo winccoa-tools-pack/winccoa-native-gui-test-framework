@@ -1,3 +1,8 @@
+/**
+  @copyright Copyright 2026 winccoa-tools-pack
+  SPDX-License-Identifier: MIT
+*/
+
 #uses "classes/oaTest/OaTestProjectView"
 #uses "classes/hsp/HspScript"
 #uses "classes/hsp/HspGediExt"
