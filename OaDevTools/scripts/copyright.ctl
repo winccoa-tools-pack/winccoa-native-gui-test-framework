@@ -61,6 +61,22 @@ main(string sourcePath, string owner = "winccoa-tools-pack", string spdx = "MIT"
              expectedLicense) > 0)
         changed = TRUE;
 
+      // Try replacing a range of older copyright years (reasonable recent range)
+      for (int y = now - 10; y <= now; y++)
+      {
+        const string oldYear = "Copyright " + y + " " + owner;
+        if (strreplace(content, oldYear, correct) > 0)
+          changed = TRUE;
+      }
+
+      // Fallback: if still missing the expected copyright, prepend a minimal header
+      if (!content.contains(correct) && !content.contains(previous) && !content.contains("Copyright") )
+      {
+        const string hdr = "/**\n  @copyright " + correct + "\n  " + expectedLicense + "\n*/\n\n";
+        content = hdr + content;
+        changed = TRUE;
+      }
+
       if (changed && ctlFile.write(content) != 0)
         throwError(makeError("", PRIO_INFO, ERR_CONTROL, 0,
                              "Cannot update copyright", ctlFile.getPath()));
