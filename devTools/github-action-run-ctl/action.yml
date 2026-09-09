@@ -1,0 +1,15 @@
+name: 'Run WinCC OA Control'
+description: 'Run WCCOActrl with provided script and config'
+inputs:
+  oa-bin:
+    description: 'Path to OA bin folder'
+    required: true
+  config-path:
+    description: 'Path to the config file'
+    required: true
+  script-path:
+    description: 'Path to the ctl script to run'
+    required: true
+runs:
+  using: 'node12'
+  main: 'index.js'

@@ -1,0 +1,26 @@
+{
+  "name": "npm-winccoa-ctrl",
+  "version": "0.1.0",
+  "description": "Small CLI helpers to register a WinCC OA runner and invoke WCCOActrl from Node",
+  "bin": {
+    "winccoa-ctrl": "index.js"
+  },
+  "author": "winccoa-tools-pack",
+  "license": "MIT",
+  "engines": {
+    "node": ">=14"
+  },
+  "dependencies": {
+    "@winccoa-tools-pack/npm-winccoa-core": "latest"
+  },
+  "devDependencies": {
+    "prettier": "^3.0.0",
+    "eslint": "^8.50.0"
+  },
+  "scripts": {
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "lint": "eslint . || true",
+    "lint:fix": "eslint --fix . || true"
+  }
+}

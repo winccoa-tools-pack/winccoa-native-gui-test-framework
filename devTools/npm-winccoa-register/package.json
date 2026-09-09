@@ -1,0 +1,17 @@
+{
+  "name": "npm-winccoa-register",
+  "version": "0.1.0",
+  "description": "Register WinCC OA runner configuration from Node",
+  "bin": {
+    "winccoa-register": "index.js"
+  },
+  "author": "winccoa-tools-pack",
+  "license": "MIT",
+  "engines": {
+    "node": ">=14"
+  }
+  ,
+  "dependencies": {
+    "@winccoa-tools-pack/npm-winccoa-core": "latest"
+  }
+}

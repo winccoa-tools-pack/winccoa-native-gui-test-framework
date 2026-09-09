@@ -86,3 +86,15 @@ This project is licensed under the MIT License. See [LICENSE](LICENSE).
 ## ⚠️ Disclaimer
 
 **WinCC OA** and **Siemens** are trademarks of Siemens AG. This project is not affiliated with, endorsed by, or sponsored by Siemens AG. This is a community-driven open source project created to enhance the development experience for WinCC OA developers.
+
+---
+
+## Huge thanks to
+- @DaKaiZar — initial ideas and guidance
+- Markus Trummer — early reviews and testing
+- Luis Herrear Romano Miguel — contributions to CTL examples
+- @mPokornyETM — prepared the first draft during a hot week in Greece
+
+
+<!-- markdownlint-disable-next-line MD033 -->
+<center>Made with ❤️ for and by the WinCC OA community</center>
