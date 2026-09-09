@@ -60,11 +60,11 @@ Tests can be executed in multiple ways:
 - AI repository instructions are available in [.github/copilot-instructions.md](.github/copilot-instructions.md).
 - GitHub Actions integration is coming soon.
 - GitHub Actions overview plan:
-	- Phase 1: repository checks (lint/format checks and basic documentation validation).
-	- Phase 2: automated test execution (WinCC OA test runs and result publishing).
-	- Phase 3: release packaging of the final WinCC OA subproject artifact.
-	- Phase 4: publish package through standard GitHub Releases.
-	- Phase 5: publish built help in two targets: inside the package for local use and on GitHub Pages from the latest main branch.
+  - Phase 1: repository checks (lint/format checks and basic documentation validation).
+  - Phase 2: automated test execution (WinCC OA test runs and result publishing).
+  - Phase 3: release packaging of the final WinCC OA subproject artifact.
+  - Phase 4: publish package through standard GitHub Releases.
+  - Phase 5: publish built help in two targets: inside the package for local use and on GitHub Pages from the latest main branch.
 
 ---
 
@@ -90,11 +90,15 @@ This project is licensed under the MIT License. See [LICENSE](LICENSE).
 ---
 
 ## Huge thanks to
-- @DaKaiZar — initial ideas and guidance
-- Markus Trummer — early reviews and testing
-- Luis Herrear Romano Miguel — contributions to CTL examples
-- @mPokornyETM — prepared the first draft during a hot week in Greece
 
+To following team to prepare the first draft during a hot week in Greece.
+
+- @DaKaiZar — support behind the cpp core libraries
+- Markus Trummer — the Gedi integration
+- Luis Herrear Romano Miguel — early reviews and testing
+- @mPokornyETM — things behind OaTest integration and DevOps automation in this repository
+
+---
 
 <!-- markdownlint-disable-next-line MD033 -->
 <center>Made with ❤️ for and by the WinCC OA community</center>
