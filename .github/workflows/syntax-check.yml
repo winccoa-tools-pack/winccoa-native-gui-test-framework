@@ -39,7 +39,7 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Run WinCC OA syntax check
-        uses: winccoa-tools-pack/github-actions-winccoa/actions/syntax-check@feature/add-winccoa-test-actions
+        uses: winccoa-tools-pack/github-actions-winccoa/actions/winccoa-syntax-check@feature/add-winccoa-test-actions
         with:
           path: .
           winccoa-version: '3.21'
@@ -56,6 +56,6 @@ jobs:
             echo "## Syntax check result"
             echo
             echo "- Project path: ${{ env.PROJECT_PATH }}"
-            echo "- Error count: ${{ steps.run-tests.outputs.error-count }}"
-            echo "- Failure count: ${{ steps.run-tests.outputs.failure-count }}"
+            echo "- Error count: ${{ steps.run-wincc-oa-syntax-check.outputs.error-count }}"
+            echo "- Failure count: ${{ steps.run-wincc-oa-syntax-check.outputs.failure-count }}"
           } >> "$GITHUB_STEP_SUMMARY"
