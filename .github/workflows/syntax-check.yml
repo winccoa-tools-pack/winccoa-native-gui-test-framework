@@ -36,7 +36,7 @@ jobs:
         run: docker pull "$WINCCOA_IMAGE"
 
       - name: Run syntax check
-        uses: winccoa-tools-pack/github-actions-winccoa/actions/winccoa-syntax-check@feature/add-winccoa-test-actions
+        uses: winccoa-tools-pack/github-actions-winccoa/actions/winccoa-syntax-check@main
         with:
           path: ${{ env.PROJECT_PATH }}
           winccoa-version: '3.21'
