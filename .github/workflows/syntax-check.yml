@@ -35,27 +35,11 @@ jobs:
       - name: Pull WinCC OA image
         run: docker pull "$WINCCOA_IMAGE"
 
-      - name: Get source code
-        uses: actions/checkout@v4
-
-      - name: Run WinCC OA syntax check
+      - name: Run syntax check
         uses: winccoa-tools-pack/github-actions-winccoa/actions/winccoa-syntax-check@feature/add-winccoa-test-actions
         with:
-          path: .
+          path: ${{ env.PROJECT_PATH }}
           winccoa-version: '3.21'
           languages: |
             en_US.utf8
           fail-on-error: 'true'
-          mode: 'all'
-
-      - name: Summarize syntax result
-        if: always()
-        shell: bash
-        run: |
-          {
-            echo "## Syntax check result"
-            echo
-            echo "- Project path: ${{ env.PROJECT_PATH }}"
-            echo "- Error count: ${{ steps.run-wincc-oa-syntax-check.outputs.error-count }}"
-            echo "- Failure count: ${{ steps.run-wincc-oa-syntax-check.outputs.failure-count }}"
-          } >> "$GITHUB_STEP_SUMMARY"
