@@ -35,15 +35,18 @@ jobs:
       - name: Pull WinCC OA image
         run: docker pull "$WINCCOA_IMAGE"
 
-      - name: Run syntax check
-        id: syntax
-        uses: winccoa-tools-pack/github-actions-winccoa/actions/syntax-check@da6f81090a9b76eadfdb36fb4cf0b15521811266
+      - name: Get source code
+        uses: actions/checkout@v4
+
+      - name: Run WinCC OA syntax check
+        uses: winccoa-tools-pack/github-actions-winccoa/actions/syntax-check@feature/add-winccoa-test-actions
         with:
-          path: ${{ env.PROJECT_PATH }}
-          winccoa-version: ${{ env.WINCCOA_VERSION }}
-          docker-image: ${{ env.WINCCOA_IMAGE }}
-          fail-on-error: "true"
-          mode: all
+          path: .
+          winccoa-version: '3.21'
+          languages: |
+            en_US.utf8
+          fail-on-error: 'true'
+          mode: 'all'
 
       - name: Summarize syntax result
         if: always()
@@ -53,5 +56,6 @@ jobs:
             echo "## Syntax check result"
             echo
             echo "- Project path: ${{ env.PROJECT_PATH }}"
-            echo "- Error count: ${{ steps.syntax.outputs.error-count }}"
+            echo "- Error count: ${{ steps.run-tests.outputs.error-count }}"
+            echo "- Failure count: ${{ steps.run-tests.outputs.failure-count }}"
           } >> "$GITHUB_STEP_SUMMARY"
