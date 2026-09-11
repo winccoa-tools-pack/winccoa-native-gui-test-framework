@@ -95,7 +95,7 @@ To following team to prepare the first draft during a hot week in Greece.
 
 - @DaKaiZar — support behind the cpp core libraries
 - Markus Trummer — the Gedi integration
-- Luis Herrear Romano Miguel — early reviews and testing
+- @LuisMiRey — early reviews and testing
 - @mPokornyETM — things behind OaTest integration and DevOps automation in this repository
 
 ---
