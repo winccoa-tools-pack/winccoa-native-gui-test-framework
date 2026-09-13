@@ -40,6 +40,7 @@ jobs:
         with:
           path: ${{ env.PROJECT_PATH }}
           winccoa-version: '3.21'
+          docker-image: ${{ env.WINCCOA_IMAGE }}
           languages: |
             en_US.utf8
           fail-on-error: 'true'
