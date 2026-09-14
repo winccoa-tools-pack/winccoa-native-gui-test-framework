@@ -121,7 +121,7 @@ Generated and uploaded automatically (when enabled via inputs):
 
 ## Action: ctrl-copyright-check
 
-**Location:** `.github/actions/ctrl-copyright-check`
+**Location:** `winccoa-tools-pack/github-actions-winccoa/actions/ctrl-copyright-check@main`
 
 **Purpose:** Validate CTL headers for owner/license mismatches.
 
