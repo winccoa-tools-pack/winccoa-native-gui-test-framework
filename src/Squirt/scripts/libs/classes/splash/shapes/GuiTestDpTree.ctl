@@ -39,8 +39,6 @@ class GuiTestDpTree : GuiTestShape
     bool updatesEnabled = this.testShape.updatesEnabled();
     bool headerHidden = this.testShape.headerHidden();
     bool itemsExpandable = this.testShape.itemsExpandable();
-    bool headerHidden = this.testShape.headerHidden();
-    bool itemsExpandable = this.testShape.itemsExpandable();
 
     getValue(this.testShape,
              "visible", visible,
