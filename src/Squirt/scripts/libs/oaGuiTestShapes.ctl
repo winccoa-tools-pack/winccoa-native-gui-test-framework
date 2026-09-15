@@ -7,9 +7,8 @@
   @file $relPath
   @copyright MIT
   @brief Shape factory helpers for Splash GUI tests.
-  @details Shared by OaGuiTest and SquirtVp without circular #uses.
+  @details Shared by OaGuiTest and SquirtVp without a circular library load.
   @AIgeneratedHelpContent
-  @noExternalUse
 */
 
 #uses "classes/splash/shapes/GuiTestArc"
