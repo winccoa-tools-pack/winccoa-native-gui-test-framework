@@ -20,6 +20,7 @@
 
 #uses "classes/splash/shapes/GuiTestShape"
 #uses "classes/SquirtVp"
+#uses "oaGuiTestShapes"
 
 
 
