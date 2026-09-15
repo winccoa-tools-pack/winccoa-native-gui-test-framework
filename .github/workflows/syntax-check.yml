@@ -9,6 +9,11 @@ on:
       - main
   workflow_dispatch:
 
+# Cancel older runs on the same PR/branch so report comments are not stacked.
+concurrency:
+  group: syntax-check-${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
 permissions:
   contents: read
   packages: read
