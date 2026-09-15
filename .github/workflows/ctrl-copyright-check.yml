@@ -21,8 +21,16 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Check copyright and SPDX
-        uses: ./.github/actions/ctrl-copyright-check
+        uses: winccoa-tools-pack/github-actions-winccoa/actions/ctrl-copyright-check@main
         with:
           source-paths: "src/Squirt tests/WinCC_OA_Test"
+          script-path: "OaDevTools/scripts/copyright.ctl"
           expected-owner: "winccoa-tools-pack"
           expected-spdx: "MIT"
+          blacklist: |
+            # Third-party / generated / vendor test hooks that cannot use the
+            # standard project license header.
+            tests/WinCC_OA_Test/TestSuites/suite_unit/sub_unit/scripts/tests/libs/fileSys.ctl
+            tests/WinCC_OA_Test/Projects/TfCustomizedSquirt/data/hsp/templates/scriptEditor/newUnitTest.ctl
+            tests/WinCC_OA_Test/Projects/TfCustomizedSquirt/scripts/libs/classes/testFramework/testProject/HookTfTestProject.ctl
+            tests/WinCC_OA_Test/Projects/TfCustomizedSquirt/scripts/libs/classes/testFramework/HookTfTestRunner.ctl

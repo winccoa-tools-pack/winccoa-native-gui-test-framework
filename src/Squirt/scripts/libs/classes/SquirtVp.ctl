@@ -5,7 +5,8 @@
 
 
 
-#uses "oaGuiTest"
+#uses "classes/json/JsonFile"
+#uses "oaGuiTestShapes"
 
 //--------------------------------------------------------------------------------
 /**

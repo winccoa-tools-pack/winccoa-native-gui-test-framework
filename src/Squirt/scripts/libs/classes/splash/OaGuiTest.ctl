@@ -14,12 +14,13 @@
 //--------------------------------------------------------------------------------
 // Libraries used (#uses)
 #uses "classes/SquirtInputEventPlayer"
-#uses "classes/SquirtVp"
 #uses "classes/oaTest/OaTest"
 
 #uses "classes/splash/OaGuiTestScreenCapture"
 
 #uses "classes/splash/shapes/GuiTestShape"
+#uses "classes/SquirtVp"
+#uses "oaGuiTestShapes"
 
 
 

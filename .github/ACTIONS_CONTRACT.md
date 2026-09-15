@@ -121,7 +121,7 @@ Generated and uploaded automatically (when enabled via inputs):
 
 ## Action: ctrl-copyright-check
 
-**Location:** `.github/actions/ctrl-copyright-check`
+**Location:** `winccoa-tools-pack/github-actions-winccoa/actions/ctrl-copyright-check@main`
 
 **Purpose:** Validate CTL headers for owner/license mismatches.
 
@@ -133,10 +133,12 @@ Generated and uploaded automatically (when enabled via inputs):
 | `script-path` | no | string | Path to `copyright.ctl` in this repository (default: `OaDevTools/scripts/copyright.ctl`) |
 | `expected-owner` | no | string | Expected owner string in copyright lines |
 | `expected-spdx` | no | string | Expected SPDX identifier |
+| `blacklist` | no | string | Newline- or space-separated repo-relative paths of known exceptions that cannot carry the standard license header (`#` comments allowed) |
 
 ### Ctrl Copyright Behavior
 
 - Scans all `*.ctl` files in configured source paths.
+- Skips paths listed in `blacklist` and records them as `SKIPPED-BLACKLIST`.
 - Fails on legacy `SIEMENS AG` or `GPL-3.0-only` markers.
 - Produces an artifact log file under `.artifacts` for diagnostics.
 

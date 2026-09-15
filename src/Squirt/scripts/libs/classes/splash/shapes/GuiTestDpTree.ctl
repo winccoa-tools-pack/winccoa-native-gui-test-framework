@@ -37,9 +37,6 @@ class GuiTestDpTree : GuiTestShape
     string selectedItem = this.testShape.selectedItem();
     string layoutDirection = this.testShape.layoutDirection();
     bool updatesEnabled = this.testShape.updatesEnabled();
-    bool enabled = this.testShape.enabled();
-    bool headerHidden = this.testShape.headerHidden();
-    bool itemsExpandable = this.testShape.itemsExpandable();
     bool headerHidden = this.testShape.headerHidden();
     bool itemsExpandable = this.testShape.itemsExpandable();
 
@@ -59,7 +56,6 @@ class GuiTestDpTree : GuiTestShape
              "selectedItem", selectedItem,
              "cursor", cursor,
              "updatesEnabled", updatesEnabled,
-             "enabled", enabled,
              "layoutDirection", layoutDirection,
              "headerHidden", headerHidden,
              "itemsExpandable", itemsExpandable,
