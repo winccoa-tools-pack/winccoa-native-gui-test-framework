@@ -7,7 +7,6 @@
 #uses "classes/splash/OaGuiTest" // load all necessary classes
 #uses "classes/splash/shapes/GuiTestShape"
 
-#uses "classes/splash/SquirtVp"
 
 
 //ShapeTypes Lib
