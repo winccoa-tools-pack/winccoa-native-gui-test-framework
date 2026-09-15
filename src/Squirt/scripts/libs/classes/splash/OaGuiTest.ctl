@@ -19,7 +19,7 @@
 #uses "classes/splash/OaGuiTestScreenCapture"
 
 #uses "classes/splash/shapes/GuiTestShape"
-#uses "classes/splash/SquirtVp"
+#uses "classes/SquirtVp"
 
 
 
