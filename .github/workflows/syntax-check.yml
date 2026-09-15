@@ -12,6 +12,7 @@ on:
 permissions:
   contents: read
   packages: read
+  pull-requests: write
 
 jobs:
   syntax-check:
@@ -36,6 +37,8 @@ jobs:
         run: docker pull "$WINCCOA_IMAGE"
 
       - name: Run syntax check
+        id: syntax
+        continue-on-error: true
         uses: winccoa-tools-pack/github-actions-winccoa/actions/winccoa-syntax-check@main
         with:
           path: ${{ env.PROJECT_PATH }}
@@ -44,3 +47,33 @@ jobs:
           languages: |
             en_US.utf8
           fail-on-error: 'true'
+          log-path: .artifacts/syntax-check.log
+
+      - name: Upload syntax log
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: syntax-check-log
+          path: |
+            .artifacts/syntax-check.log
+            ${{ steps.syntax.outputs.log-path }}
+          if-no-files-found: warn
+
+      - name: Report syntax findings on PR
+        if: always() && github.event_name == 'pull_request'
+        uses: winccoa-tools-pack/github-actions-winccoa/actions/winccoa-logs-to-pr-review@main
+        with:
+          log-path: ${{ steps.syntax.outputs.log-path || '.artifacts/syntax-check.log' }}
+          title: Syntax check report
+          comment-marker: '<!-- winccoa-syntax-check-report -->'
+          include-error-types: CTRL
+          review-comments: 'true'
+          comment-on-pr: 'true'
+          fail-on-findings: 'false'
+          package-version: '0.1.1'
+
+      - name: Fail job if syntax check failed
+        if: steps.syntax.outcome == 'failure'
+        run: |
+          echo "::error::Syntax check failed (see PR report / log artifact)."
+          exit 1
