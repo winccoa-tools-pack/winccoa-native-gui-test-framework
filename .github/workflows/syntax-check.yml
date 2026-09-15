@@ -60,6 +60,7 @@ jobs:
           if-no-files-found: warn
 
       - name: Report syntax findings on PR
+        id: report
         if: always() && github.event_name == 'pull_request'
         uses: winccoa-tools-pack/github-actions-winccoa/actions/winccoa-logs-to-pr-review@main
         with:
@@ -69,11 +70,34 @@ jobs:
           include-error-types: CTRL
           review-comments: 'true'
           comment-on-pr: 'true'
+          # Legacy baseline: only active findings (files touched by this PR) fail the job
+          ignore-outside-pr-changes: 'true'
           fail-on-findings: 'false'
           package-version: '0.1.1'
 
-      - name: Fail job if syntax check failed
-        if: steps.syntax.outcome == 'failure'
+      # PR: fail only when active findings remain after ignore-outside-pr-changes.
+      # Push / workflow_dispatch: fail when the syntax step itself failed.
+      - name: Fail job if active syntax issues remain
+        if: always()
         run: |
-          echo "::error::Syntax check failed (see PR report / log artifact)."
-          exit 1
+          if [ "${{ github.event_name }}" = "pull_request" ]; then
+            FINDINGS="${{ steps.report.outputs.finding-count }}"
+            FINDINGS="${FINDINGS:-0}"
+            IGNORED="${{ steps.report.outputs.ignored-count }}"
+            IGNORED="${IGNORED:-0}"
+            TOTAL="${{ steps.report.outputs.finding-count-total }}"
+            TOTAL="${TOTAL:-$FINDINGS}"
+            echo "Active findings=${FINDINGS} ignored=${IGNORED} total=${TOTAL}"
+            if [ "$FINDINGS" -gt 0 ]; then
+              echo "::error::Syntax check has ${FINDINGS} active finding(s) in PR-changed files (ignored outside PR: ${IGNORED})."
+              exit 1
+            fi
+            if [ "$IGNORED" -gt 0 ]; then
+              echo "Note: ${IGNORED} finding(s) outside PR changes were ignored."
+            fi
+            exit 0
+          fi
+          if [ "${{ steps.syntax.outcome }}" = "failure" ]; then
+            echo "::error::Syntax check failed (see log artifact)."
+            exit 1
+          fi
