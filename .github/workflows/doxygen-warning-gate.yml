@@ -37,8 +37,7 @@ jobs:
 
       - name: Build docs
         id: docs
-        # TODO: switch ref to @main after github-actions-winccoa PR #4 is merged
-        uses: winccoa-tools-pack/github-actions-winccoa/actions/winccoa-docu-builder@feature/winccoa-docu-builder-action
+        uses: winccoa-tools-pack/github-actions-winccoa/actions/winccoa-docu-builder@main
         with:
           path: ${{ env.PROJECT_PATH }}
           winccoa-version: ${{ env.WINCCOA_VERSION }}
@@ -47,9 +46,7 @@ jobs:
           languages: |
             en_US.utf8
           register-project: 'true'
-          # Bootstrap: install package from git until 0.1.0 is published to npm.
-          # After release, set package-version: '0.1.0' (or later).
-          package-version: 'github:winccoa-tools-pack/npm-winccoa-docu-builder#feature/initial-docu-builder'
+          package-version: '0.1.0'
           warning-output-file: .artifacts/doxygen-warnings.txt
           log-path: .artifacts/docu-builder.log
           annotate-warnings: 'true'

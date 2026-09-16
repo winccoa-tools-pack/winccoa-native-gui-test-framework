@@ -45,11 +45,22 @@ jobs:
           docker pull "${WINCCOA_IMAGE}"
 
       - name: Build Squirt help
-        uses: winccoa-tools-pack/github-actions-winccoa/actions/winccoa-build-docs@main
+        uses: winccoa-tools-pack/github-actions-winccoa/actions/winccoa-docu-builder@main
         with:
           path: ${{ env.PROJECT_PATH }}
           winccoa-version: ${{ env.WINCCOA_VERSION }}
           docker-image: ${{ env.WINCCOA_IMAGE }}
+          company-name: winccoa-tools-pack
+          languages: |
+            en_US.utf8
+          register-project: 'true'
+          package-version: '0.1.0'
+          log-path: .artifacts/docu-builder.log
+          warning-output-file: .artifacts/doxygen-warnings.txt
+          annotate-warnings: 'false'
+          max-warning-count: '-1'
+          install-doxygen: 'true'
+          fail-on-error: 'true'
 
       - name: Configure GitHub Pages
         uses: actions/configure-pages@v5
