@@ -55,7 +55,7 @@ jobs:
           languages: |
             en_US.utf8
           fail-on-error: 'true'
-          package-version: '0.1.1'
+          package-version: '0.1.2'
           log-path: .artifacts/style-check-squirt.log
 
       - name: Check CTL style (tests)
@@ -71,9 +71,10 @@ jobs:
           languages: |
             en_US.utf8
           fail-on-error: 'true'
-          # Worker already registered by the Squirt step
-          register-project: 'false'
-          package-version: '0.1.1'
+          # Fresh container each step: always register (StyleCheck is materialized
+          # to a durable workspace path by the package).
+          register-project: 'true'
+          package-version: '0.1.2'
           log-path: .artifacts/style-check-tests.log
 
       - name: Upload style logs
