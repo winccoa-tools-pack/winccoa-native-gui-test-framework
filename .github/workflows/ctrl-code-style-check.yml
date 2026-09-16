@@ -9,16 +9,24 @@ on:
       - main
   workflow_dispatch:
 
+# Cancel older runs on the same PR/branch so report comments are not stacked.
+concurrency:
+  group: ctrl-style-check-${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
 permissions:
   contents: read
   packages: read
+  pull-requests: write
 
 jobs:
   ctrl-code-style-check:
     name: CtrlCodeStyleCheck
     runs-on: ubuntu-latest
     env:
-      WINCCOA_VERSION: 3.21
+      WINCCOA_VERSION: '3.21'
+      # Runnable worker project (StyleCheck is registered as non-runnable sub-project)
+      PROJECT_PATH: src/Squirt
       WINCCOA_IMAGE: ghcr.io/winccoa-tools-pack/winccoa:v3.21.3-debian12-all
     steps:
       - name: Checkout repository
@@ -34,11 +42,102 @@ jobs:
       - name: Pull WinCC OA image
         run: docker pull "$WINCCOA_IMAGE"
 
-      - name: Check CTL formatting
-        uses: ./.github/actions/ctrl-code-style-check
+      - name: Check CTL style (Squirt)
+        id: style-squirt
+        continue-on-error: true
+        uses: winccoa-tools-pack/github-actions-winccoa/actions/winccoa-style-check@main
         with:
-          source-paths: "src/Squirt tests/WinCC_OA_Test"
-          runner-project-path: "tests/WinCC_OA_Test/Projects/TfCustomizedSquirt"
+          path: ${{ env.PROJECT_PATH }}
+          source-path: src/Squirt
           winccoa-version: ${{ env.WINCCOA_VERSION }}
           docker-image: ${{ env.WINCCOA_IMAGE }}
-          language: en_US.utf8
+          command: check
+          languages: |
+            en_US.utf8
+          fail-on-error: 'true'
+          package-version: '0.1.1'
+          log-path: .artifacts/style-check-squirt.log
+
+      - name: Check CTL style (tests)
+        id: style-tests
+        continue-on-error: true
+        uses: winccoa-tools-pack/github-actions-winccoa/actions/winccoa-style-check@main
+        with:
+          path: ${{ env.PROJECT_PATH }}
+          source-path: tests/WinCC_OA_Test
+          winccoa-version: ${{ env.WINCCOA_VERSION }}
+          docker-image: ${{ env.WINCCOA_IMAGE }}
+          command: check
+          languages: |
+            en_US.utf8
+          fail-on-error: 'true'
+          # Worker already registered by the Squirt step
+          register-project: 'false'
+          package-version: '0.1.1'
+          log-path: .artifacts/style-check-tests.log
+
+      - name: Upload style logs
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: ctrl-style-check-logs
+          path: |
+            .artifacts/style-check-squirt.log
+            .artifacts/style-check-tests.log
+            ${{ steps.style-squirt.outputs.log-path }}
+            ${{ steps.style-tests.outputs.log-path }}
+          if-no-files-found: warn
+
+      - name: Report style findings on PR (Squirt)
+        id: report-squirt
+        if: always() && github.event_name == 'pull_request'
+        uses: winccoa-tools-pack/github-actions-winccoa/actions/winccoa-logs-to-pr-review@main
+        with:
+          log-path: ${{ steps.style-squirt.outputs.log-path || '.artifacts/style-check-squirt.log' }}
+          title: CTL style check report (Squirt)
+          comment-marker: '<!-- winccoa-style-check-squirt-report -->'
+          include-error-types: CTRL
+          review-comments: 'true'
+          comment-on-pr: 'true'
+          ignore-outside-pr-changes: 'true'
+          fail-on-findings: 'false'
+          package-version: '0.1.1'
+
+      - name: Report style findings on PR (tests)
+        id: report-tests
+        if: always() && github.event_name == 'pull_request'
+        uses: winccoa-tools-pack/github-actions-winccoa/actions/winccoa-logs-to-pr-review@main
+        with:
+          log-path: ${{ steps.style-tests.outputs.log-path || '.artifacts/style-check-tests.log' }}
+          title: CTL style check report (tests)
+          comment-marker: '<!-- winccoa-style-check-tests-report -->'
+          include-error-types: CTRL
+          review-comments: 'true'
+          comment-on-pr: 'true'
+          ignore-outside-pr-changes: 'true'
+          fail-on-findings: 'false'
+          package-version: '0.1.1'
+
+      # PR: fail only when active findings remain after ignore-outside-pr-changes.
+      # Push / workflow_dispatch: fail when either style step failed.
+      - name: Fail job if active style issues remain
+        if: always()
+        run: |
+          if [ "${{ github.event_name }}" = "pull_request" ]; then
+            S="${{ steps.report-squirt.outputs.finding-count }}"
+            T="${{ steps.report-tests.outputs.finding-count }}"
+            S="${S:-0}"
+            T="${T:-0}"
+            FINDINGS=$((S + T))
+            echo "Active findings Squirt=${S} tests=${T} total=${FINDINGS}"
+            if [ "$FINDINGS" -gt 0 ]; then
+              echo "::error::CTL style check has ${FINDINGS} active finding(s) in PR-changed files."
+              exit 1
+            fi
+            exit 0
+          fi
+          if [ "${{ steps.style-squirt.outcome }}" = "failure" ] || \
+             [ "${{ steps.style-tests.outcome }}" = "failure" ]; then
+            echo "::error::CTL style check failed (see log artifacts)."
+            exit 1
+          fi
