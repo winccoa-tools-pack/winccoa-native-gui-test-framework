@@ -57,7 +57,7 @@ jobs:
             .doxygen-awesome-css
             .winccoa-docu-builder
           register-project: 'true'
-          package-version: '0.2.0'
+          package-version: '0.2.1'
           log-path: .artifacts/docu-builder.log
           warning-output-file: .artifacts/doxygen-warnings.txt
           annotate-warnings: 'false'
