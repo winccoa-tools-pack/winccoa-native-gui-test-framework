@@ -45,8 +45,11 @@ jobs:
           company-name: winccoa-tools-pack
           languages: |
             en_US.utf8
+          project-docu-paths: |
+            .doxygen-awesome-css
+            .winccoa-docu-builder
           register-project: 'true'
-          package-version: '0.1.0'
+          package-version: '0.2.0'
           warning-output-file: .artifacts/doxygen-warnings.txt
           log-path: .artifacts/docu-builder.log
           annotate-warnings: 'true'
@@ -74,6 +77,8 @@ jobs:
             echo "- Docs log: ${LOG_PATH}"
             echo
             echo "Use the job log groups for stderr/stdout/WARN_LOGFILE previews and the uploaded artifacts for raw files, HTML preview (incl. todo/bug lists), and doxygen config (\`data/projectDocu/advanced_doxygenConfig.txt\` + generated \`doxygenConfig.txt\` + \`log/doxygen_warn_logfile.txt\`)."
+            echo
+            echo "External projectDocu sources: \`.doxygen-awesome-css\`, \`.winccoa-docu-builder\` (merged into \`src/Squirt/data/projectDocu\` at build time)."
           } >> "$GITHUB_STEP_SUMMARY"
 
       - name: Upload warning artifacts
@@ -95,6 +100,7 @@ jobs:
             src/Squirt/log/doxygen_warn_logfile.txt
             src/Squirt/data/projectDocu/advanced_doxygenConfig.txt
             src/Squirt/data/projectDocu/doxygenConfig.txt
+            .winccoa-docu-builder/advanced_doxygenConfig.txt
           if-no-files-found: warn
 
       - name: Upload docs preview artifact
@@ -136,6 +142,7 @@ jobs:
               `- Max warning count: ${maxWarningCount} (-1 means disabled)`,
               `- Warning file: \`${warningFile}\``,
               `- Docs log: \`${logPath}\``,
+              `- projectDocu sources: \`.doxygen-awesome-css\`, \`.winccoa-docu-builder\``,
               `- Doxygen configs/logs in warning artifact: \`src/Squirt/data/projectDocu/advanced_doxygenConfig.txt\`, \`src/Squirt/data/projectDocu/doxygenConfig.txt\`, \`src/Squirt/log/doxygen_warn_logfile.txt\``,
               `- Docs preview artifact: ${docsPreviewArtifactUrl}`,
               `- Warning report artifact: ${warningArtifactUrl}`,
