@@ -73,7 +73,7 @@ jobs:
             echo "- Warning file: ${WARNING_FILE}"
             echo "- Docs log: ${LOG_PATH}"
             echo
-            echo "Use the job log groups for stderr/stdout previews and the uploaded artifacts for raw files, HTML preview, and doxygen config (\`data/projectDocu/advanced_doxygenConfig.txt\` + generated \`doxygenConfig.txt\`)."
+            echo "Use the job log groups for stderr/stdout/WARN_LOGFILE previews and the uploaded artifacts for raw files, HTML preview (incl. todo/bug lists), and doxygen config (\`data/projectDocu/advanced_doxygenConfig.txt\` + generated \`doxygenConfig.txt\` + \`log/doxygen_warn_logfile.txt\`)."
           } >> "$GITHUB_STEP_SUMMARY"
 
       - name: Upload warning artifacts
@@ -89,8 +89,10 @@ jobs:
             .artifacts/docu-builder.log
             .artifacts/advanced_doxygenConfig.txt
             .artifacts/doxygenConfig.txt
+            .artifacts/doxygen_warn_logfile.txt
             src/Squirt/log/doxygen_stdErr.txt
             src/Squirt/log/doxygen_stdOut.txt
+            src/Squirt/log/doxygen_warn_logfile.txt
             src/Squirt/data/projectDocu/advanced_doxygenConfig.txt
             src/Squirt/data/projectDocu/doxygenConfig.txt
           if-no-files-found: warn
@@ -134,7 +136,7 @@ jobs:
               `- Max warning count: ${maxWarningCount} (-1 means disabled)`,
               `- Warning file: \`${warningFile}\``,
               `- Docs log: \`${logPath}\``,
-              `- Doxygen configs in warning artifact: \`src/Squirt/data/projectDocu/advanced_doxygenConfig.txt\`, \`src/Squirt/data/projectDocu/doxygenConfig.txt\``,
+              `- Doxygen configs/logs in warning artifact: \`src/Squirt/data/projectDocu/advanced_doxygenConfig.txt\`, \`src/Squirt/data/projectDocu/doxygenConfig.txt\`, \`src/Squirt/log/doxygen_warn_logfile.txt\``,
               `- Docs preview artifact: ${docsPreviewArtifactUrl}`,
               `- Warning report artifact: ${warningArtifactUrl}`,
               `- Run logs/artifacts: ${runUrl}`

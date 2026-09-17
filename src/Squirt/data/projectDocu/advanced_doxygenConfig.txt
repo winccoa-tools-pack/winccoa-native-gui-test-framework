@@ -19,11 +19,12 @@ IMAGE_PATH =
 PROJECT_NAME           = "Squirt  %WINCCOA_VERSION%"
 PROJECT_NUMBER         = ""
                          
-GENERATE_BUGLIST = NO
-#SHOW_FILES = NO
-GENERATE_TODOLIST = NO
+GENERATE_BUGLIST = YES
+GENERATE_TODOLIST = YES
 
-
+# Durable warning capture independent of OA system() stderr plumbing.
+# WinCC OA DoxygenConfig replaces $PROJ_PATH when appending this fragment.
+WARN_LOGFILE           = "$PROJ_PATH/log/doxygen_warn_logfile.txt"
 
 COLS_IN_ALPHA_INDEX    = 10
 
