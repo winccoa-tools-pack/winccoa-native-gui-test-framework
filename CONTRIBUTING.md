@@ -19,7 +19,7 @@ Thank you for contributing to this repository.
 - Run relevant GUI tests for impacted panels/shapes.
 - For behavior changes, include at least one reproducible validation step.
 - When possible, update or add VP data and screenshots for changed behavior.
-- Pull requests are expected to pass the Doxygen warning gate without
+- Pull requests are expected to pass the documentation warning gate without
   introducing new warnings compared to the base branch.
 
 ## Commit and PR guidance
@@ -89,7 +89,7 @@ Image/runtime requirements:
 
 - The image must contain a WinCC OA 3.21 installation at
   `/opt/WinCC_OA/3.21`.
-- The workflow installs `doxygen` inside the container if `apt-get` is
+- The workflow installs required documentation tooling inside the container if `apt-get` is
   available.
 - The workflow creates a temporary WinCC OA config and initializes SQLite
   before running `buildHelp.ctl`.
@@ -101,8 +101,8 @@ Typical failures and fixes:
   ensure `DOCKER_USER` / `DOCKER_PASSWORD` are available when private package
   access is required.
 
-- Error: `doxygen: command not found`
-- Fix: ensure the image supports `apt-get`, or preinstall `doxygen` in the
+- Error: documentation tooling is not available in the image
+- Fix: ensure the image supports `apt-get`, or preinstall the required tooling in the
   published WinCC OA image.
 
 - Error: WinCC OA tools fail due to missing project DB/config

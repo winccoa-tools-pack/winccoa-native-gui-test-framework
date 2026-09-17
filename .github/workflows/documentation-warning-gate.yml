@@ -1,4 +1,4 @@
-name: Doxygen Warning Gate
+name: Documentation Warning Gate
 
 on:
   pull_request:
@@ -13,7 +13,7 @@ permissions:
 
 jobs:
   warning-report:
-    name: Doxygen Warning Report
+    name: Documentation Warning Report
     runs-on: ubuntu-latest
     env:
       WINCCOA_VERSION: '3.21'
@@ -46,16 +46,15 @@ jobs:
           languages: |
             en_US.utf8
           project-docu-paths: |
-            .doxygen-awesome-css
+            .documentation-theme
             .winccoa-docu-builder
           register-project: 'true'
           package-version: '0.2.1'
-          warning-output-file: .artifacts/doxygen-warnings.txt
+          warning-output-file: .artifacts/documentation-warnings.txt
           log-path: .artifacts/docu-builder.log
           annotate-warnings: 'true'
           max-warning-count: ${{ env.MAX_WARNING_COUNT }}
           max-annotations: '200'
-          install-doxygen: 'true'
           fail-on-error: 'true'
 
       - name: Write warning summary
@@ -69,16 +68,16 @@ jobs:
           MAX_WARNING_COUNT="${{ env.MAX_WARNING_COUNT }}"
 
           {
-            echo "## Doxygen warning report"
+            echo "## Documentation warning report"
             echo
             echo "- Warning count: ${WARNING_COUNT}"
             echo "- Max warning count: ${MAX_WARNING_COUNT} (-1 means disabled)"
             echo "- Warning file: ${WARNING_FILE}"
             echo "- Docs log: ${LOG_PATH}"
             echo
-            echo "Use the job log groups for stderr/stdout/WARN_LOGFILE previews and the uploaded artifacts for raw files, HTML preview (incl. todo/bug lists), and doxygen config (\`data/projectDocu/advanced_doxygenConfig.txt\` + generated \`doxygenConfig.txt\` + \`log/doxygen_warn_logfile.txt\`)."
+            echo "Use the job log groups for stderr/stdout/WARN_LOGFILE previews and the uploaded artifacts for raw files, HTML preview (incl. todo/bug lists), and configuration/log debug files."
             echo
-            echo "External projectDocu sources: \`.doxygen-awesome-css\`, \`.winccoa-docu-builder\` (merged into \`src/Squirt/data/projectDocu\` at build time)."
+            echo "External projectDocu sources: \`.documentation-theme\`, \`.winccoa-docu-builder\` (merged into \`src/Squirt/data/projectDocu\` at build time)."
           } >> "$GITHUB_STEP_SUMMARY"
 
       - name: Upload warning artifacts
@@ -86,21 +85,16 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: doxygen-warning-report
+          name: documentation-warning-report
           path: |
             ${{ steps.docs.outputs.warning-file }}
             ${{ steps.docs.outputs.log-path }}
-            .artifacts/doxygen-warnings.txt
+            .artifacts/documentation-warnings.txt
             .artifacts/docu-builder.log
-            .artifacts/advanced_doxygenConfig.txt
-            .artifacts/doxygenConfig.txt
-            .artifacts/doxygen_warn_logfile.txt
-            src/Squirt/log/doxygen_stdErr.txt
-            src/Squirt/log/doxygen_stdOut.txt
-            src/Squirt/log/doxygen_warn_logfile.txt
-            src/Squirt/data/projectDocu/advanced_doxygenConfig.txt
-            src/Squirt/data/projectDocu/doxygenConfig.txt
-            .winccoa-docu-builder/advanced_doxygenConfig.txt
+            .artifacts/*.txt
+            src/Squirt/log/*.txt
+            src/Squirt/data/projectDocu/*.txt
+            .winccoa-docu-builder/*.txt
           if-no-files-found: warn
 
       - name: Upload docs preview artifact
@@ -108,7 +102,7 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: doxygen-html-preview
+          name: documentation-html-preview
           path: src/Squirt/help/html
           if-no-files-found: warn
 
@@ -117,7 +111,7 @@ jobs:
         uses: actions/github-script@v7
         with:
           script: |
-            const marker = '<!-- doxygen-warning-report -->';
+            const marker = '<!-- documentation-warning-report -->';
             const warningCount = `${{ steps.docs.outputs.warning-count }}`;
             const maxWarningCount = `${{ env.MAX_WARNING_COUNT }}`;
             const warningFile = `${{ steps.docs.outputs.warning-file }}`;
@@ -136,14 +130,14 @@ jobs:
 
             const body = [
               marker,
-              '## Doxygen warning report',
+              '## Documentation warning report',
               '',
               `- Warning count: ${warningCount}`,
               `- Max warning count: ${maxWarningCount} (-1 means disabled)`,
               `- Warning file: \`${warningFile}\``,
               `- Docs log: \`${logPath}\``,
-              `- projectDocu sources: \`.doxygen-awesome-css\`, \`.winccoa-docu-builder\``,
-              `- Doxygen configs/logs in warning artifact: \`src/Squirt/data/projectDocu/advanced_doxygenConfig.txt\`, \`src/Squirt/data/projectDocu/doxygenConfig.txt\`, \`src/Squirt/log/doxygen_warn_logfile.txt\``,
+              `- projectDocu sources: \`.documentation-theme\`, \`.winccoa-docu-builder\``,
+              `- Configuration and log debug files are included in the warning artifact`,
               `- Docs preview artifact: ${docsPreviewArtifactUrl}`,
               `- Warning report artifact: ${warningArtifactUrl}`,
               `- Run logs/artifacts: ${runUrl}`

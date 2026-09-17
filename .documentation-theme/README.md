@@ -1,8 +1,7 @@
-﻿# Doxygen theme / extras (first try)
+﻿# Documentation theme / extras
 
 Temporary home for HTML extras used by the Squirt docs build.
-Intended later as org-wide theme assets (for example based on
-[doxygen-awesome-css](https://github.com/jothepro/doxygen-awesome-css)).
+Intended later as org-wide theme assets.
 
 Top-level files in this directory are merged into
 `src/Squirt/data/projectDocu` before `buildHelp.ctl` runs.
@@ -17,7 +16,7 @@ Pass this directory first in `project-docu-paths`, then project overrides:
 
 ```yaml
 project-docu-paths: |
-  .doxygen-awesome-css
+  .documentation-theme
   .winccoa-docu-builder
 ```
 

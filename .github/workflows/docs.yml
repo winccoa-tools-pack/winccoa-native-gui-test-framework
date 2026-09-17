@@ -54,15 +54,14 @@ jobs:
           languages: |
             en_US.utf8
           project-docu-paths: |
-            .doxygen-awesome-css
+            .documentation-theme
             .winccoa-docu-builder
           register-project: 'true'
           package-version: '0.2.1'
           log-path: .artifacts/docu-builder.log
-          warning-output-file: .artifacts/doxygen-warnings.txt
+          warning-output-file: .artifacts/documentation-warnings.txt
           annotate-warnings: 'false'
           max-warning-count: '-1'
-          install-doxygen: 'true'
           fail-on-error: 'true'
 
       - name: Configure GitHub Pages

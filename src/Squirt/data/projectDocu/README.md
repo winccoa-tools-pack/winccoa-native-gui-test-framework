@@ -5,7 +5,7 @@ WinCC OA discovers Doxygen extras next to
 
 Source assets live outside this tree and are merged here at docs-build time:
 
-- `.doxygen-awesome-css/` (theme / HTML extras)
+- `.documentation-theme/` (theme / HTML extras)
 - `.winccoa-docu-builder/` (project advanced Doxygen config)
 
 Do not commit generated `doxygenConfig.txt` or merged copies from CI.

@@ -1,6 +1,6 @@
 ﻿# Project Docu Builder overrides
 
-Project-local Doxygen advanced config and related assets for
+Project-local advanced documentation config and related assets for
 `@winccoa-tools-pack/npm-winccoa-docu-builder`.
 
 Merged into `src/Squirt/data/projectDocu` at docs-build time via
@@ -9,14 +9,14 @@ earlier for non-advanced files; advanced configs concatenate).
 
 ## Contents
 
-- `advanced_doxygenConfig.txt` — project advanced Doxygen fragment
-  (WARN_LOGFILE, GENERATE_TODOLIST/BUGLIST, etc.)
+- Advanced documentation fragment
+  (warning logfile, todo/bug lists, etc.)
 
 Layer after org/theme sources, for example:
 
 ```yaml
 project-docu-paths: |
-  .doxygen-awesome-css
+  .documentation-theme
   .winccoa-docu-builder
 ```
 
