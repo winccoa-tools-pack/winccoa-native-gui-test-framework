@@ -68,6 +68,8 @@ jobs:
           MAX_WARNING_COUNT="${{ env.MAX_WARNING_COUNT }}"
 
           {
+            TOP_WARNING_LINES=20
+
             echo "## Documentation warning report"
             echo
             echo "- Warning count: ${WARNING_COUNT}"
@@ -78,6 +80,14 @@ jobs:
             echo "Use the job log groups for stderr/stdout/WARN_LOGFILE previews and the uploaded artifacts for raw files, HTML preview (incl. todo/bug lists), and configuration/log debug files."
             echo
             echo "External projectDocu sources: \`.documentation-theme\`, \`.winccoa-docu-builder\` (merged into \`src/Squirt/data/projectDocu\` at build time)."
+            echo
+            echo "### Top ${TOP_WARNING_LINES} warnings"
+            echo
+            if [ -f "${WARNING_FILE}" ] && [ -s "${WARNING_FILE}" ]; then
+              head -n "${TOP_WARNING_LINES}" "${WARNING_FILE}"
+            else
+              echo "No warning file was produced."
+            fi
           } >> "$GITHUB_STEP_SUMMARY"
 
       - name: Upload warning artifacts
