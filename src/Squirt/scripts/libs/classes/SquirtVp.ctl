@@ -133,3 +133,40 @@ class SquirtVp
     return "splash/VPs/" + this.id + ".json";
   }
 };
+
+
+class SquirtVpPanel : SquirtVp
+{
+  public SquirtVpPanel(const string &vpId, const shape &panel)
+  {
+    this.panel = panel;
+    this.id = vpId;
+    this.shapes = this.getPanelShapes();
+  }
+
+  
+  protected shape panel;
+
+  //------------------------------------------------------------------------------
+  /**
+    @brief Returns VP metadata path relative to DATA_REL_PATH.
+    @return Relative VP JSON path.
+  */
+  protected string getMetaRelPath()
+  {
+    return "splash/VPs/panels/" + this.id + ".json";
+  }
+
+  protected vector<shape> getPanelShapes()
+  {
+    dyn_string dsShapes = getShapes(this.panel.moduleName, this.panel.name(), "visible", TRUE);
+    vector<shape> retShapes;
+
+    for(int i = 1; i <= dynlen(dsShapes); i++)
+    {
+      const shape sh = getShape(this.panel.moduleName, this.panel.name(), dsShapes[i]);
+      retShapes.append(sh);
+    }
+    return retShapes;
+  }
+};
