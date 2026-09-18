@@ -10,44 +10,29 @@ This directory contains automated tests based on the WinCC OA TestFramework.
 
 ## Run regression tests locally
 
-Use the local helper script from repository root:
+This repository no longer ships an in-repo local runner wrapper.
+Run the configured test run with your local WinCC OA TestFramework setup,
+using the configuration under `tests/WinCC_OA_Test/Projects/TfCustomizedSquirt`.
 
-```powershell
-./devTools/run-local-tests.ps1 -RunId "Regression-tests"
-```
+For the CI setup and the expected TestFramework execution model, see:
 
-The script creates a dynamic config for
-`tests/WinCC_OA_Test/Projects/TfCustomizedSquirt/config/config`,
-registers with `-autofreg`, runs the selected test run, and converts results
-to jUnit.
+- `.github/workflows/ci.yml`
+- `.github/ACTIONS_CONTRACT.md`
 
-## Check CTL formatting locally
+## Style and copyright checks
 
-Dry-run check (fails if formatting changes would be needed):
+This repository no longer ships in-repo helper scripts for CTL formatting or
+copyright checks.
 
-```powershell
-./devTools/check-ctrl-code-style.ps1 -SourcePath "src/Squirt"
-```
+Use the maintained org tooling instead:
 
-Apply formatting locally before commit:
+- CTL formatting: `winccoa-tools-pack/github-actions-winccoa/actions/winccoa-style-check@main`
+- Copyright validation: `winccoa-tools-pack/github-actions-winccoa/actions/ctrl-copyright-check@main`
 
-```powershell
-./devTools/check-ctrl-code-style.ps1 -SourcePath "src/Squirt" -ApplyChanges
-```
+The corresponding repository workflows are:
 
-## Check copyright locally
-
-Check only:
-
-```powershell
-./devTools/check-ctl-copyright.ps1
-```
-
-Apply automatic updates (year, owner, SPDX) and re-check:
-
-```powershell
-./devTools/check-ctl-copyright.ps1 -ApplyChanges
-```
+- `.github/workflows/ctrl-code-style-check.yml`
+- `.github/workflows/ctrl-copyright-check.yml`
 
 ---
 
