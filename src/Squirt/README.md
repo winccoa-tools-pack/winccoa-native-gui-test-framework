@@ -44,7 +44,8 @@ TBD
 ## Roadmap
 
 + VS Code integration is coming soon.
-+ AI repository instructions are available in [../../.github/copilot-instructions.md](../../.github/copilot-instructions.md).
++ AI repository instructions are available in the repository root at
+  `../../.github/copilot-instructions.md`.
 + GitHub Actions integration is coming soon.
 + GitHub Actions overview plan:
   + Phase 1: repository checks (lint/format checks and basic documentation validation).
