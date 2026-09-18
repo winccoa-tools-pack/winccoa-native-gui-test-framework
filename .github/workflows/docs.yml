@@ -135,17 +135,24 @@ jobs:
       - name: Comment warning count on PR
         if: ${{ always() && github.event_name == 'pull_request' }}
         uses: actions/github-script@v7
+        env:
+          WARNING_COUNT: ${{ steps.docs.outputs.warning-count }}
+          MAX_WARNING_COUNT: ${{ env.MAX_WARNING_COUNT }}
+          WARNING_FILE: ${{ steps.docs.outputs.warning-file }}
+          LOG_PATH: ${{ steps.docs.outputs.log-path }}
+          WARNING_ARTIFACT_ID: ${{ steps.upload_warning_artifact.outputs.artifact-id }}
+          DOCS_PREVIEW_ARTIFACT_ID: ${{ steps.upload_docs_preview_artifact.outputs.artifact-id }}
         with:
           script: |
             const marker = '<!-- documentation-warning-report -->';
-            const warningCount = `${{ steps.docs.outputs.warning-count }}`;
-            const maxWarningCount = `${{ env.MAX_WARNING_COUNT }}`;
-            const warningFile = `${{ steps.docs.outputs.warning-file }}`;
-            const logPath = `${{ steps.docs.outputs.log-path }}`;
+            const warningCount = process.env.WARNING_COUNT || 'unknown';
+            const maxWarningCount = process.env.MAX_WARNING_COUNT || 'unknown';
+            const warningFile = process.env.WARNING_FILE || '';
+            const logPath = process.env.LOG_PATH || '';
             const runUrl = `${context.serverUrl}/${context.repo.owner}/${context.repo.repo}/actions/runs/${context.runId}`;
 
-            const warningArtifactId = `${{ steps.upload_warning_artifact.outputs.artifact-id }}`;
-            const docsPreviewArtifactId = `${{ steps.upload_docs_preview_artifact.outputs.artifact-id }}`;
+            const warningArtifactId = process.env.WARNING_ARTIFACT_ID || '';
+            const docsPreviewArtifactId = process.env.DOCS_PREVIEW_ARTIFACT_ID || '';
 
             const warningArtifactUrl = warningArtifactId
               ? `${runUrl}/artifacts/${warningArtifactId}`
@@ -154,15 +161,21 @@ jobs:
               ? `${runUrl}/artifacts/${docsPreviewArtifactId}`
               : `${runUrl}#artifacts`;
 
+            const code = (value) => '`' + value + '`';
             const body = [
               marker,
               '## Documentation warning report',
               '',
               `- Warning count: ${warningCount}`,
               `- Max warning count: ${maxWarningCount} (-1 means disabled)`,
-              `- Warning file: \`${warningFile}\``,
-              `- Docs log: \`${logPath}\``,
-              '- projectDocu sources: `winccoa-tools-pack/docu-builder-theme` -> `.docu-builder-theme`, `.winccoa-docu-builder`',
+              `- Warning file: ${code(warningFile)}`,
+              `- Docs log: ${code(logPath)}`,
+              '- projectDocu sources: ' +
+                code('winccoa-tools-pack/docu-builder-theme') +
+                ' -> ' +
+                code('.docu-builder-theme') +
+                ', ' +
+                code('.winccoa-docu-builder'),
               '- Configuration and log debug files are included in the warning artifact',
               `- Docs preview artifact: ${docsPreviewArtifactUrl}`,
               `- Warning report artifact: ${warningArtifactUrl}`,
