@@ -9,9 +9,15 @@ on:
       - main
   workflow_dispatch:
 
+# Cancel older runs on the same PR/branch so report comments are not stacked.
+concurrency:
+  group: syntax-check-${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
 permissions:
   contents: read
   packages: read
+  pull-requests: write
 
 jobs:
   syntax-check:
@@ -36,10 +42,67 @@ jobs:
         run: docker pull "$WINCCOA_IMAGE"
 
       - name: Run syntax check
+        id: syntax
+        continue-on-error: true
         uses: winccoa-tools-pack/github-actions-winccoa/actions/winccoa-syntax-check@main
         with:
           path: ${{ env.PROJECT_PATH }}
           winccoa-version: '3.21'
+          docker-image: ${{ env.WINCCOA_IMAGE }}
           languages: |
             en_US.utf8
           fail-on-error: 'true'
+          log-path: .artifacts/syntax-check.log
+
+      - name: Upload syntax log
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: syntax-check-log
+          path: |
+            .artifacts/syntax-check.log
+            ${{ steps.syntax.outputs.log-path }}
+          if-no-files-found: warn
+
+      - name: Report syntax findings on PR
+        id: report
+        if: always() && github.event_name == 'pull_request'
+        uses: winccoa-tools-pack/github-actions-winccoa/actions/winccoa-logs-to-pr-review@main
+        with:
+          log-path: ${{ steps.syntax.outputs.log-path || '.artifacts/syntax-check.log' }}
+          title: Syntax check report
+          comment-marker: '<!-- winccoa-syntax-check-report -->'
+          include-error-types: CTRL
+          review-comments: 'true'
+          comment-on-pr: 'true'
+          # Legacy baseline: only active findings (files touched by this PR) fail the job
+          ignore-outside-pr-changes: 'true'
+          fail-on-findings: 'false'
+          package-version: '0.1.1'
+
+      # PR: fail only when active findings remain after ignore-outside-pr-changes.
+      # Push / workflow_dispatch: fail when the syntax step itself failed.
+      - name: Fail job if active syntax issues remain
+        if: always()
+        run: |
+          if [ "${{ github.event_name }}" = "pull_request" ]; then
+            FINDINGS="${{ steps.report.outputs.finding-count }}"
+            FINDINGS="${FINDINGS:-0}"
+            IGNORED="${{ steps.report.outputs.ignored-count }}"
+            IGNORED="${IGNORED:-0}"
+            TOTAL="${{ steps.report.outputs.finding-count-total }}"
+            TOTAL="${TOTAL:-$FINDINGS}"
+            echo "Active findings=${FINDINGS} ignored=${IGNORED} total=${TOTAL}"
+            if [ "$FINDINGS" -gt 0 ]; then
+              echo "::error::Syntax check has ${FINDINGS} active finding(s) in PR-changed files (ignored outside PR: ${IGNORED})."
+              exit 1
+            fi
+            if [ "$IGNORED" -gt 0 ]; then
+              echo "Note: ${IGNORED} finding(s) outside PR changes were ignored."
+            fi
+            exit 0
+          fi
+          if [ "${{ steps.syntax.outcome }}" = "failure" ]; then
+            echo "::error::Syntax check failed (see log artifact)."
+            exit 1
+          fi

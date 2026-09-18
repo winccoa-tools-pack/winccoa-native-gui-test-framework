@@ -2,6 +2,9 @@
 
 is a framework to test WinCC OA native panels (GUI) provided in the .pnl or .xml format.
 
+Narrative guides live under [docs/](docs/README.md). API reference is generated
+from CTL Doxygen comments; this README is the help **main page**.
+
 ----
 
 ## Usage
@@ -13,6 +16,8 @@ is a framework to test WinCC OA native panels (GUI) provided in the .pnl or .xml
 + create screenshots on assertions
 + bind tests into WinCC OA test frameworks
 + ...
+
+For a longer walkthrough, see [docs/usage.md](docs/usage.md).
 
 Squirt GUI tests are based on the WinCC OA `OaTest` class and therefore follow the WinCC OA Test concept.
 
@@ -26,7 +31,7 @@ Execution options:
 
 ## Configuration
 
-TBD
+TBD — extend [docs/](docs/README.md) when configuration details stabilize.
 
 ----
 
@@ -39,7 +44,8 @@ TBD
 ## Roadmap
 
 + VS Code integration is coming soon.
-+ AI repository instructions are available in [../../.github/copilot-instructions.md](../../.github/copilot-instructions.md).
++ AI repository instructions are available in the repository root at
+  `../../.github/copilot-instructions.md`.
 + GitHub Actions integration is coming soon.
 + GitHub Actions overview plan:
   + Phase 1: repository checks (lint/format checks and basic documentation validation).
@@ -59,6 +65,12 @@ TBD
 ### Code coverage
 
 TBD
+
+### Documentation
+
+- API docs: Doxygen in `.ctl` sources
+- Guides and concepts: [docs/](docs/README.md)
+- See [docs/contributing-docs.md](docs/contributing-docs.md)
 
 ----
 
@@ -81,3 +93,8 @@ Only WinCC OA shapes are possible to record / re-play. That means no file-select
 
 + Create smaller test cases instead of complex long duration tests. It will help you for analysis and you does not need
   to record whole scenario, when something changes
+
+----
+
+<!-- markdownlint-disable-next-line MD033 -->
+<center>Made with ❤️ for and by the WinCC OA community</center>

@@ -19,7 +19,7 @@ Thank you for contributing to this repository.
 - Run relevant GUI tests for impacted panels/shapes.
 - For behavior changes, include at least one reproducible validation step.
 - When possible, update or add VP data and screenshots for changed behavior.
-- Pull requests are expected to pass the Doxygen warning gate without
+- Pull requests are expected to pass the documentation warning gate without
   introducing new warnings compared to the base branch.
 
 ## Commit and PR guidance
@@ -32,8 +32,17 @@ Thank you for contributing to this repository.
 
 ## CI/CD maintainer setup (Docs workflow)
 
-The Docs workflow pulls a WinCC OA helper image from GHCR and deploys help to
-GitHub Pages.
+The Docs workflow (`.github/workflows/docs.yml`) is the **single** documentation
+build path for:
+
+- pull requests: Doxygen warning gate, PR annotations/comment, HTML preview
+  artifact
+- `main` push / manual dispatch: the same build, then GitHub Pages deploy
+
+It pulls a WinCC OA helper image from GHCR, builds help once via
+`winccoa-docu-builder`, and (on `main` only) deploys HTML to GitHub Pages.
+There is no separate documentation-warning-gate workflow; that avoided a second
+full image pull and Doxygen run.
 
 IMPORTANT - most frequent time sink:
 
@@ -72,12 +81,12 @@ Pages deployment requirements:
   repository-level Pages setting is enabled.
 - The workflow uses the built-in `GITHUB_TOKEN` for Pages deploy.
 - Required workflow permissions are set in `.github/workflows/docs.yml`
-  (`pages: write`, `id-token: write`, `contents: read`).
+  (`pages: write`, `id-token: write`, `contents: read`, `pull-requests: write`).
 
 Shared action requirements:
 
 - Docs workflows now use the shared action
-  `winccoa-tools-pack/github-actions-winccoa/actions/winccoa-build-docs@main`.
+  `winccoa-tools-pack/github-actions-winccoa/actions/winccoa-docu-builder@main`.
 - If the shared action repository is private or internal, allow this repository
   to use actions from that repository in org/repository Actions settings.
 - If workflow validation reports "repository or version not found" for that
@@ -89,7 +98,7 @@ Image/runtime requirements:
 
 - The image must contain a WinCC OA 3.21 installation at
   `/opt/WinCC_OA/3.21`.
-- The workflow installs `doxygen` inside the container if `apt-get` is
+- The workflow installs required documentation tooling inside the container if `apt-get` is
   available.
 - The workflow creates a temporary WinCC OA config and initializes SQLite
   before running `buildHelp.ctl`.
@@ -101,8 +110,8 @@ Typical failures and fixes:
   ensure `DOCKER_USER` / `DOCKER_PASSWORD` are available when private package
   access is required.
 
-- Error: `doxygen: command not found`
-- Fix: ensure the image supports `apt-get`, or preinstall `doxygen` in the
+- Error: documentation tooling is not available in the image
+- Fix: ensure the image supports `apt-get`, or preinstall the required tooling in the
   published WinCC OA image.
 
 - Error: WinCC OA tools fail due to missing project DB/config

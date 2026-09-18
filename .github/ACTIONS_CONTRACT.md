@@ -94,34 +94,38 @@ Generated and uploaded automatically (when enabled via inputs):
 
 ## Action: ctrl-code-style-check
 
-**Location:** `.github/actions/ctrl-code-style-check`
+**Location:** workflow uses
+`winccoa-tools-pack/github-actions-winccoa/actions/winccoa-style-check@main`
 
-**Purpose:** Validate CTL formatting using
-`OaDevTools/scripts/astyle.ctl`.
+**Purpose:** Validate CTL formatting via
+`@winccoa-tools-pack/npm-winccoa-ctrl-code-style` (bundled StyleCheck +
+`astyle.ctl`). The legacy in-repo `OaDevTools` runner project is removed.
 
-### Ctrl Code Style Inputs
+### Ctrl Code Style Inputs (composite action)
 
 | Input | Required | Type | Description |
 | ----- | -------- | ---- | ----------- |
-| `source-paths` | no | string | Space-separated directories to check (default: `src/Squirt tests/WinCC_OA_Test`) |
-| `runner-project-path` | no | string | Path to runner project used for dynamic config creation |
-| `script-path` | no | string | Path to `astyle.ctl` in this repository (default: `OaDevTools/scripts/astyle.ctl`) |
+| `path` | yes | string | Runnable worker project path (e.g. `src/Squirt`) |
+| `source-path` | yes | string | Directory of CTL sources to check |
 | `winccoa-version` | yes | string | WinCC OA version |
 | `docker-image` | yes | string | Container image used for execution |
-| `language` | no | string | WinCC OA language for script execution |
+| `command` | no | string | `check` or `format` |
+| `package-version` | no | string | npm-winccoa-ctrl-code-style version |
+| `fail-on-error` | no | string | Fail the step when style issues are found |
+| `log-path` | no | string | Path for captured style log |
 
 ### Ctrl Code Style Behavior
 
-- Creates a temporary WinCC OA config dynamically.
-- Registers with `WCCILpmon -autofreg`.
-- Calls `WCCOActrl` with absolute script path to `astyle.ctl`.
-- Fails if log output indicates files would be changed (`formatted`, `geändert`, `changed`).
+- Registers the worker project and a non-runnable StyleCheck sub-project.
+- Runs `WCCOActrl` with bare script name `astyle.ctl` resolved via StyleCheck
+  on `proj_path`.
+- Fails when dry-run reports files that would change.
 
 ---
 
 ## Action: ctrl-copyright-check
 
-**Location:** `.github/actions/ctrl-copyright-check`
+**Location:** `winccoa-tools-pack/github-actions-winccoa/actions/ctrl-copyright-check@main`
 
 **Purpose:** Validate CTL headers for owner/license mismatches.
 
@@ -130,13 +134,16 @@ Generated and uploaded automatically (when enabled via inputs):
 | Input | Required | Type | Description |
 | ----- | -------- | ---- | ----------- |
 | `source-paths` | no | string | Space-separated directories to scan |
-| `script-path` | no | string | Path to `copyright.ctl` in this repository (default: `OaDevTools/scripts/copyright.ctl`) |
+| `script-path` | no | string | Optional helper path; existence-checked only when set (unused by this repo) |
 | `expected-owner` | no | string | Expected owner string in copyright lines |
 | `expected-spdx` | no | string | Expected SPDX identifier |
+| `blacklist` | no | string | Newline- or space-separated repo-relative paths of known exceptions that cannot carry the standard license header (`#` comments allowed) |
 
 ### Ctrl Copyright Behavior
 
-- Scans all `*.ctl` files in configured source paths.
+- Scans all `*.ctl` files in configured source paths (shell action logic; no
+  in-repo CTL runner project required).
+- Skips paths listed in `blacklist` and records them as `SKIPPED-BLACKLIST`.
 - Fails on legacy `SIEMENS AG` or `GPL-3.0-only` markers.
 - Produces an artifact log file under `.artifacts` for diagnostics.
 

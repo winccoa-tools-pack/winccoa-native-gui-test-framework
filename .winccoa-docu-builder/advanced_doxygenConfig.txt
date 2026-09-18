@@ -1,0 +1,69 @@
+HAVE_DOT               = YES
+DOT_PATH               =
+QHP_NAMESPACE          = "winccoa_%WINCCOA_VERSION%_squirt_en"
+QHP_VIRTUAL_FOLDER     = "doc"
+
+QHP_SECT_FILTER_ATTRS = "winccoa squirt %WINCCOA_VERSION% en de"
+CLASS_GRAPH            = NO
+COLLABORATION_GRAPH    = NO
+GROUP_GRAPHS           = NO
+INCLUDE_GRAPH          = NO
+INCLUDED_BY_GRAPH      = NO
+CALL_GRAPH             = NO
+CALLER_GRAPH           = NO
+GRAPHICAL_HIERARCHY    = NO
+DIRECTORY_GRAPH        = NO
+GENERATE_LEGEND        = NO
+IMAGE_PATH             =
+
+PROJECT_NAME           = "Squirt  %WINCCOA_VERSION%"
+PROJECT_NUMBER         = ""
+
+GENERATE_BUGLIST       = YES
+GENERATE_TODOLIST      = YES
+
+# Durable warning capture independent of OA system() stderr plumbing.
+# WinCC OA DoxygenConfig replaces $PROJ_PATH when appending this fragment.
+WARN_LOGFILE           = "$PROJ_PATH/log/doxygen_warn_logfile.txt"
+
+# Narrative documentation lives next to the worker project, not only in CTL.
+# OA still generates INPUT from the temp CTL generator; append Markdown sources.
+INPUT                 += "$PROJ_PATH/README.md" \
+                         "$PROJ_PATH/docs"
+FILE_PATTERNS         += *.md \
+                         *.markdown \
+                         *.mdown
+USE_MDFILE_AS_MAINPAGE = "$PROJ_PATH/README.md"
+IMAGE_PATH            += "$PROJ_PATH/docs" \
+                         "$PROJ_PATH/images"
+
+COLS_IN_ALPHA_INDEX    = 10
+
+# Doxygen Awesome (jothepro/doxygen-awesome-css v2.3.4) - base + sidebar theme.
+# Assets live in data/projectDocu after merge from docu-builder-theme.
+# Do NOT ship extra_stylesheet.css: OA maps that to HTML_STYLESHEET (full
+# replace). Awesome must layer via HTML_EXTRA_STYLESHEET instead.
+# Keep HTML_DYNAMIC_MENUS as OA default (NO when QHP is generated) so Qt
+# Online Help stays valid; browser HTML still loads Awesome extension JS.
+GENERATE_TREEVIEW      = YES
+DISABLE_INDEX          = NO
+FULL_SIDEBAR           = NO
+HTML_COLORSTYLE        = LIGHT
+HTML_COPY_CLIPBOARD    = NO
+HTML_EXTRA_STYLESHEET  = "$PROJ_PATH/data/projectDocu/doxygen-awesome.css" \
+                         "$PROJ_PATH/data/projectDocu/doxygen-awesome-sidebar-only.css" \
+                         "$PROJ_PATH/data/projectDocu/doxygen-awesome-sidebar-only-darkmode-toggle.css"
+HTML_EXTRA_FILES       = "$PROJ_PATH/data/projectDocu/doxygen-awesome-darkmode-toggle.js" \
+                         "$PROJ_PATH/data/projectDocu/doxygen-awesome-fragment-copy-button.js" \
+                         "$PROJ_PATH/data/projectDocu/doxygen-awesome-paragraph-link.js" \
+                         "$PROJ_PATH/data/projectDocu/doxygen-awesome-interactive-toc.js" \
+                         "$PROJ_PATH/data/projectDocu/doxygen-awesome-tabs.js"
+
+ALIASES += synchronized="@attention  Synchronized reason:^^"
+ALIASES += synopsis="<b>Synopsis:</b>^^"
+ALIASES += var_type="<strong>Variable type:</strong>^^"
+ALIASES += exampleDescription="<strong>Example:</strong>^^"
+ALIASES += NoExternalUse="@li Do not use in extern application. Allowed only to be used inside the @doxyconfig PROJECT_NAME"
+ALIASES += AllowInTestScope="@li Allowed to be used inside OaTest scope."
+ALIASES += Restricted="@attention Restricted usage:^^"
+ALIASES += AIgeneratedHelpContent="@attention This documentation is created with the help of an artificial intelligence."
