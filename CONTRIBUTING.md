@@ -32,8 +32,17 @@ Thank you for contributing to this repository.
 
 ## CI/CD maintainer setup (Docs workflow)
 
-The Docs workflow pulls a WinCC OA helper image from GHCR and deploys help to
-GitHub Pages.
+The Docs workflow (`.github/workflows/docs.yml`) is the **single** documentation
+build path for:
+
+- pull requests: Doxygen warning gate, PR annotations/comment, HTML preview
+  artifact
+- `main` push / manual dispatch: the same build, then GitHub Pages deploy
+
+It pulls a WinCC OA helper image from GHCR, builds help once via
+`winccoa-docu-builder`, and (on `main` only) deploys HTML to GitHub Pages.
+There is no separate documentation-warning-gate workflow; that avoided a second
+full image pull and Doxygen run.
 
 IMPORTANT - most frequent time sink:
 
@@ -72,12 +81,12 @@ Pages deployment requirements:
   repository-level Pages setting is enabled.
 - The workflow uses the built-in `GITHUB_TOKEN` for Pages deploy.
 - Required workflow permissions are set in `.github/workflows/docs.yml`
-  (`pages: write`, `id-token: write`, `contents: read`).
+  (`pages: write`, `id-token: write`, `contents: read`, `pull-requests: write`).
 
 Shared action requirements:
 
 - Docs workflows now use the shared action
-  `winccoa-tools-pack/github-actions-winccoa/actions/winccoa-build-docs@main`.
+  `winccoa-tools-pack/github-actions-winccoa/actions/winccoa-docu-builder@main`.
 - If the shared action repository is private or internal, allow this repository
   to use actions from that repository in org/repository Actions settings.
 - If workflow validation reports "repository or version not found" for that

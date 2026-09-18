@@ -3,6 +3,9 @@
   SPDX-License-Identifier: MIT
 */
 
+/**
+  @file $relPath
+*/
 
 #uses "classes/splash/OaGuiTest" // load all necessary classes
 #uses "oaGuiTestShapes"

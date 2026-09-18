@@ -1,14 +1,26 @@
-# devTools — WinCC OA Node CLIs
+﻿# devTools — WinCC OA helper CLIs
 
-This folder contains small Node CLIs to register a WinCC OA runner and to invoke `WCCOActrl` from Node.
+Small Node CLIs under this folder. Prefer the published org packages and
+GitHub Actions for day-to-day work; these helpers remain for local experiments.
 
-Packages:
-- `devTools/npm-winccoa-register` — writes runner config and attempts programmatic project registration via `@winccoa-tools-pack/npm-winccoa-core`.
-- `devTools/npm-winccoa-ctrl` — wrapper to run `WCCOActrl.exe` and forward its exit code.
+| Package | Role |
+| --- | --- |
+| `devTools/npm-winccoa-register` | Write runner config / register a project |
+| `devTools/npm-winccoa-ctrl` | Invoke `WCCOActrl` and forward its exit code |
+| `devTools/github-action-run-ctl` | Local composite-style CTL runner notes |
 
-Quick start
+## Preferred replacements
 
-1. Install dependencies for each package (or run per-package):
+| Old `OaDevTools` use | Use instead |
+| --- | --- |
+| CTL astyle dry-run | `@winccoa-tools-pack/npm-winccoa-ctrl-code-style` / action `winccoa-style-check` |
+| Copyright header check | action `ctrl-copyright-check` (no in-repo CTL project) |
+| Docs build runner | `src/Squirt` + `winccoa-docu-builder` |
+
+The legacy **`OaDevTools`** WinCC OA mini-project was removed from this
+repository. Do not register or point scripts at it.
+
+## Quick start (local Node helpers)
 
 ```powershell
 cd devTools\npm-winccoa-register
@@ -18,59 +30,33 @@ cd ..\npm-winccoa-ctrl
 npm install
 ```
 
-2. Register a runner (creates `runner/config/config` and attempts registration):
+Register the **worker** project (example):
 
 ```powershell
-node devTools\npm-winccoa-register\index.js "C:\path\to\repo" "C:\Program Files\Siemens\WinCC_OA\3.21" "C:\path\to\repo\OaDevTools" 3.21
+node devTools\npm-winccoa-register\index.js `
+  "C:\ws\winccoa-tools-pack\winccoa-native-gui-test-framework" `
+  "C:\Program Files\Siemens\WinCC_OA\3.21" `
+  "C:\ws\winccoa-tools-pack\winccoa-native-gui-test-framework\src\Squirt" `
+  3.21
 ```
 
-3. Run a CTL script via `WCCOActrl` using the run wrapper:
+Run an arbitrary CTL script against the worker config:
 
 ```powershell
-node devTools\npm-winccoa-ctrl\index.js run "C:\Program Files\Siemens\WinCC_OA\3.21\bin" "C:\path\to\repo\OaDevTools\config\config" "C:\path\to\script.ctl" [args...]
+node devTools\npm-winccoa-ctrl\index.js run `
+  "C:\Program Files\Siemens\WinCC_OA\3.21\bin" `
+  "C:\ws\winccoa-tools-pack\winccoa-native-gui-test-framework\src\Squirt\config\config" `
+  "C:\path\to\script.ctl"
 ```
 
-Notes
-- Registration tries `ProjEnvProject` / `setDir()` from `@winccoa-tools-pack/npm-winccoa-core` when available; otherwise falls back to writing the config file.
-- The register CLI will wait briefly for registration to complete and exit with:
-  - `0` = success
-  - `2` = registration did not complete in time
-  - `3` = unexpected error
-- The `run` wrapper forwards the exact exit code returned by `WCCOActrl.exe`.
+## Notes
 
-If you want, publish these packages to npm or use `npx` wrappers for convenience in CI.
+- Registration tries `ProjEnvProject` / `setDir()` from
+  `@winccoa-tools-pack/npm-winccoa-core` when available; otherwise it falls back
+  to writing the config file.
+- The `run` wrapper forwards STDOUT/STDERR and the exit code from `WCCOActrl`.
 
 ---
 
+<!-- markdownlint-disable-next-line MD033 -->
 <center>Made with ❤️ for and by the WinCC OA community</center>
-# devTools — WinCC OA helper CLIs
-
-We replaced the PowerShell helpers with small Node CLIs located under `devTools/npm-winccoa-ctrl` and
-`devTools/npm-winccoa-register`.
-
-Prerequisites
-- Node.js 14+ installed and available on PATH.
-
-Register runner (create config and dirs)
-
-From the repository root, run:
-
-```powershell
-node devTools/npm-winccoa-ctrl/index.js register . "C:/Program Files/Siemens/WinCC_OA/3.21" "C:/ws/winccoa-tools-pack/winccoa-native-gui-test-framework/OaDevTools" 3.21
-```
-
-Or use the standalone register CLI:
-
-```powershell
-node devTools/npm-winccoa-register/index.js . "C:/Program Files/Siemens/WinCC_OA/3.21" "C:/ws/winccoa-tools-pack/winccoa-native-gui-test-framework/OaDevTools" 3.21
-```
-
-Run a `.ctl` helper (invokes `WCCOActrl.exe` and returns its exit code)
-
-```powershell
-node devTools/npm-winccoa-ctrl/index.js run "C:/Program Files/Siemens/WinCC_OA/3.21/bin" "C:/ws/winccoa-tools-pack/winccoa-native-gui-test-framework/OaDevTools/config/config" "C:/ws/winccoa-tools-pack/winccoa-native-gui-test-framework/OaDevTools/scripts/copyright.ctl" TRUE
-```
-
-Notes
-- The `run` command forwards STDOUT/STDERR from `WCCOActrl.exe` and exits with the same exit code.
-- You can wrap `node` with `npx` or install the tools locally/global for convenience.

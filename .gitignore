@@ -1,11 +1,23 @@
-
 # WinCC OA backup files
 *.bak
 
 
 pw.cmd
 tests/WinCC_OA_Test/Projects/TfCustomizedSquirt/config/config
+tests/WinCC_OA_Test/Projects/Stored
+!tests/WinCC_OA_Test/Projects/Stored/README.md
+tests/WinCC_OA_Test/Results
+!tests/WinCC_OA_Test/Results/README.md
 
 # WinCC OA artifacts and logs
 .artifacts/
 *.log
+
+# Docu-builder local helpers / merge outputs
+.docu-builder-theme/
+src/Squirt/data/projectDocu/*
+!src/Squirt/data/projectDocu/README.md
+node_modules/
+package-lock.json
+src/Squirt/help/html/
+src/Squirt/log/

@@ -1,6 +1,6 @@
 [general]
 pvss_path = "C:/Program Files/Siemens/WinCC_OA/3.21"
-proj_path = "C:/ws/winccoa-tools-pack/npm-winccoa-ctrl-code-style/winccoa/StyleCheck"
+proj_path = "C:/ws/winccoa-tools-pack/winccoa-native-gui-test-framework/src/.artifacts/DocuBuilder"
 proj_path = "C:/ws/winccoa-tools-pack/winccoa-native-gui-test-framework/src/Squirt"
 proj_version = "3.21"
 langs = "en_US.utf8"

@@ -24,7 +24,6 @@ jobs:
         uses: winccoa-tools-pack/github-actions-winccoa/actions/ctrl-copyright-check@main
         with:
           source-paths: "src/Squirt tests/WinCC_OA_Test"
-          script-path: "OaDevTools/scripts/copyright.ctl"
           expected-owner: "winccoa-tools-pack"
           expected-spdx: "MIT"
           blacklist: |

@@ -1,7 +1,8 @@
-name: Yearly CTL Copyright Update
+name: Yearly Copyright Update
 
 on:
   schedule:
+    # 04:00 UTC on 1 January
     - cron: "0 4 1 1 *"
   workflow_dispatch:
 
@@ -17,23 +18,41 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Update CTL copyright year
-        shell: pwsh
-        run: ./.github/scripts/bump-ctl-copyright-year.ps1
+      # Marketplace: https://github.com/marketplace/actions/update-copyright-year
+      # https://github.com/octivi/update-copyright-year
+      - name: Update copyright years in headers
+        uses: octivi/update-copyright-year@v1
+        with:
+          targets: |
+            .
+            src/Squirt
+            tests/WinCC_OA_Test
+          exclude_paths: |
+            .github/workflows
+            node_modules
+            help
+            log
+          include_glob: |
+            **/*.ctl
+            LICENSE
+          organization_regexp: "winccoa-tools-pack"
+          verbose: "true"
 
       - name: Create pull request
         uses: peter-evans/create-pull-request@v6
         with:
-          branch: chore/yearly-ctl-copyright-update
-          title: "chore: bump CTL copyright year"
-          commit-message: "chore: bump CTL copyright year"
+          branch: chore/yearly-copyright-update
+          delete-branch: true
+          title: "chore: bump copyright year"
+          commit-message: "chore: bump copyright year"
           body: |
             ## Summary
-            - bump CTL copyright year to current year
-            - normalize legacy owner and SPDX markers to repository standards
+            - bump copyright years in CTL headers (and LICENSE when present)
+            - automated via [octivi/update-copyright-year](https://github.com/marketplace/actions/update-copyright-year)
 
             ## Validation
-            - updated by yearly automation workflow
+            - review the diff
+            - existing `ctrl-copyright-check` still enforces owner/SPDX on PRs
           labels: |
             dependencies
             area/build

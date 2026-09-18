@@ -45,8 +45,9 @@ jobs:
           company-name: winccoa-tools-pack
           languages: |
             en_US.utf8
+          theme-repository: winccoa-tools-pack/docu-builder-theme
+          theme-ref: main
           project-docu-paths: |
-            .documentation-theme
             .winccoa-docu-builder
           register-project: 'true'
           package-version: '0.2.1'
@@ -79,7 +80,7 @@ jobs:
             echo
             echo "Use the job log groups for stderr/stdout/WARN_LOGFILE previews and the uploaded artifacts for raw files, HTML preview (incl. todo/bug lists), and configuration/log debug files."
             echo
-            echo "External projectDocu sources: \`.documentation-theme\`, \`.winccoa-docu-builder\` (merged into \`src/Squirt/data/projectDocu\` at build time)."
+            echo "External projectDocu sources: shared theme \`winccoa-tools-pack/docu-builder-theme\` (checked out to \`.docu-builder-theme\`) + \`.winccoa-docu-builder\` (merged into \`src/Squirt/data/projectDocu\` at build time)."
             echo
             echo "### Top ${TOP_WARNING_LINES} warnings"
             echo
@@ -146,7 +147,7 @@ jobs:
               `- Max warning count: ${maxWarningCount} (-1 means disabled)`,
               `- Warning file: \`${warningFile}\``,
               `- Docs log: \`${logPath}\``,
-              `- projectDocu sources: \`.documentation-theme\`, \`.winccoa-docu-builder\``,
+              `- projectDocu sources: `winccoa-tools-pack/docu-builder-theme` -> `.docu-builder-theme`, `.winccoa-docu-builder`,
               `- Configuration and log debug files are included in the warning artifact`,
               `- Docs preview artifact: ${docsPreviewArtifactUrl}`,
               `- Warning report artifact: ${warningArtifactUrl}`,
