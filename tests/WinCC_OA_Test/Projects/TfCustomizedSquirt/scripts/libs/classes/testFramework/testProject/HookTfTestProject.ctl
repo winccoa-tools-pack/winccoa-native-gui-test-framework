@@ -84,7 +84,7 @@ class HookTfTestProject : TfTestProject
 
           // in both feature and production branches we log a warning and set test-assertion to fail to force the teams to fix their test projects
           this._errHdl.throwErr(makeError("", PRIO_WARNING, ERR_CONTROL, 54, errText));
-          
+
 
           this.changeManagerOptions(i - 1, manager);
         }

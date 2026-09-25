@@ -78,7 +78,7 @@ class TstGuiTestPushButton : OaTest
                                "font", (langString)"Segoe UI,9,-1,5,400,0,0,0,0,0,0,0,0,0,0,1",
                                "textPosition", "TEXT_RIGHT_OF_PIXMAP",
                                "text", (langString)"testButton"
-                               );
+                             );
     const mapping current = testShapeObject.getCurrentAttributes();
 
     this.assertEqual(expected.count(), current.count(), "Check count of attributes");

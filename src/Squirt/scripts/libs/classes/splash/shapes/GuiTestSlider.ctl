@@ -35,9 +35,9 @@ class GuiTestSlider : GuiTestShape
     anytype invertedAppearance, invertedControls, isActiveWindow, sliderDown, tracking, updatesEnabled, windowModified, focus;
     anytype x1, y1, w, h;
     anytype cursor, height, lineStep, maximum, maxValue, minimum, minValue, pageStep, singleStep, sliderPosition, tickInterval, toolTipDuration,
-        value, Value, width, x, y, BorderWidth;
+            value, Value, width, x, y, BorderWidth;
     anytype accessibleDescription, accessibleName, contextMenuPolicy, inputMethodHints, layoutDirection, orientation, statusTip,
-           styleSheet, tickPosition;
+            styleSheet, tickPosition;
     anytype windowOpacity;
 
     getValue(this.testShape,

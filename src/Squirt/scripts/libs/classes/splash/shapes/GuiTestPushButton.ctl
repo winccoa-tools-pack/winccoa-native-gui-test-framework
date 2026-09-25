@@ -33,11 +33,11 @@ class GuiTestPushButton : GuiTestShape
 
     anytype visible, enabled, x, y, w, h,
 
-     toggleState, updatesEnabled,
-     buttonType,
-     borderStyle, fill, textPosition,
-     font,
-     text;
+            toggleState, updatesEnabled,
+            buttonType,
+            borderStyle, fill, textPosition,
+            font,
+            text;
 
     getValue(this.testShape,
              "visible", visible,

@@ -32,14 +32,14 @@ class GuiTestEmbeddedModule : GuiTestShape
   {
 
     anytype visible, enabled, focus, isActiveWindow, newPanelAnimateOpacity, newPanelAnimateSize, oldPanelAnimateOpacity, oldPanelAnimateSize, updatesEnabled,
-         windowModified;
+            windowModified;
     anytype x1, y1, w, h;
     anytype        contentsHeight, contentsWidth, contentsX, contentsY, cursor, frameWidth, height, lineWidth, midLineWidth, newPanelAnimDuration,
-               oldPanelAnimDuration, toolTipDuration, visibleHeight, visibleWidth, width, x, y;
+                   oldPanelAnimDuration, toolTipDuration, visibleHeight, visibleWidth, width, x, y;
     anytype      windowOpacity;
     anytype     accessibleDescription, accessibleName, alignment, frameShadow, frameShape, horizontalScrollBarPolicy,
-               inputMethodHints, ModuleName, newPanelAnimType, newPanelEasingCurve, oldPanelAnimType, oldPanelEasingCurve, sizeAdjustPolicy,
-               statusTip, styleSheet, verticalScrollBarPolicy, vScrollBarMode, whatsThis, hScrollBarMode;
+                inputMethodHints, ModuleName, newPanelAnimType, newPanelEasingCurve, oldPanelAnimType, oldPanelEasingCurve, sizeAdjustPolicy,
+                statusTip, styleSheet, verticalScrollBarPolicy, vScrollBarMode, whatsThis, hScrollBarMode;
 
     getValue(this.testShape,
              "visible", visible,
