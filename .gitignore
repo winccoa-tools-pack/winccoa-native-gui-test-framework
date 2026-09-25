@@ -8,10 +8,11 @@ tests/WinCC_OA_Test/Projects/Stored
 !tests/WinCC_OA_Test/Projects/Stored/README.md
 tests/WinCC_OA_Test/Results
 !tests/WinCC_OA_Test/Results/README.md
+tests/WinCC_OA_Test/Projects/Running
 
 # WinCC OA artifacts and logs
 .artifacts/
-*.log
+tests/WinCC_OA_Test/Projects/TfCustomizedSquirt/log/
 
 # Docu-builder local helpers / merge outputs
 .docu-builder-theme/
@@ -23,3 +24,6 @@ src/Squirt/help/html/
 src/Squirt/log/
 src/Squirt/data/help.qhc
 .help/
+
+# APM dependencies
+apm_modules/

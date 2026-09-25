@@ -31,13 +31,13 @@ class GuiTestEmbeddedModule : GuiTestShape
   public mapping getCurrentAttributes()
   {
 
-    bool visible, enabled, focus, isActiveWindow, newPanelAnimateOpacity, newPanelAnimateSize, oldPanelAnimateOpacity, oldPanelAnimateSize, updatesEnabled,
+    anytype visible, enabled, focus, isActiveWindow, newPanelAnimateOpacity, newPanelAnimateSize, oldPanelAnimateOpacity, oldPanelAnimateSize, updatesEnabled,
          windowModified;
-    int x1, y1, w, h;
-    int        contentsHeight, contentsWidth, contentsX, contentsY, cursor, frameWidth, height, lineWidth, midLineWidth, newPanelAnimDuration,
+    anytype x1, y1, w, h;
+    anytype        contentsHeight, contentsWidth, contentsX, contentsY, cursor, frameWidth, height, lineWidth, midLineWidth, newPanelAnimDuration,
                oldPanelAnimDuration, toolTipDuration, visibleHeight, visibleWidth, width, x, y;
-    float      windowOpacity;
-    string     accessibleDescription, accessibleName, alignment, frameShadow, frameShape, horizontalScrollBarPolicy,
+    anytype      windowOpacity;
+    anytype     accessibleDescription, accessibleName, alignment, frameShadow, frameShape, horizontalScrollBarPolicy,
                inputMethodHints, ModuleName, newPanelAnimType, newPanelEasingCurve, oldPanelAnimType, oldPanelEasingCurve, sizeAdjustPolicy,
                statusTip, styleSheet, verticalScrollBarPolicy, vScrollBarMode, whatsThis, hScrollBarMode;
 

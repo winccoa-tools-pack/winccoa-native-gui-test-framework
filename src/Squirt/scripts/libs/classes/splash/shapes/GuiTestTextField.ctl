@@ -18,13 +18,13 @@ class GuiTestTextField : GuiTestShape
   public mapping getCurrentAttributes()
   {
 
-    bool visible, enabled;
-    int x, y, w, h;
+    anytype visible, enabled;
+    anytype x, y, w, h;
 
-    string font;
-    string max, min, text;
-    string borderStyle, format;
-    bool updatesEnabled, editable;
+    anytype font;
+    anytype max, min, text;
+    anytype borderStyle, format;
+    anytype updatesEnabled, editable;
 
     getValue(this.testShape,
              "visible", visible,

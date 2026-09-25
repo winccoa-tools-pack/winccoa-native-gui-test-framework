@@ -31,14 +31,13 @@ class GuiTestPushButton : GuiTestShape
   public mapping getCurrentAttributes()
   {
 
-    bool visible, enabled;
-    int x, y, w, h;
+    anytype visible, enabled, x, y, w, h,
 
-    bool toggleState, updatesEnabled;
-    int buttonType, cursor;
-    string borderStyle, fill, textPosition;
-    string font;
-    string text;
+     toggleState, updatesEnabled,
+     buttonType,
+     borderStyle, fill, textPosition,
+     font,
+     text;
 
     getValue(this.testShape,
              "visible", visible,
@@ -49,7 +48,6 @@ class GuiTestPushButton : GuiTestShape
              "toggleState", toggleState,
              "updatesEnabled", updatesEnabled,
              "buttonType", buttonType,
-             // "cursor", cursor,
              "borderStyle", borderStyle,
              "fill", fill,
              "textPosition", textPosition,
@@ -76,7 +74,6 @@ class GuiTestPushButton : GuiTestShape
              "toggleState", toggleState,
              "updatesEnabled", updatesEnabled,
              "buttonType", buttonType,
-             "cursor", cursor,
              "borderStyle", borderStyle,
              "fill", fill,
              "textPosition", textPosition,
