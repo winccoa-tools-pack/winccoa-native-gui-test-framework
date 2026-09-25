@@ -15,7 +15,7 @@ Register Project TfCustomizedSquirt as runnable project
 Start the WinCC OA Console whithin TfCustomizedSquirt
 Start the WinCC OA ctrl manager testRunner.ctl
 
-## Check CTL formatting locally
+## Style and copyright checks
 
 Use the published package
 [`@winccoa-tools-pack/npm-winccoa-ctrl-code-style`](https://www.npmjs.com/package/@winccoa-tools-pack/npm-winccoa-ctrl-code-style)
