@@ -51,17 +51,18 @@ class HookTfTestRunner : TfTestRunner
       TfErrHdl::outputFormat = OaTestResultFileFormat::JsonFull;
     }
 
+    // in case oyu are running somehwere else than in 0our CI/CD piepeline, you need to register the Squirt sub project to be able to use its libraries
     if (squirtSubProj.isRegistered())
     {
-      DebugTN(__FUNCTION__, "Is registered at the moment", squirtSubProj);
       return 0;
     }
 
     // Register Squirt sub project to be able to use its libraries
-    squirtSubProj.setInstallDir(dirName(dirName(TfFileSys::getTestInstallPath())) + makeNativePath("/src/Squirt/"));
+    squirtSubProj.setInstallDir(dirName(dirName(TfFileSys::getTestInstallPath())) + makeNativePath("/src/"));
     squirtSubProj.setRunnable(false);
-    squirtSubProj.registerProj();
-    return 0;
+    const int rc = squirtSubProj.registerProj();
+
+    return rc;
   }
 
   //------------------------------------------------------------------------------

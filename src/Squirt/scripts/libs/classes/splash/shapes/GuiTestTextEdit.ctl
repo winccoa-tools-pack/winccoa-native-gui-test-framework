@@ -18,9 +18,9 @@ class GuiTestTextEdit : GuiTestShape
   public mapping getCurrentAttributes()
   {
 
-    bool visible, enabled;
-    int x, y, w, h;
-    string text;
+    anytype visible, enabled;
+    anytype x, y, w, h;
+    anytype text;
 
 
     getValue(this.testShape,
