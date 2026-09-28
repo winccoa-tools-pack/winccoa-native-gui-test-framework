@@ -76,7 +76,7 @@ class HookTfTestRunner : TfTestRunner
     TfTestRunner::onExit(exitCode);
   }
 
-  
+
 
   //------------------------------------------------------------------------------
   public int start()
@@ -224,7 +224,7 @@ class HookTfTestRunner : TfTestRunner
 
     if (diagStdErr != "")
       str += "\n\tstderr:\n" + diagStdErr;
-    
+
     throwError(makeError("", PRIO_INFO, ERR_CONTROL, 0,
                          "Display diagnostics", str));
 
