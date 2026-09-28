@@ -34,7 +34,7 @@ class HookTfTestProject : TfTestProject
     if (rc)
       return rc;
 
-    if (this._forcePmonStart)
+    if (this._forcePmonStart && false)
     {
       if (this.startPmon(/*autoStart*/ false) || this.waitUntilPmonIsRunning())
       {
