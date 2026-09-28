@@ -27,3 +27,6 @@ src/Squirt/data/help.qhc
 
 # APM dependencies
 apm_modules/
+# added by APM install
+.github/skills/
+.github/hooks/
