@@ -20,6 +20,7 @@ env:
   TEST_RUNNER_PROJECT: TfCustomizedSquirt
   WINCCOA_IMAGE: ghcr.io/winccoa-tools-pack/winccoa:v3.21.3-debian12-all
   LANGUAGES: en_US.utf8 de_AT.utf8
+  DISPLAY: :99
 
 jobs:
   test-squirt:
@@ -40,6 +41,29 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: '22'
+
+      - name: Start virtual display for GUI-capable WinCC OA managers
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          if ! command -v Xvfb >/dev/null 2>&1; then
+            apt-get update
+            apt-get install -y xvfb xauth x11-utils >/dev/null
+          fi
+
+          Xvfb "${DISPLAY}" -screen 0 1280x1024x24 -nolisten tcp >/tmp/xvfb.log 2>&1 &
+
+          for _ in 1 2 3 4 5; do
+            if xdpyinfo -display "${DISPLAY}" >/dev/null 2>&1; then
+              exit 0
+            fi
+            sleep 1
+          done
+
+          echo "::error::Xvfb did not become ready on ${DISPLAY}"
+          cat /tmp/xvfb.log || true
+          exit 1
 
       - name: Register Squirt as non-runnable sub-project
         shell: bash
