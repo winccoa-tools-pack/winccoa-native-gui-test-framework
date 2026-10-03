@@ -31,9 +31,9 @@ class GuiTestComboBox : GuiTestShape
   public mapping getCurrentAttributes()
   {
 
-    bool visible, enabled, updatesEnabled, editable;
-    int x, y, w, h, cursor, itemCount, selectedPos;
-    string selectedText, text;
+    anytype visible, enabled, updatesEnabled, editable;
+    anytype x, y, w, h, cursor, itemCount, selectedPos;
+    anytype selectedText, text;
 
     getValue(this.testShape,
              "visible", visible,

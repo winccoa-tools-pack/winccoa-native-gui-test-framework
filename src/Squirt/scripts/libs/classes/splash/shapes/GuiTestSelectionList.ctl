@@ -31,8 +31,9 @@ class GuiTestSelectionList : GuiTestShape
   public mapping getCurrentAttributes()
   {
 
-    bool visible, enabled, updatesEnabled, alternatingRowColors;
-    int x, y, w, h, itemCount, selectedPos, cursor;
+    anytype visible, enabled, updatesEnabled, alternatingRowColors;
+    anytype x, y, w, h, itemCount, selectedPos, cursor;
+    anytype selectedText;
 
     getValue(this.testShape,
              "visible", visible,

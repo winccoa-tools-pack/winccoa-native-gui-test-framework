@@ -31,14 +31,14 @@ class GuiTestDpTree : GuiTestShape
   public mapping getCurrentAttributes()
   {
 
-    bool visible, enabled;
-    int x, y, w, h;
-    int cursor = this.testShape.cursor();
-    string selectedItem = this.testShape.selectedItem();
-    string layoutDirection = this.testShape.layoutDirection();
-    bool updatesEnabled = this.testShape.updatesEnabled();
-    bool headerHidden = this.testShape.headerHidden();
-    bool itemsExpandable = this.testShape.itemsExpandable();
+    anytype visible, enabled;
+    anytype x, y, w, h;
+    anytype cursor = this.testShape.cursor();
+    anytype selectedItem = this.testShape.selectedItem();
+    anytype layoutDirection = this.testShape.layoutDirection();
+    anytype updatesEnabled = this.testShape.updatesEnabled();
+    anytype headerHidden = this.testShape.headerHidden();
+    anytype itemsExpandable = this.testShape.itemsExpandable();
 
     getValue(this.testShape,
              "visible", visible,
