@@ -18,7 +18,7 @@ env:
   PROJECT_PATH: src/Squirt
   TEST_PROJECT_PATH: tests/WinCC_OA_Test
   TEST_RUNNER_PROJECT: TfCustomizedSquirt
-  WINCCOA_IMAGE: ghcr.io/winccoa-tools-pack/winccoa:v3.21.3-debian12-all
+  WINCCOA_IMAGE: ghcr.io/winccoa-tools-pack/winccoa:pre-v3.21.6-pr2-debian12-all
   LANGUAGES: en_US.utf8 de_AT.utf8
   DISPLAY: :99
 
@@ -27,7 +27,7 @@ jobs:
     name: WinCC OA TestFramework - Squirt Tests
     runs-on: ubuntu-latest
     container:
-      image: ghcr.io/winccoa-tools-pack/winccoa:v3.21.3-debian12-all
+      image: ghcr.io/winccoa-tools-pack/winccoa:pre-v3.21.6-pr2-debian12-all
       options: --user root
       credentials:
         username: ${{ github.actor }}
