@@ -26,7 +26,7 @@ jobs:
     env:
       WINCCOA_VERSION: 3.21
       PROJECT_PATH: src/Squirt
-      WINCCOA_IMAGE: ghcr.io/winccoa-tools-pack/winccoa:v3.21.3-debian12-all
+      WINCCOA_IMAGE: ghcr.io/winccoa-tools-pack/winccoa:pre-v3.21.6-pr2-debian12-all
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
