@@ -50,12 +50,24 @@ IMPORTANT - most frequent time sink:
   usually package authorization, not workflow syntax.
 - Repository `GITHUB_TOKEN` is repository-scoped. It can log in, but still
   cannot pull a package unless that repository has package read access.
-- This access is managed in the package settings of
-  `ghcr.io/winccoa-tools-pack/winccoa-images` (organization package settings).
+- Do not use a shared organization token in consumer workflows. Each consumer
+  repository must use its own `GITHUB_TOKEN` and receive package read access
+  individually.
+- To request access, open an issue in
+  [`winccoa-tools-pack/.infra`](https://github.com/winccoa-tools-pack/.infra/issues)
+  with the exact consumer repository (`owner/repo`), package name, and reason.
+  An administrator will review the request and grant Actions access manually
+  in the package settings for `ghcr.io/winccoa-tools-pack/winccoa-images`.
+- Keep `packages: read` in the consuming workflow's permissions. This is
+  necessary but does not itself grant package access.
 - Symptom differences:
   - `manifest ... latest not found`: wrong or missing image tag.
   - `denied` after successful login: token/repository has no package read
     authorization.
+- For a step-based job, a denied `docker pull` should report the image reference,
+  confirm login succeeded, and point to the `.infra` access request process.
+  Container jobs pull their image before workflow steps start, so their runner
+  log is controlled by GitHub; use the same package-access checks there.
 
 Current expected setup:
 
