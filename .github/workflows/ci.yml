@@ -76,6 +76,15 @@ jobs:
             --langs "${{ env.LANGUAGES }}" \
             --wincc-oa-version "${{ env.WINCCOA_VERSION }}"
 
+      - name: Verify virtual display before test runner
+        shell: bash
+        run: |
+          set -euo pipefail
+          echo "DISPLAY=${DISPLAY:-<unset>}"
+          ps -eo pid,args | grep '[X]vfb' || true
+          xdpyinfo -display "${DISPLAY:?DISPLAY is not set}" >/dev/null
+          echo "X server is reachable"
+
       - name: Run WinCC OA tests
         id: run-tests
         continue-on-error: true
