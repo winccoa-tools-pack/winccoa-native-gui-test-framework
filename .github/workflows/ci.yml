@@ -21,6 +21,7 @@ env:
   WINCCOA_IMAGE: ghcr.io/winccoa-tools-pack/winccoa-images:3.21.6-debian12-amd64-all
   LANGUAGES: en_US.utf8 de_AT.utf8
   DISPLAY: :99
+  QT_DEBUG_PLUGINS: '1'
 
 jobs:
   test-squirt:
