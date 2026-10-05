@@ -17,5 +17,5 @@ WCCILsim         | always |      30 |        3 |        1 |
 WCCOActrl        | always |      30 |        3 |        1 |webclient_http.ctl -num 2
 WCCOActrl        | always |      30 |        3 |        1 |dashboard.ctl
 node             | always |      30 |        3 |        1 |system-dashboard/index.js
-WCCOAui          | always |      30 |        3 |        1 |-m gedi -user root:
-WCCOAui          | always |      30 |        3 |        1 |-p about.pnl
+WCCOAui          | always |      30 |        3 |        1 |-m gedi -user root: -dbg all
+WCCOAui          | always |      30 |        3 |        1 |-p about.pnl -dbg all
