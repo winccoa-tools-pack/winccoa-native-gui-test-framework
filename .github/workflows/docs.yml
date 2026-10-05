@@ -25,7 +25,7 @@ concurrency:
 env:
   WINCCOA_VERSION: '3.21'
   PROJECT_PATH: src/Squirt
-  WINCCOA_IMAGE: ghcr.io/winccoa-tools-pack/winccoa:pre-v3.21.6-pr2-debian12-all
+  WINCCOA_IMAGE: ghcr.io/winccoa-tools-pack/winccoa-images:3.21.6-debian12-amd64-all
   # Fail PRs on any Doxygen warning; main/publish keeps previous soft gate.
   MAX_WARNING_COUNT: ${{ github.event_name == 'pull_request' && '0' || '-1' }}
 

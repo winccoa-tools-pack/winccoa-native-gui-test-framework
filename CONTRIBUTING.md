@@ -51,7 +51,7 @@ IMPORTANT - most frequent time sink:
 - Repository `GITHUB_TOKEN` is repository-scoped. It can log in, but still
   cannot pull a package unless that repository has package read access.
 - This access is managed in the package settings of
-  `ghcr.io/winccoa-tools-pack/winccoa` (organization package settings).
+  `ghcr.io/winccoa-tools-pack/winccoa-images` (organization package settings).
 - Symptom differences:
   - `manifest ... latest not found`: wrong or missing image tag.
   - `denied` after successful login: token/repository has no package read
@@ -61,7 +61,7 @@ Current expected setup:
 
 - The workflow resolves image from `DOCKER_IMAGE` secret first.
 - If `DOCKER_IMAGE` is not set, it falls back to
-  `ghcr.io/winccoa-tools-pack/winccoa:pre-v3.21.6-pr2-debian12-all`.
+  `ghcr.io/winccoa-tools-pack/winccoa-images:3.21.6-debian12-amd64-all`.
 - If the published image tag changes, update the fallback value in
   `.github/workflows/docs.yml`.
 

@@ -27,7 +27,7 @@ jobs:
       WINCCOA_VERSION: '3.21'
       # Runnable worker project (StyleCheck is registered as non-runnable sub-project)
       PROJECT_PATH: src/Squirt
-      WINCCOA_IMAGE: ghcr.io/winccoa-tools-pack/winccoa:pre-v3.21.6-pr2-debian12-all
+      WINCCOA_IMAGE: ghcr.io/winccoa-tools-pack/winccoa-images:3.21.6-debian12-amd64-all
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
