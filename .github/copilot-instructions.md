@@ -107,7 +107,7 @@ When behavior or workflows change, update relevant docs in the same change:
   - In this case, the repository token can authenticate, but the repository is
     not authorized to read the package.
   - Check org package access settings for
-    `ghcr.io/winccoa-tools-pack/winccoa` before changing workflow logic.
+    `ghcr.io/winccoa-tools-pack/winccoa-images` before changing workflow logic.
   - If error says `manifest ... latest not found`, fix the image tag first.
 - TODO: Add repository settings as code via `.github/repository.settings.yml`
   and manage branch protections through versioned GitHub rulesets.

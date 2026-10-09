@@ -18,15 +18,18 @@ env:
   PROJECT_PATH: src/Squirt
   TEST_PROJECT_PATH: tests/WinCC_OA_Test
   TEST_RUNNER_PROJECT: TfCustomizedSquirt
-  WINCCOA_IMAGE: ghcr.io/winccoa-tools-pack/winccoa:v3.21.3-debian12-all
+  WINCCOA_IMAGE: ghcr.io/winccoa-tools-pack/winccoa-images:3.21.6-debian12-amd64-all
   LANGUAGES: en_US.utf8 de_AT.utf8
+  DISPLAY: :0
+  QT_QPA_PLATFORM: xcb
+  QT_DEBUG_PLUGINS: '1'
 
 jobs:
   test-squirt:
     name: WinCC OA TestFramework - Squirt Tests
     runs-on: ubuntu-latest
     container:
-      image: ghcr.io/winccoa-tools-pack/winccoa:v3.21.3-debian12-all
+      image: ghcr.io/winccoa-tools-pack/winccoa-images:3.21.6-debian12-amd64-all
       options: --user root
       credentials:
         username: ${{ github.actor }}
@@ -36,98 +39,128 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Create and register test runner config
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Start virtual display for GUI-capable WinCC OA managers
         shell: bash
         run: |
           set -euo pipefail
 
-          WINCCOA_BIN="/opt/WinCC_OA/${{ env.WINCCOA_VERSION }}/bin"
-          TEST_ROOT="${GITHUB_WORKSPACE}/${{ env.TEST_PROJECT_PATH }}"
-          RUNNER_PROJECT_PATH="${TEST_ROOT}/Projects/${{ env.TEST_RUNNER_PROJECT }}"
-          CONFIG_DIR="${RUNNER_PROJECT_PATH}/config"
-          CONFIG="${CONFIG_DIR}/config"
+          apt-get update
+          apt-get install -y --no-install-recommends \
+            xvfb xauth x11-utils \
+            libxcb-cursor0 libxkbcommon-x11-0 libxcb-icccm4 \
+            libxcb-image0 libxcb-keysyms1 libxcb-randr0 \
+            libxcb-render-util0 libxcb-shape0 libxcb-xinerama0 \
+            libxcb-xkb1 libgl1 libegl1 libfontconfig1 libdbus-1-3 \
+            fonts-dejavu-core
 
-          echo "=== ls -la /opt/WinCCOA/${{ env.WINCCOA_VERSION }} ==="
-          ls -la "/opt/WinCCOA/${{ env.WINCCOA_VERSION }}" || true
-          echo "=== ls -la /opt/WinCC_OA/${{ env.WINCCOA_VERSION }} ==="
-          ls -la "/opt/WinCC_OA/${{ env.WINCCOA_VERSION }}" || true
+          Xvfb "${DISPLAY}" -screen 0 1280x1024x24 -nolisten tcp >/tmp/xvfb.log 2>&1 &
 
-          mkdir -p "${CONFIG_DIR}"
-          mkdir -p "${RUNNER_PROJECT_PATH}/log"
-
-          cat > "${CONFIG}" <<EOF
-          [general]
-          pvss_path = "/opt/WinCC_OA/${{ env.WINCCOA_VERSION }}"
-          proj_path = "${GITHUB_WORKSPACE}/${{ env.PROJECT_PATH }}"
-          proj_path = "/opt/WinCC_OA/${{ env.WINCCOA_VERSION }}/TestFramework_${{ env.WINCCOA_VERSION }}"
-          proj_path = "${TEST_ROOT}/Projects/Global"
-          proj_path = "${RUNNER_PROJECT_PATH}"
-          proj_version = "${{ env.WINCCOA_VERSION }}"
-          EOF
-
-          for lang in ${{ env.LANGUAGES }}; do
-            echo "langs = \"${lang}\"" >> "${CONFIG}"
+          for _ in 1 2 3 4 5; do
+            if xdpyinfo -display "${DISPLAY}" >/dev/null 2>&1; then
+              exit 0
+            fi
+            sleep 1
           done
 
-          cat >> "${CONFIG}" <<EOF
-          pmonPort = 5999
-          [testFramework]
-          installPath = "${TEST_ROOT}/"
-          EOF
+          echo "::error::Xvfb did not become ready on ${DISPLAY}"
+          cat /tmp/xvfb.log || true
+          exit 1
 
-          cd "${RUNNER_PROJECT_PATH}"
-          "${WINCCOA_BIN}/WCCILpmon" \
-            -config "${CONFIG}" \
-            -n \
-            -autofreg \
-            -status \
-            -log +stderr || {
-            EXIT_CODE=$?
-            echo "::warning::WCCILpmon exited with code ${EXIT_CODE}. This may be expected if the system manager is not running."
-          }
+      - name: Register Squirt as non-runnable sub-project
+        shell: bash
+        run: |
+          set -euo pipefail
 
-          echo "=== ${CONFIG} ==="
-          cat "${CONFIG}"
+          npx --yes @winccoa-tools-pack/npm-winccoa-register-project@1.1.1 \
+            --project-path "${GITHUB_WORKSPACE}/${{ env.PROJECT_PATH }}" \
+            --runnable false \
+            --langs "${{ env.LANGUAGES }}" \
+            --wincc-oa-version "${{ env.WINCCOA_VERSION }}"
+
+      - name: Verify virtual display before test runner
+        shell: bash
+        run: |
+          set -euo pipefail
+          echo "DISPLAY=${DISPLAY:-<unset>}"
+          ps -eo pid,args | grep '[X]vfb' || true
+          xdpyinfo -display "${DISPLAY:?DISPLAY is not set}" >/dev/null
+          echo "X server is reachable"
+
+          echo "QT_QPA_PLATFORM=${QT_QPA_PLATFORM}"
+          QXCB_PATH="$(find "/opt/WinCC_OA/${WINCCOA_VERSION}" -type f \
+            -name libqxcb.so -print -quit)"
+          if [ -z "${QXCB_PATH}" ]; then
+            echo "::error::WinCC OA Qt xcb plugin was not found"
+            exit 1
+          fi
+
+          if ! XCB_DEPENDENCIES="$(ldd "${QXCB_PATH}" 2>&1)"; then
+            printf '%s\n' "${XCB_DEPENDENCIES}"
+            echo "::error::Could not inspect Qt xcb dependencies"
+            exit 1
+          fi
+          printf '%s\n' "${XCB_DEPENDENCIES}"
+          if grep -q 'not found' <<< "${XCB_DEPENDENCIES}"; then
+            echo "::error::Qt xcb runtime libraries are missing"
+            exit 1
+          fi
 
       - name: Run WinCC OA tests
-        shell: bash
-        env:
-          TEST_RUN_ID: ${{ github.event_name == 'pull_request' && 'Regression-tests' || 'Squirt-regression' }}
-        run: |
-          set -euo pipefail
+        id: run-tests
+        continue-on-error: true
+        uses: winccoa-tools-pack/github-actions-winccoa/actions/winccoa-ctrl-test-framework-runner@main
+        with:
+          winccoa-test-path: ${{ env.TEST_PROJECT_PATH }}
+          test-run-id: ${{ github.event_name == 'pull_request' && 'Regression-tests' || 'Squirt-regression' }}
+          languages: ${{ env.LANGUAGES }}
+          winccoa-version: ${{ env.WINCCOA_VERSION }}
+          upload-artifacts: 'true'
+          publish-junit-report: 'false'
+          parse-results: 'true'
 
-          WINCCOA_BIN="/opt/WinCC_OA/${{ env.WINCCOA_VERSION }}/bin"
-          FIRST_LANG="${{ env.LANGUAGES }}"
-          FIRST_LANG="${FIRST_LANG%% *}"
-
-          TEST_PARAMS="{'testRunId':'${TEST_RUN_ID}','registerGlobalProject':true,'registerAllTools':true,'registerAllTemplates':true,'showLogViewer':false,'TfTestManager.checkForPossibleFreezeTests':true}"
-
-          echo "Running test runner project: ${{ env.TEST_RUNNER_PROJECT }}"
-          echo "Using test run ID: ${TEST_RUN_ID}"
-          echo "Using language: ${FIRST_LANG}"
-
-          cd "${WINCCOA_BIN}"
-          ./WCCOActrl \
-            -proj "${{ env.TEST_RUNNER_PROJECT }}" \
-            -n testRunner.ctl "${TEST_PARAMS}" \
-            -log +stderr \
-            -lang "${FIRST_LANG}"
-
-      - name: Convert test results to jUnit format
+      - name: Check for jUnit results
+        id: junit-results
+        if: ${{ always() }}
         shell: bash
         run: |
           set -euo pipefail
 
-          WINCCOA_BIN="/opt/WinCC_OA/${{ env.WINCCOA_VERSION }}/bin"
-          FIRST_LANG="${{ env.LANGUAGES }}"
-          FIRST_LANG="${FIRST_LANG%% *}"
+          RESULTS_GLOB="${GITHUB_WORKSPACE}/${{ env.TEST_PROJECT_PATH }}/Results/jUnit*.xml"
+          JUNIT_FILE="$(find "${GITHUB_WORKSPACE}/${{ env.TEST_PROJECT_PATH }}/Results" -maxdepth 1 -type f -name 'jUnit*.xml' | head -1 || true)"
 
-          cd "${WINCCOA_BIN}"
-          ./WCCOActrl \
-            -proj "${{ env.TEST_RUNNER_PROJECT }}" \
-            -n oaTestParsers/jsonToJUnit.ctl \
-            -log +stderr \
-            -lang "${FIRST_LANG}" || {
-            EXIT_CODE=$?
-            echo "::warning::jUnit conversion exited with code ${EXIT_CODE}"
-          }
+          if [ -z "${JUNIT_FILE}" ]; then
+            echo "has-results=false" >> "$GITHUB_OUTPUT"
+            echo "::error::No jUnit result file was produced under ${RESULTS_GLOB}"
+            exit 0
+          fi
+
+          echo "has-results=true" >> "$GITHUB_OUTPUT"
+          echo "junit-file=${JUNIT_FILE}" >> "$GITHUB_OUTPUT"
+
+      - name: Publish jUnit dashboard
+        if: ${{ always() && steps.junit-results.outputs.has-results == 'true' }}
+        uses: test-summary/action@v2
+        with:
+          paths: ${{ env.TEST_PROJECT_PATH }}/Results/jUnit*.xml
+          show: fail,skip
+
+      - name: Fail when test execution or jUnit export failed
+        if: ${{ always() }}
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          if [ "${{ steps.junit-results.outputs.has-results || 'false' }}" != "true" ]; then
+            echo "::error::Missing jUnit results from oaTestParsers/jsonToJUnit.ctl"
+            exit 1
+          fi
+
+          if [ "${{ steps.run-tests.outcome }}" != "success" ]; then
+            echo "::error::WinCC OA test execution reported warnings, severe errors, or a non-zero manager exit code."
+            exit 1
+          fi

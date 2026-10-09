@@ -25,7 +25,7 @@ concurrency:
 env:
   WINCCOA_VERSION: '3.21'
   PROJECT_PATH: src/Squirt
-  WINCCOA_IMAGE: ghcr.io/winccoa-tools-pack/winccoa:v3.21.3-debian12-all
+  WINCCOA_IMAGE: ghcr.io/winccoa-tools-pack/winccoa-images:3.21.6-debian12-amd64-all
   # Fail PRs on any Doxygen warning; main/publish keeps previous soft gate.
   MAX_WARNING_COUNT: ${{ github.event_name == 'pull_request' && '0' || '-1' }}
 
@@ -48,7 +48,10 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          docker pull "${WINCCOA_IMAGE}"
+          if ! docker pull "${WINCCOA_IMAGE}"; then
+            echo "::error::Could not pull ${WINCCOA_IMAGE}. GHCR login succeeded, so verify that this repository has Actions read access to the winccoa-images package. Request a manual grant in winccoa-tools-pack/.infra; do not use a shared organization token."
+            exit 1
+          fi
 
       - name: Build Squirt help
         id: docs

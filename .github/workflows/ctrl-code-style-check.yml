@@ -27,7 +27,7 @@ jobs:
       WINCCOA_VERSION: '3.21'
       # Runnable worker project (StyleCheck is registered as non-runnable sub-project)
       PROJECT_PATH: src/Squirt
-      WINCCOA_IMAGE: ghcr.io/winccoa-tools-pack/winccoa:v3.21.3-debian12-all
+      WINCCOA_IMAGE: ghcr.io/winccoa-tools-pack/winccoa-images:3.21.6-debian12-amd64-all
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -40,7 +40,11 @@ jobs:
           password: ${{ secrets.GHCR_PAT != '' && secrets.GHCR_PAT || secrets.GITHUB_TOKEN }}
 
       - name: Pull WinCC OA image
-        run: docker pull "$WINCCOA_IMAGE"
+        run: |
+          if ! docker pull "$WINCCOA_IMAGE"; then
+            echo "::error::Could not pull $WINCCOA_IMAGE. GHCR login succeeded, so verify that this repository has Actions read access to the winccoa-images package. Request a manual grant in winccoa-tools-pack/.infra; do not use a shared organization token."
+            exit 1
+          fi
 
       - name: Check CTL style (Squirt)
         id: style-squirt

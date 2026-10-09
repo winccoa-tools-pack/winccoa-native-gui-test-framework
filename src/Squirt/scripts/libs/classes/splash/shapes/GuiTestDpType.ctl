@@ -31,8 +31,8 @@ class GuiTestDpType : GuiTestShape
   public mapping getCurrentAttributes()
   {
 
-    bool visible, enabled;
-    int x, y, w, h;
+    anytype visible, enabled;
+    anytype x, y, w, h;
 
     getValue(this.testShape,
              "visible", visible,

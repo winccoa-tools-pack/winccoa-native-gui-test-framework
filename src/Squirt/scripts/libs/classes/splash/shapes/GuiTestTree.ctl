@@ -31,12 +31,12 @@ class GuiTestTree : GuiTestShape
   public mapping getCurrentAttributes()
   {
 
-    bool visible, enabled;
-    int x, y, w, h;
-    int cursor, lineWidth, midLineWidth, treeStepSize;
-    bool updatesEnabled, itemsExpandable, headerHidden, rootIsDecorated, sortingEnabled; //, uniformRowHeights;
-    float uniformRowHeights;
-    string layoutDirection, selectionBehavior, selectionMode;
+    anytype visible, enabled;
+    anytype x, y, w, h;
+    anytype cursor, lineWidth, midLineWidth, treeStepSize;
+    anytype updatesEnabled, itemsExpandable, headerHidden, rootIsDecorated, sortingEnabled; //, uniformRowHeights;
+    anytype uniformRowHeights;
+    anytype layoutDirection, selectionBehavior, selectionMode;
 
     getValue(this.testShape,
              "visible", visible,

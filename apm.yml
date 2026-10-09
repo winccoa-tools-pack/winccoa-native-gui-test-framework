@@ -1,0 +1,9 @@
+name: test-ai-skills
+version: 0.1.0
+description: >
+  AI agent configuration for a typical WinCC OA repository
+
+dependencies:
+  apm:
+    - git: https://code.siemens.com/winccoa-ai/wincc-oa-teams/test-ai-skills.git
+      ref: main
