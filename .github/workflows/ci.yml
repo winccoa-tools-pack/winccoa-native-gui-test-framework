@@ -21,6 +21,7 @@ env:
   WINCCOA_IMAGE: ghcr.io/winccoa-tools-pack/winccoa-images:3.21.6-debian12-amd64-all
   LANGUAGES: en_US.utf8 de_AT.utf8
   DISPLAY: :99
+  QT_QPA_PLATFORM: xcb
   QT_DEBUG_PLUGINS: '1'
 
 jobs:
@@ -48,10 +49,14 @@ jobs:
         run: |
           set -euo pipefail
 
-          if ! command -v Xvfb >/dev/null 2>&1; then
-            apt-get update
-            apt-get install -y xvfb xauth x11-utils >/dev/null
-          fi
+          apt-get update
+          apt-get install -y --no-install-recommends \
+            xvfb xauth x11-utils \
+            libxcb-cursor0 libxkbcommon-x11-0 libxcb-icccm4 \
+            libxcb-image0 libxcb-keysyms1 libxcb-randr0 \
+            libxcb-render-util0 libxcb-shape0 libxcb-xinerama0 \
+            libxcb-xkb1 libgl1 libegl1 libfontconfig1 libdbus-1-3 \
+            fonts-dejavu-core
 
           Xvfb "${DISPLAY}" -screen 0 1280x1024x24 -nolisten tcp >/tmp/xvfb.log 2>&1 &
 
@@ -85,6 +90,25 @@ jobs:
           ps -eo pid,args | grep '[X]vfb' || true
           xdpyinfo -display "${DISPLAY:?DISPLAY is not set}" >/dev/null
           echo "X server is reachable"
+
+          echo "QT_QPA_PLATFORM=${QT_QPA_PLATFORM}"
+          QXCB_PATH="$(find "/opt/WinCC_OA/${WINCCOA_VERSION}" -type f \
+            -name libqxcb.so -print -quit)"
+          if [ -z "${QXCB_PATH}" ]; then
+            echo "::error::WinCC OA Qt xcb plugin was not found"
+            exit 1
+          fi
+
+          if ! XCB_DEPENDENCIES="$(ldd "${QXCB_PATH}" 2>&1)"; then
+            printf '%s\n' "${XCB_DEPENDENCIES}"
+            echo "::error::Could not inspect Qt xcb dependencies"
+            exit 1
+          fi
+          printf '%s\n' "${XCB_DEPENDENCIES}"
+          if grep -q 'not found' <<< "${XCB_DEPENDENCIES}"; then
+            echo "::error::Qt xcb runtime libraries are missing"
+            exit 1
+          fi
 
       - name: Run WinCC OA tests
         id: run-tests

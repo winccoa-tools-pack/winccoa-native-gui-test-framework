@@ -15,6 +15,23 @@ Register Project TfCustomizedSquirt as runnable project
 Start the WinCC OA Console whithin TfCustomizedSquirt
 Start the WinCC OA ctrl manager testRunner.ctl
 
+## GUI runtime in CI
+
+The Debian CI container runs its own Xvfb server on `DISPLAY=:99`.
+No host display, WSLg socket, or XQuartz connection is required. The workflow
+sets `QT_QPA_PLATFORM=xcb` for the whole job so that child UI managers inherit
+the same platform and display settings.
+
+The workflow installs the Qt-xcb system libraries and fonts, verifies the X
+server with `xdpyinfo`, and checks the WinCC OA `libqxcb.so` dependencies with
+`ldd` before starting the test runner. A reachable X server alone does not
+prove that Qt can load its platform plugin.
+
+If these checks pass but tests still fail, inspect the uploaded
+`PVSS_II.log` and failed-project logs. `QT_DEBUG_PLUGINS=1` is enabled in CI
+to expose Qt plugin loading errors. Do not suppress WARNING/SEVERE entries
+or switch to `offscreen` to hide GUI initialization failures.
+
 ## Style and copyright checks
 
 Use the published package
