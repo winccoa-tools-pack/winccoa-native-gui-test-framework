@@ -20,7 +20,7 @@ env:
   TEST_RUNNER_PROJECT: TfCustomizedSquirt
   WINCCOA_IMAGE: ghcr.io/winccoa-tools-pack/winccoa-images:3.21.6-debian12-amd64-all
   LANGUAGES: en_US.utf8 de_AT.utf8
-  DISPLAY: :99
+  DISPLAY: :0
   QT_QPA_PLATFORM: xcb
   QT_DEBUG_PLUGINS: '1'
 

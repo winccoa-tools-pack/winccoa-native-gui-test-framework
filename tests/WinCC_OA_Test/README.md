@@ -17,7 +17,7 @@ Start the WinCC OA ctrl manager testRunner.ctl
 
 ## GUI runtime in CI
 
-The Debian CI container runs its own Xvfb server on `DISPLAY=:99`.
+The Debian CI container runs its own Xvfb server on `DISPLAY=:0`.
 No host display, WSLg socket, or XQuartz connection is required. The workflow
 sets `QT_QPA_PLATFORM=xcb` for the whole job so that child UI managers inherit
 the same platform and display settings.
