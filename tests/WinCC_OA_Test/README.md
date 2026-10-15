@@ -15,22 +15,23 @@ Register Project TfCustomizedSquirt as runnable project
 Start the WinCC OA Console whithin TfCustomizedSquirt
 Start the WinCC OA ctrl manager testRunner.ctl
 
-## GUI runtime in CI
+## GUI tests and GitHub automation
 
-The Debian CI container runs its own Xvfb server on `DISPLAY=:0`.
-No host display, WSLg socket, or XQuartz connection is required. The workflow
-sets `QT_QPA_PLATFORM=xcb` for the whole job so that child UI managers inherit
-the same platform and display settings.
+GUI tests are currently **not supported in GitHub Actions automation** because
+a working display is not available. This includes the `shapes` test run in
+[testRuns.config](testRuns.config), which is currently excluded from the
+automated `Regression-tests` run. This limitation does not apply to non-GUI
+CTRL unit tests.
 
-The workflow installs the Qt-xcb system libraries and fonts, verifies the X
-server with `xdpyinfo`, and checks the WinCC OA `libqxcb.so` dependencies with
-`ldd` before starting the test runner. A reachable X server alone does not
-prove that Qt can load its platform plugin.
+**Run the GUI tests locally before merging a pull request.** A passing GitHub
+Actions run does not verify GUI behavior while these tests are excluded.
+Use a local WinCC OA environment with a display and the TestFramework setup
+described above. Start the CTRL manager with `testRunner.ctl shapes -n` to
+select the GUI shape test run explicitly.
 
-If these checks pass but tests still fail, inspect the uploaded
-`PVSS_II.log` and failed-project logs. `QT_DEBUG_PLUGINS=1` is enabled in CI
-to expose Qt plugin loading errors. Do not suppress WARNING/SEVERE entries
-or switch to `offscreen` to hide GUI initialization failures.
+The display setup is being investigated, and a fix is pending DevOps feedback.
+There is no confirmed completion date yet. Update this section when GUI
+execution is supported and the tests are enabled in GitHub automation.
 
 ## Style and copyright checks
 

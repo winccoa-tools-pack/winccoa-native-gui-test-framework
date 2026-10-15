@@ -35,6 +35,12 @@ Tests can be executed in multiple ways:
 - From command line
 - Fully automated in WinCC OA TestFramework for CI/CD pipelines
 
+**Current GitHub Actions limitation:** GUI test runs such as `shapes` are not
+supported in GitHub automation because a working display is not available.
+Run the GUI tests locally before merging a pull request. See the
+[test execution guide](tests/WinCC_OA_Test/README.md#gui-tests-and-github-automation)
+for the current status and local execution instructions.
+
 ---
 
 ## Repository layout
