@@ -31,9 +31,9 @@ class GuiTestCheckBox : GuiTestShape
   public mapping getCurrentAttributes()
   {
 
-    bool visible, enabled, updatesEnabled;
-    int x, y, w, h, itemCount;
-    string text;
+    anytype visible, enabled, updatesEnabled;
+    anytype x, y, w, h, itemCount;
+    anytype text;
 
     getValue(this.testShape,
              "visible", visible,

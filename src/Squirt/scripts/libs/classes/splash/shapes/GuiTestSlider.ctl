@@ -31,14 +31,14 @@ class GuiTestSlider : GuiTestShape
   public mapping getCurrentAttributes()
   {
 
-    bool visible, enabled;
-    bool invertedAppearance, invertedControls, isActiveWindow, sliderDown, tracking, updatesEnabled, windowModified, focus;
-    int x1, y1, w, h;
-    int cursor, height, lineStep, maximum, maxValue, minimum, minValue, pageStep, singleStep, sliderPosition, tickInterval, toolTipDuration,
-        value, Value, width, x, y, BorderWidth;
-    string accessibleDescription, accessibleName, contextMenuPolicy, inputMethodHints, layoutDirection, orientation, statusTip,
-           styleSheet, tickPosition;
-    float windowOpacity;
+    anytype visible, enabled;
+    anytype invertedAppearance, invertedControls, isActiveWindow, sliderDown, tracking, updatesEnabled, windowModified, focus;
+    anytype x1, y1, w, h;
+    anytype cursor, height, lineStep, maximum, maxValue, minimum, minValue, pageStep, singleStep, sliderPosition, tickInterval, toolTipDuration,
+            value, Value, width, x, y, BorderWidth;
+    anytype accessibleDescription, accessibleName, contextMenuPolicy, inputMethodHints, layoutDirection, orientation, statusTip,
+            styleSheet, tickPosition;
+    anytype windowOpacity;
 
     getValue(this.testShape,
              "visible", visible,

@@ -31,9 +31,9 @@ class GuiTestRectangle : GuiTestShape
   public mapping getCurrentAttributes()
   {
 
-    bool visible, enabled, armed, selected;
-    int x, y, w, h;
-    string border, borderStyle, dashBackCol, fill;
+    anytype visible, enabled, armed, selected;
+    anytype x, y, w, h;
+    anytype border, borderStyle, dashBackCol, fill;
 
     getValue(this.testShape,
              "visible", visible,
