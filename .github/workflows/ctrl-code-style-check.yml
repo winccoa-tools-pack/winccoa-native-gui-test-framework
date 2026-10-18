@@ -18,6 +18,8 @@ permissions:
   contents: read
   packages: read
   pull-requests: write
+  security-events: write
+  actions: read
 
 jobs:
   ctrl-code-style-check:
@@ -27,7 +29,7 @@ jobs:
       WINCCOA_VERSION: '3.21'
       # Runnable worker project (StyleCheck is registered as non-runnable sub-project)
       PROJECT_PATH: src/Squirt
-      WINCCOA_IMAGE: ghcr.io/winccoa-tools-pack/winccoa:v3.21.3-debian12-all
+      WINCCOA_IMAGE: ghcr.io/winccoa-tools-pack/winccoa-images:3.21.6-debian12-amd64-all
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -40,7 +42,11 @@ jobs:
           password: ${{ secrets.GHCR_PAT != '' && secrets.GHCR_PAT || secrets.GITHUB_TOKEN }}
 
       - name: Pull WinCC OA image
-        run: docker pull "$WINCCOA_IMAGE"
+        run: |
+          if ! docker pull "$WINCCOA_IMAGE"; then
+            echo "::error::Could not pull $WINCCOA_IMAGE. GHCR login succeeded, so verify that this repository has Actions read access to the winccoa-images package. Request a manual grant in winccoa-tools-pack/.infra; do not use a shared organization token."
+            exit 1
+          fi
 
       - name: Check CTL style (Squirt)
         id: style-squirt
@@ -55,7 +61,9 @@ jobs:
           languages: |
             en_US.utf8
           fail-on-error: 'true'
-          package-version: '0.1.2'
+          package-version: '0.2.1'
+          report-format: sarif
+          report-path: .artifacts/style-check-squirt.sarif
           log-path: .artifacts/style-check-squirt.log
 
       - name: Check CTL style (tests)
@@ -74,10 +82,12 @@ jobs:
           # Fresh container each step: always register (StyleCheck is materialized
           # to a durable workspace path by the package).
           register-project: 'true'
-          package-version: '0.1.2'
+          package-version: '0.2.1'
+          report-format: sarif
+          report-path: .artifacts/style-check-tests.sarif
           log-path: .artifacts/style-check-tests.log
 
-      - name: Upload style logs
+      - name: Upload style logs and SARIF reports
         if: always()
         uses: actions/upload-artifact@v4
         with:
@@ -85,9 +95,25 @@ jobs:
           path: |
             .artifacts/style-check-squirt.log
             .artifacts/style-check-tests.log
+            .artifacts/style-check-squirt.sarif
+            .artifacts/style-check-tests.sarif
             ${{ steps.style-squirt.outputs.log-path }}
             ${{ steps.style-tests.outputs.log-path }}
           if-no-files-found: warn
+
+      - name: Publish Squirt SARIF to code scanning
+        if: always() && steps.style-squirt.outputs.report-path != '' && (github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository)
+        uses: github/codeql-action/upload-sarif@v4
+        with:
+          sarif_file: ${{ steps.style-squirt.outputs.report-path }}
+          category: winccoa-ctl-style-squirt
+
+      - name: Publish test SARIF to code scanning
+        if: always() && steps.style-tests.outputs.report-path != '' && (github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository)
+        uses: github/codeql-action/upload-sarif@v4
+        with:
+          sarif_file: ${{ steps.style-tests.outputs.report-path }}
+          category: winccoa-ctl-style-tests
 
       - name: Report style findings on PR (Squirt)
         id: report-squirt

@@ -194,14 +194,14 @@ class Splash
           DebugTN("finished recording", sFilename);
 
           inputRecorderStop();
-
           string script = inputRecorderGetScript();
+
           strreplace(script, "InputEventPlayer player;", "");
           strreplace(script, "#uses \"classes/InputEventPlayer\"", "");
 
           script.trim();
 
-          // make methhod play() public
+          // make method play() public
           script = "public int " + script;
           script.remove(script.length() - 1, 1); // remove last }
           // and add return 0; }
@@ -219,7 +219,7 @@ class Splash
           string sContent;
           fileToString(getPath(DATA_REL_PATH, "hsp/templates/scriptEditor/newSplash.ctl"), sContent);
           strreplace(sContent, sParameterPlaceholder, sParameterPlaceholder + sParams);
-          strreplace(sContent, "public play(){}", script);
+          strreplace(sContent, "/** SCRIPT_PLACEHOLDER **/", script);
 
           strreplace(sFilename, ".pnl", ".ctl");
 
