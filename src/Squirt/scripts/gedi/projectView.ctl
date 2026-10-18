@@ -789,8 +789,8 @@ void startDialog(dyn_string dsPathElements, int iPos)
   strreplace(sText, "$2", dsPathElements[iPos + 1]);
 
   openDialog("vision/MessageDevice", makeDynString("$1:" + sText,
-             "$2:" + getCatStr("general", "yes"),
-             "$3:" + getCatStr("general", "no")));
+      "$2:" + getCatStr("general", "yes"),
+      "$3:" + getCatStr("general", "no")));
 }
 
 //-------------------------------------------------------------------
