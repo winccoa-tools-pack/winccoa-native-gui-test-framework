@@ -37,20 +37,20 @@ execution is supported and the tests are enabled in GitHub automation.
 
 Use the published package
 [`@winccoa-tools-pack/npm-winccoa-ctrl-code-style`](https://www.npmjs.com/package/@winccoa-tools-pack/npm-winccoa-ctrl-code-style)
-(CLI bin: `winccoa-ctrl-style`). CI currently pins **0.1.2**.
+(CLI bin: `winccoa-ctrl-style`). CI currently pins **0.2.1**.
 
 From the repository root (requires a local WinCC OA install):
 
 ```powershell
 # one-shot via npx (no permanent install)
-npx --yes @winccoa-tools-pack/npm-winccoa-ctrl-code-style@0.1.2 check ./src/Squirt -v 3.21
-npx --yes @winccoa-tools-pack/npm-winccoa-ctrl-code-style@0.1.2 format ./src/Squirt -v 3.21
+npx --yes @winccoa-tools-pack/npm-winccoa-ctrl-code-style@0.2.1 check ./src/Squirt -v 3.21
+npx --yes @winccoa-tools-pack/npm-winccoa-ctrl-code-style@0.2.1 format ./src/Squirt -v 3.21
 ```
 
 Or install the CLI, then run:
 
 ```powershell
-npm install --no-save @winccoa-tools-pack/npm-winccoa-ctrl-code-style@0.1.2
+npm install --no-save @winccoa-tools-pack/npm-winccoa-ctrl-code-style@0.2.1
 
 # register StyleCheck (non-runnable) + worker project once
 npx winccoa-ctrl-style register ./src/Squirt -v 3.21
