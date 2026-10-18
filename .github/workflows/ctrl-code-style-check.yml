@@ -59,7 +59,9 @@ jobs:
           languages: |
             en_US.utf8
           fail-on-error: 'true'
-          package-version: '0.1.2'
+          package-version: '0.2.1'
+          report-format: sarif
+          report-path: .artifacts/style-check-squirt.sarif
           log-path: .artifacts/style-check-squirt.log
 
       - name: Check CTL style (tests)
@@ -78,10 +80,12 @@ jobs:
           # Fresh container each step: always register (StyleCheck is materialized
           # to a durable workspace path by the package).
           register-project: 'true'
-          package-version: '0.1.2'
+          package-version: '0.2.1'
+          report-format: sarif
+          report-path: .artifacts/style-check-tests.sarif
           log-path: .artifacts/style-check-tests.log
 
-      - name: Upload style logs
+      - name: Upload style logs and SARIF reports
         if: always()
         uses: actions/upload-artifact@v4
         with:
@@ -89,6 +93,8 @@ jobs:
           path: |
             .artifacts/style-check-squirt.log
             .artifacts/style-check-tests.log
+            .artifacts/style-check-squirt.sarif
+            .artifacts/style-check-tests.sarif
             ${{ steps.style-squirt.outputs.log-path }}
             ${{ steps.style-tests.outputs.log-path }}
           if-no-files-found: warn
