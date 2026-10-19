@@ -61,6 +61,12 @@ sq-cli.cmd DPE_monitor_test_3.22 stop -winccoa-tools-pack.squirt.testScript.path
 Only project-relative paths under `scripts/tests/` are accepted for generated
 test scripts.
 
+The headless CLI validation suite is `suite_CLI`; it checks accepted and
+rejected project-relative panel and script paths without launching WCCOAui.
+See the [suite documentation](../../tests/WinCC_OA_Test/TestSuites/suite_CLI/README.md)
+for execution details. Recording and playback lifecycle integration still
+requires a display and is not part of this headless suite.
+
 ----
 
 ## Examples

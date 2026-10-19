@@ -21,13 +21,19 @@ GUI tests are currently **not supported in GitHub Actions automation** because
 a working display is not available. This includes the `shapes` test run in
 [testRuns.config](testRuns.config), which is currently excluded from the
 automated `Regression-tests` run. This limitation does not apply to non-GUI
-CTRL unit tests.
+CTRL unit tests, including the new headless `cli` test run, which validates
+Squirt CLI path handling without starting WCCOAui.
 
 **Run the GUI tests locally before merging a pull request.** A passing GitHub
 Actions run does not verify GUI behavior while these tests are excluded.
 Use a local WinCC OA environment with a display and the TestFramework setup
 described above. Start the CTRL manager with `testRunner.ctl shapes -n` to
 select the GUI shape test run explicitly.
+
+The `cli` test run is registered in [testRuns.config](testRuns.config) and is
+included in `Regression-tests`. Its scope and invocation are documented in
+[suite_CLI](TestSuites/suite_CLI/README.md). CLI recording and playback remain
+display-dependent integration workflows and are not exercised by this suite.
 
 The display setup is being investigated, and a fix is pending DevOps feedback.
 There is no confirmed completion date yet. Update this section when GUI

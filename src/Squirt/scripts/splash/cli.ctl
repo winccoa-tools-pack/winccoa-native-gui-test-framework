@@ -9,6 +9,7 @@
 #uses "classes/projectEnvironment/ProjEnvComponent"
 #uses "classes/splash/ErrorHdl/OaLogger"
 #uses "classes/splash/Splash"
+#uses "classes/splash/SplashCliValidation"
 
 /**
   @brief Parses the sq-cli command and runs the requested Splash operation.
@@ -63,6 +64,8 @@ void main(...)
 */
 void startRecording(CommandLineArguments cli)
 {
+  SplashCliValidation validation = SplashCliValidation();
+
   if (!cli.hasSetting("panel.path") ||
       !cli.hasSetting("testScript.path") ||
       !cli.hasSetting("testScript.force"))
@@ -86,7 +89,8 @@ void startRecording(CommandLineArguments cli)
     exit(2);
   }
 
-  if (!isSafePanelPath(panelPath) || !isSafeTestScriptPath(testScriptPath))
+  if (!validation.isSafePanelPath(panelPath) ||
+      !validation.isSafeTestScriptPath(testScriptPath))
   {
     logWarning(tr("sq-cli: panel and script paths must be safe project-relative paths"));
     exit(2);
@@ -98,8 +102,8 @@ void startRecording(CommandLineArguments cli)
   if (getCurrentSession(activePanel, activeScript))
   {
     logWarning(tr("sq-cli: a Splash session is already active for panel $1 and script $2")
-               .subst(activePanel.value("path", ""))
-               .subst(activeScript.value("path", "")));
+               .subst(activePanel.value("path", ""),
+                      activeScript.value("path", "")));
     exit(1);
   }
 
@@ -156,7 +160,7 @@ void startRecording(CommandLineArguments cli)
 
   dpSetWait("_Splash.command", "record", "_Splash.response", "");
   logInfo(tr("sq-cli: recording started for panel $1 with script $2")
-          .subst(panelPath).subst(testScriptPath));
+          .subst(panelPath, testScriptPath));
 }
 
 /**
@@ -182,13 +186,13 @@ void sendSessionCommand(const string command)
       (command == "resume" && currentCommand != "pause"))
   {
     logWarning(tr("sq-cli: command $1 is invalid in session state $2")
-               .subst(command).subst(currentCommand));
+               .subst(command, currentCommand));
     exit(1);
   }
 
   dpSetWait("_Splash.command", command, "_Splash.response", "");
   logInfo(tr("sq-cli: command $1 sent for panel $2")
-          .subst(command).subst(panelInfo.value("path", "")));
+          .subst(command, panelInfo.value("path", "")));
 }
 
 /**
@@ -197,6 +201,8 @@ void sendSessionCommand(const string command)
 */
 void stopRecording(CommandLineArguments cli)
 {
+  SplashCliValidation validation = SplashCliValidation();
+
   if (!cli.hasSetting("testScript.path") ||
       !cli.hasSetting("testScript.force"))
   {
@@ -216,7 +222,7 @@ void stopRecording(CommandLineArguments cli)
   string requestedPath = cli.getSettingsValue("testScript.path", "");
   string forceText = cli.getSettingsValue("testScript.force", "");
 
-  if (!isSafeTestScriptPath(requestedPath) ||
+  if (!validation.isSafeTestScriptPath(requestedPath) ||
       requestedPath != scriptInfo.value("path", ""))
   {
     logWarning(tr("sq-cli: stop path must match the current session script"));
@@ -267,6 +273,7 @@ void stopRecording(CommandLineArguments cli)
 */
 bool getCurrentSession(mapping &panelInfo, mapping &scriptInfo)
 {
+  SplashCliValidation validation = SplashCliValidation();
   string panelJson;
   string scriptJson;
   dpGet("_Splash.currentPanel", panelJson,
@@ -278,8 +285,8 @@ bool getCurrentSession(mapping &panelInfo, mapping &scriptInfo)
   panelInfo = jsonDecode(panelJson);
   scriptInfo = jsonDecode(scriptJson);
 
-  return isSafePanelPath(panelInfo.value("path", "")) &&
-         isSafeTestScriptPath(scriptInfo.value("path", ""));
+  return validation.isSafePanelPath(panelInfo.value("path", "")) &&
+         validation.isSafeTestScriptPath(scriptInfo.value("path", ""));
 }
 
 /**
@@ -304,55 +311,6 @@ void printStatus()
                                  "panel", panelInfo,
                                  "testScript", scriptInfo,
                                  "response", response)));
-}
-
-/**
-  @brief Validates a panel path rooted below the project's panels directory.
-  @param path Panel path, optionally prefixed with one slash.
-  @return true for a safe relative .pnl path.
-*/
-bool isSafePanelPath(const string path)
-{
-  string relativePath = path;
-
-  if (relativePath.startsWith("/"))
-    relativePath = substr(relativePath, 1);
-
-  if (!relativePath.endsWith(".pnl") || relativePath.contains("\\") ||
-      relativePath.contains(":") || relativePath.contains(".."))
-    return FALSE;
-
-  dyn_string parts = strsplit(relativePath, "/");
-
-  for (int i = 1; i <= dynlen(parts); i++)
-  {
-    if (parts[i] == "" || parts[i] == ".")
-      return FALSE;
-  }
-
-  return dynlen(parts) >= 2;
-}
-
-/**
-  @brief Validates a test script path under the project's scripts/tests tree.
-  @param path Project-relative path to a generated CTRL test script.
-  @return true for a safe relative .ctl path.
-*/
-bool isSafeTestScriptPath(const string path)
-{
-  if (!path.startsWith("tests/") || !path.endsWith(".ctl") ||
-      path.contains("\\") || path.contains(":") || path.contains(".."))
-    return FALSE;
-
-  dyn_string parts = strsplit(path, "/");
-
-  for (int i = 1; i <= dynlen(parts); i++)
-  {
-    if (parts[i] == "" || parts[i] == ".")
-      return FALSE;
-  }
-
-  return dynlen(parts) >= 3;
 }
 
 /**

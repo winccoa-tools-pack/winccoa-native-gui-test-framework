@@ -279,11 +279,21 @@ class Splash
           strreplace(sFilename, ".pnl", ".ctl");
 
           // TODO clarify, Why not to use File class ?
-          const string newGuiTestScriptPath = getPath(SCRIPTS_REL_PATH,
-                                              sOutputRelativePath);
+          const string newGuiTestScriptPath = getPath(SCRIPTS_REL_PATH) + "/" +
+                                              sOutputRelativePath;
           file fScript = fopen(newGuiTestScriptPath, "w");
           fputs(sContent, fScript);
           fclose(fScript);
+
+          if (!isfile(newGuiTestScriptPath))
+          {
+            OaLogger logger = OaLogger();
+            logger.warning(tr("Failed to write Splash test script: $1")
+                           .subst(newGuiTestScriptPath));
+            setCommandOnDP("error: failed to write test script");
+            return;
+          }
+
           DebugTN("finished recording saved script", sFilename);
 
           // format code by astyle
