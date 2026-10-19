@@ -1,3 +1,9 @@
+<div align="center">
+
+<img src="images/squirt-logo.svg" alt="GUI test framework logo" width="480">
+
+</div>
+
 # Squirt documentation
 
 This directory holds **narrative** project documentation for Squirt.

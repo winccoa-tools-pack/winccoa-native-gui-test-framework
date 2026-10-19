@@ -31,18 +31,13 @@ class GuiTestCheckBox : GuiTestShape
   public mapping getCurrentAttributes()
   {
 
-    anytype visible, enabled, updatesEnabled;
-    anytype x, y, w, h, itemCount;
-    anytype text;
-
+    anytype visible, enabled;
+    anytype x, y, w, h;
     getValue(this.testShape,
              "visible", visible,
              "enabled", enabled,
              "position", x, y,
-             "size", w, h,
-             "text", text,
-             "updatesEnabled", updatesEnabled,
-             "itemCount", itemCount);
+             "size", w, h);
 
     return makeMapping(
              "visible", visible,
@@ -50,10 +45,7 @@ class GuiTestCheckBox : GuiTestShape
              "position.x", x,
              "position.y", y,
              "size.w", w,
-             "size.h", h,
-             "text", text,
-             "updatesEnabled", updatesEnabled,
-             "itemCount", itemCount
+             "size.h", h
            );
   }
 

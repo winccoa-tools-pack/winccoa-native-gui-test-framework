@@ -44,6 +44,60 @@ WCCOAui.exe -p "vision/dpe_monitor.pnl" -log "+stderr" -proj "<test-project>" -s
 The VP baseline is committed with Squirt and is resolved from the configured
 subproject; the showcase does not create or modify test-project data.
 
+## Input helpers
+
+`SquirtInputEventPlayer` provides address-based actions that wait for visible,
+enabled, nonempty targets before sending input:
+
+```ctrl
+player.replaceText("Vision_1.MyPanel:editor", "System1:Example.value");
+player.clearText("Vision_1.MyPanel:editor");
+player.writeText("Vision_1.MyPanel:editor", "replacement");
+player.commitText("Vision_1.MyPanel:editor");
+player.setChecked("Vision_1.MyPanel:options", 0, true);
+player.clickShape("Vision_1.MyPanel:refresh");
+```
+
+Text actions send keyboard input rather than assigning widget text. Text is
+not included in helper diagnostics. Text entry first clicks the target to
+focus it, so caret placement follows that click; it does not preserve a
+previous selection. `clearText` uses Select All and Backspace. `replaceText`
+combines clearing with whole-string input. Only `commitText` explicitly sends
+Return. Editable text fields are covered by live tests; read-only and other
+editor types still need dedicated validation.
+
+`waitForAttribute` waits for a scalar readable attribute. `waitForPanelOpen`
+and `waitForPanelClosed` take module and panel instance names, not panel file
+names. Timeouts are in milliseconds; zero checks the current state once.
+
+`selectComboItemByText` selects an exact, unique label through keyboard input.
+`clickTableCell` uses zero-based row and column indexes, while
+`selectTableRowByValue` takes a column name and rejects ambiguous matches.
+Table cells must already be visible; automatic scrolling is not implemented.
+`pressShortcut` focuses its target by clicking before sending the key.
+
+The click helpers honor the inherited `shallMoveCursor()` setting. Double-click
+helpers currently send two press/release sequences and do not guarantee a
+native `DoubleClicked` callback. `dragShape` and tree path actions remain
+experimental: strict live checks have exposed drag-selection and tree-expansion
+failures. They must not be treated as verified interaction APIs yet.
+
+Reusable standalone checks and their current results are documented in
+[the input-player test directory](../../../tests/WinCC_OA_Test/TestSuites/suite_shapes/sub_unit/scripts/tests/libs/classes/inputPlayer/README.md).
+The existing combined test script is preserved separately.
+
+## Touch input
+
+`SquirtInputEventPlayer` offers `touchFrame`, `tapShape`, `doubleTapShape`,
+`longPressShape`, `swipeShape` and `twoContactGesture`. Run native UI touch
+tests with `-touch -style fusion`. Injection alone does not establish gesture
+recognition; assert the widget's actual callbacks and state.
+
+The [touch input guide](../../../tests/WinCC_OA_Test/TestSuites/suite_uiEvents/touch.md)
+covers frame lifecycle, timing, bounds, readiness, release policy, cleanup and
+concurrency limits. Two self-terminating, fixture-based examples live under
+the suite's `sub_uiEvents/scripts/examples`, not the Squirt subproject.
+
 ## CLI tests
 
 The `suite_CLI` test run exercises the path validation shared by `sq-cli` and

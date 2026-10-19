@@ -2,6 +2,8 @@
 
 <div align="center">
 
+<img src="src/Squirt/docs/images/squirt-logo.svg" alt="Squirt native GUI test framework for WinCC OA" width="560">
+
 ![Version](https://img.shields.io/github/v/release/winccoa-tools-pack/winccoa-native-gui-test-framework?label=version)
 ![License](https://img.shields.io/github/license/winccoa-tools-pack/winccoa-native-gui-test-framework)
 [![Quality gate](https://github.com/winccoa-tools-pack/winccoa-native-gui-test-framework/actions/workflows/ci-cd.yml/badge.svg)](https://github.com/winccoa-tools-pack/winccoa-native-gui-test-framework/actions/workflows/ci-cd.yml)

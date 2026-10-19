@@ -1,0 +1,81 @@
+V 14
+2
+LANG:10001 13 Touch surface
+LANG:10000 13 Touch surface
+PANEL,-1 -1 600 400 N "_3DFace" 0
+E E E E E 1 -1 -1 0 0 0
+""0 1
+"main(string moduleName, string panelName)
+{
+  touchRecords.append(jsonEncode(makeMapping(\"type\", \"zoom\")));
+}" 0
+"/**
+  @file $relPath
+  @brief Test-owned touch callback recorder.
+  @copyright MIT
+  @AIgeneratedHelpContent
+*/
+dyn_string touchRecords;
+
+/** @brief Returns ordered native callback records.
+    @return Encoded callback records. @AIgeneratedHelpContent */
+public dyn_string records()
+{
+  return touchRecords;
+}
+
+/** @brief Clears callback records. @AIgeneratedHelpContent */
+public void clearRecords()
+{
+  touchRecords.clear();
+}" 0
+2
+"Gesture" "main(string type, mapping data)
+{
+  touchRecords.append(jsonEncode(makeMapping(\"type\", type, \"data\", data)));
+}"
+"dpi" "96"
+0 0 0
+""
+DISPLAY_LAYER, 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0
+LAYER, 0
+2
+LANG:10001 0
+LANG:10000 0
+0
+LAYER, 1
+2
+LANG:10001 0
+LANG:10000 0
+0
+LAYER, 2
+2
+LANG:10001 0
+LANG:10000 0
+0
+LAYER, 3
+2
+LANG:10001 0
+LANG:10000 0
+0
+LAYER, 4
+2
+LANG:10001 0
+LANG:10000 0
+0
+LAYER, 5
+2
+LANG:10001 0
+LANG:10000 0
+0
+LAYER, 6
+2
+LANG:10001 0
+LANG:10000 0
+0
+LAYER, 7
+2
+LANG:10001 0
+LANG:10000 0
+0
+0
