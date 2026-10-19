@@ -63,7 +63,7 @@ test scripts.
 
 The headless CLI validation suite is `suite_CLI`; it checks accepted and
 rejected project-relative panel and script paths without launching WCCOAui.
-See the [suite documentation](../../tests/WinCC_OA_Test/TestSuites/suite_CLI/README.md)
+See the [suite documentation](https://github.com/winccoa-tools-pack/winccoa-native-gui-test-framework/blob/main/tests/WinCC_OA_Test/TestSuites/suite_CLI/README.md)
 for execution details. Recording and playback lifecycle integration still
 requires a display and is not part of this headless suite.
 
