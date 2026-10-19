@@ -12,6 +12,13 @@
 */
 
 
+/**
+  @brief Creates localized WinCC OA error messages and logs them at a chosen priority.
+  @details Severe messages are thrown as exceptions; other priorities are sent
+           through throwError(). String messages are wrapped in the configured
+           message catalog, while existing error objects are passed through.
+  @AIgeneratedHelpContent
+*/
 class OaLogger
 {
 //--------------------------------------------------------------------------------
@@ -20,6 +27,8 @@ class OaLogger
 
   //------------------------------------------------------------------------------
   /**
+    @brief Creates a logger using an optional message catalog.
+    @param msgCatalog Message catalog used when constructing errors from text.
   */
   public OaLogger(const string msgCatalog = "")
   {
@@ -28,6 +37,11 @@ class OaLogger
 
   //------------------------------------------------------------------------------
   /**
+    @brief Logs or throws an informational message.
+    @param codeOrError Message text, error code, or existing error object.
+    @param note Optional first substitution value or error note.
+    @param note2 Optional second substitution value or error note.
+    @param note3 Optional third substitution value or error note.
   */
   public void info(const anytype &codeOrError,
                    const anytype note = NULL,
@@ -39,6 +53,11 @@ class OaLogger
 
   //------------------------------------------------------------------------------
   /**
+    @brief Logs or throws a warning message.
+    @param codeOrError Message text, error code, or existing error object.
+    @param note Optional first substitution value or error note.
+    @param note2 Optional second substitution value or error note.
+    @param note3 Optional third substitution value or error note.
   */
   public void warning(const anytype &codeOrError,
                       const anytype note = NULL,
@@ -50,6 +69,11 @@ class OaLogger
 
   //------------------------------------------------------------------------------
   /**
+    @brief Throws a severe error message.
+    @param codeOrError Message text, error code, or existing error object.
+    @param note Optional first substitution value or error note.
+    @param note2 Optional second substitution value or error note.
+    @param note3 Optional third substitution value or error note.
   */
   public void severe(const anytype &codeOrError,
                      const anytype note = NULL,
@@ -61,6 +85,11 @@ class OaLogger
 
   //------------------------------------------------------------------------------
   /**
+    @brief Logs or throws a fatal message.
+    @param codeOrError Message text, error code, or existing error object.
+    @param note Optional first substitution value or error note.
+    @param note2 Optional second substitution value or error note.
+    @param note3 Optional third substitution value or error note.
   */
   public void fatal(const anytype &codeOrError,
                     const anytype note = NULL,
@@ -69,11 +98,16 @@ class OaLogger
   {
     _throw(codeOrError, PRIO_FATAL, note, note2, note3);
   }
-
-
+  /** Message catalog used when constructing errors from plain text. */
   protected string msgCatalog;
   //------------------------------------------------------------------------------
   /**
+    @brief Constructs and emits an error using the requested priority.
+    @param codeOrError Message text, error code, or existing error object.
+    @param prio WinCC OA error priority.
+    @param note Optional first substitution value or error note.
+    @param note2 Optional second substitution value or error note.
+    @param note3 Optional third substitution value or error note.
   */
   protected _throw(const anytype &codeOrError,
                    const int prio,

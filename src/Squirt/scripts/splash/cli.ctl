@@ -322,6 +322,12 @@ void printUsage()
   logInfo(tr("Settings: -winccoa-tools-pack.squirt.<key>=<value>"));
 }
 
+/**
+  @brief Logs an informational sq-cli message through OaLogger.
+  @param message Translatable message text.
+  @param note Optional first substitution value.
+  @param note2 Optional second substitution value.
+*/
 void logInfo(const string message,
              const anytype note = NULL,
              const anytype note2 = NULL)
@@ -330,6 +336,12 @@ void logInfo(const string message,
   logger.info(message, note, note2);
 }
 
+/**
+  @brief Logs a warning sq-cli message through OaLogger.
+  @param message Translatable message text.
+  @param note Optional first substitution value.
+  @param note2 Optional second substitution value.
+*/
 void logWarning(const string message,
                 const anytype note = NULL,
                 const anytype note2 = NULL)
