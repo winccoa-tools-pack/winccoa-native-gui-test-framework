@@ -137,7 +137,7 @@ This project is licensed under the MIT License. See [LICENSE](LICENSE).
 To following team to prepare the first draft during a hot week in Greece.
 
 - @DaKaiZar — support behind the cpp core libraries
-- Markus Trummer — the Gedi integration
+- @mtrummer-ETM Markus Trummer — the Gedi integration
 - @LuisMiRey — early reviews and testing
 - @mPokornyETM — things behind OaTest integration and DevOps automation in this repository
 
