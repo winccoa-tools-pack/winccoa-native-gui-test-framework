@@ -109,11 +109,11 @@ class OaLogger
     @param note2 Optional second substitution value or error note.
     @param note3 Optional third substitution value or error note.
   */
-  protected _throw(const anytype &codeOrError,
-                   const int prio,
-                   const anytype &note,
-                   const anytype &note2,
-                   const anytype &note3)
+  protected void _throw(const anytype &codeOrError,
+                        const int prio,
+                        const anytype &note,
+                        const anytype &note2,
+                        const anytype &note3)
   {
     dyn_errClass err;
 
