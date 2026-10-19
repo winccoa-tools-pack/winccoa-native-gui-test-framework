@@ -31,10 +31,10 @@ class GuiTestLine : GuiTestShape
   public mapping getCurrentAttributes()
   {
 
-    bool visible, enabled, armed, selected;;
-    int x, y, w, h;
-    float rotation;
-    string border, dashBackCol;
+    anytype visible, enabled, armed, selected;;
+    anytype x, y, w, h;
+    anytype rotation;
+    anytype border, dashBackCol;
 
     getValue(this.testShape,
              "visible", visible,

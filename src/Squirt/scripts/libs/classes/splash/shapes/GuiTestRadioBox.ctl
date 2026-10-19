@@ -31,8 +31,8 @@ class GuiTestRadioBox : GuiTestShape
   public mapping getCurrentAttributes()
   {
 
-    bool visible, enabled, updatesEnabled;
-    int x, y, w, h, cursor, number;
+    anytype visible, enabled, updatesEnabled;
+    anytype x, y, w, h, cursor, number;
 
     getValue(this.testShape,
              "visible", visible,

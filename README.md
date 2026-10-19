@@ -35,6 +35,12 @@ Tests can be executed in multiple ways:
 - From command line
 - Fully automated in WinCC OA TestFramework for CI/CD pipelines
 
+**Current GitHub Actions limitation:** GUI test runs such as `shapes` are not
+supported in GitHub automation because a working display is not available.
+Run the GUI tests locally before merging a pull request. See the
+[test execution guide](tests/WinCC_OA_Test/README.md#gui-tests-and-github-automation)
+for the current status and local execution instructions.
+
 ---
 
 ## Repository layout
@@ -51,6 +57,43 @@ Tests can be executed in multiple ways:
 1. Open this repository in VS Code.
 2. Use your WinCC OA project environment to load and run the Squirt scripts.
 3. Read project-specific details in [src/Squirt/README.md](src/Squirt/README.md).
+4. For TestFramework regression tests, see [tests/WinCC_OA_Test/README.md](tests/WinCC_OA_Test/README.md).
+
+---
+
+## Check and format CTL sources
+
+Use the published package
+[`@winccoa-tools-pack/npm-winccoa-ctrl-code-style`](https://www.npmjs.com/package/@winccoa-tools-pack/npm-winccoa-ctrl-code-style)
+(CLI bin: `winccoa-ctrl-style`). CI currently pins **0.1.2**.
+
+Requires a local WinCC OA install (`WCCOActrl`) and Node.js/npm. Run from the
+repository root:
+
+```powershell
+# dry-run: fail if CTL files need formatting
+npx --yes @winccoa-tools-pack/npm-winccoa-ctrl-code-style@0.1.2 check ./src/Squirt -v 3.21
+
+# format CTL files in place
+npx --yes @winccoa-tools-pack/npm-winccoa-ctrl-code-style@0.1.2 format ./src/Squirt -v 3.21
+```
+
+Optional: register once, then reuse without re-registration:
+
+```powershell
+npx --yes @winccoa-tools-pack/npm-winccoa-ctrl-code-style@0.1.2 register ./src/Squirt -v 3.21
+npx winccoa-ctrl-style check ./src/Squirt -v 3.21 --no-register
+npx winccoa-ctrl-style format ./src/Squirt -v 3.21 --no-register
+```
+
+Scan the tests tree (or another subtree) with `-s`:
+
+```powershell
+npx winccoa-ctrl-style check ./src/Squirt -v 3.21 -s ./tests/WinCC_OA_Test
+npx winccoa-ctrl-style format ./src/Squirt -v 3.21 -s ./tests/WinCC_OA_Test
+```
+
+More local QA notes (tests, copyright CI): [tests/WinCC_OA_Test/README.md](tests/WinCC_OA_Test/README.md).
 
 ---
 
@@ -94,7 +137,7 @@ This project is licensed under the MIT License. See [LICENSE](LICENSE).
 To following team to prepare the first draft during a hot week in Greece.
 
 - @DaKaiZar — support behind the cpp core libraries
-- Markus Trummer — the Gedi integration
+- @mtrummer-ETM Markus Trummer — the Gedi integration
 - @LuisMiRey — early reviews and testing
 - @mPokornyETM — things behind OaTest integration and DevOps automation in this repository
 

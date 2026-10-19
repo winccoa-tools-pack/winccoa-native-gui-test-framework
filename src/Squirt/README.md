@@ -33,6 +33,40 @@ Execution options:
 
 TBD — extend [docs/](docs/README.md) when configuration details stabilize.
 
+### Splash Command-Line Interface
+
+The `sq-cli` wrappers require the WinCC OA `bin` directory and
+`src/Squirt/bin` to be on `PATH`. For example, in PowerShell:
+
+```powershell
+$env:PATH = "C:\Program Files\Siemens\WinCC_OA\3.22\bin;C:\ws\winccoa-tools-pack\winccoa-native-gui-test-framework\src\Squirt\bin;$env:PATH"
+```
+
+Start a recording with a panel path relative to `panels/` and a test-script
+path relative to `scripts/`:
+
+```text
+sq-cli.cmd DPE_monitor_test_3.22 record -winccoa-tools-pack.squirt.panel.path=/vision/login.pnl -winccoa-tools-pack.squirt.testScript.path=tests/vision/login/tc1.ctl -winccoa-tools-pack.squirt.testScript.force=true
+```
+
+The POSIX wrapper is named `sq-cli.sh` and accepts the same project, command,
+and settings. `pause`, `resume`, and `status` operate on the current session.
+Stop the current recording and save it to its configured path with:
+
+```text
+sq-cli.cmd DPE_monitor_test_3.22 stop -winccoa-tools-pack.squirt.testScript.path=tests/vision/login/tc1.ctl -winccoa-tools-pack.squirt.testScript.force=true
+```
+
+`testScript.force=true` allows an existing output script to be overwritten.
+Only project-relative paths under `scripts/tests/` are accepted for generated
+test scripts.
+
+The headless CLI validation suite is `suite_CLI`; it checks accepted and
+rejected project-relative panel and script paths without launching WCCOAui.
+See the [suite documentation](https://github.com/winccoa-tools-pack/winccoa-native-gui-test-framework/blob/main/tests/WinCC_OA_Test/TestSuites/suite_CLI/README.md)
+for execution details. Recording and playback lifecycle integration still
+requires a display and is not part of this headless suite.
+
 ----
 
 ## Examples
@@ -95,6 +129,8 @@ Only WinCC OA shapes are possible to record / re-play. That means no file-select
   to record whole scenario, when something changes
 
 ----
+
+---
 
 <!-- markdownlint-disable-next-line MD033 -->
 <center>Made with ❤️ for and by the WinCC OA community</center>

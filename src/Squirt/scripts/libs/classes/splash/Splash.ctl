@@ -14,6 +14,7 @@
 //--------------------------------------------------------------------------------
 // Libraries used (#uses)
 #uses "ascii"
+#uses "classes/splash/ErrorHdl/OaLogger"
 
 
 //--------------------------------------------------------------------------------
@@ -49,7 +50,9 @@ class Splash
   */
   public static int initInterface()
   {
-    if (!dpExists("_Splash"))
+    if (!dpExists("_Splash") ||
+        !dpExists("_Splash.currentPanel") ||
+        !dpExists("_Splash.currentTestScript"))
       asciiImport("Splash.dpl");
   }
 
@@ -143,39 +146,91 @@ class Splash
         }
         else if (patternMatch(sCmdStop + "*", sCommand))  //stop recording now
         {
-          dyn_string dsSplit = strsplit(sCommand, " ");
-          DebugN("split::", dsSplit);
-          string sFilename = substr(sCommand, strlen(sCmdStop) + 1);
+          string sFilename;
+          string sOutputRelativePath;
+          string sParams;
+          string sCurrentTestScript;
+          mapping currentTestScript = makeMapping();
+          bool hasCliSession = FALSE;
+          dpGet("_Splash.currentTestScript", sCurrentTestScript);
 
-          if (dynlen(dsSplit) < 2)
+          if (sCurrentTestScript != "")
           {
-            sFilename = this.sPanel;
-            strreplace(sFilename, ".pnl", "");
-            sFilename += "/" + this.sTestCase;
+            currentTestScript = jsonDecode(sCurrentTestScript);
+            hasCliSession = currentTestScript.contains("path");
+          }
+
+          if (hasCliSession)
+          {
+            sFilename = currentTestScript.value("path", "");
+            sOutputRelativePath = sFilename;
+            sParams = currentTestScript.value("params", "");
           }
           else
           {
-            sFilename = dsSplit[2] + "/" + dsSplit[3];
-          }
+            dyn_string dsSplit = strsplit(sCommand, " ");
 
-          string sParams;
+            if (dynlen(dsSplit) < 2)
+            {
+              sFilename = this.sPanel;
 
-          //
-          dyn_string items;
+              if (sFilename.startsWith("/"))
+                sFilename = substr(sFilename, 1);
 
-          for (int i = 4; i <= dynlen(dsSplit); i++)
-          {
-            if (i > 4)
-              sParams += " ";
+              strreplace(sFilename, ".pnl", "");
+              sFilename += "/" + this.sTestCase;
+            }
+            else if (dynlen(dsSplit) >= 3)
+            {
+              sFilename = dsSplit[2] + "/" + dsSplit[3];
 
-            sParams += dsSplit[i];
+              if (sFilename.startsWith("/"))
+                sFilename = substr(sFilename, 1);
+
+              strreplace(sFilename, ".pnl", "");
+
+              for (int i = 4; i <= dynlen(dsSplit); i++)
+              {
+                if (i > 4)
+                  sParams += " ";
+
+                sParams += dsSplit[i];
+              }
+            }
+
+            sOutputRelativePath = "tests/splash/" + sFilename;
+            currentTestScript["force"] = TRUE;
           }
 
           if (!patternMatch("*.ctl", sFilename))
             sFilename += ".ctl";
 
-          dyn_string dsFolders = strsplit(sFilename, "/");
-          string sDir = getScriptPath();
+          if (!patternMatch("*.ctl", sOutputRelativePath))
+            sOutputRelativePath += ".ctl";
+
+          if (!isSafeTestScriptPath(sOutputRelativePath))
+          {
+            OaLogger logger = OaLogger();
+            logger.warning(tr("Rejected unsafe Splash output path: $1")
+                           .subst(sOutputRelativePath));
+            setCommandOnDP("error: invalid test script path");
+            return;
+          }
+
+          string sOutputPath = getPath(SCRIPTS_REL_PATH, sOutputRelativePath);
+
+          if (isfile(sOutputPath) &&
+              !currentTestScript.value("force", false))
+          {
+            OaLogger logger = OaLogger();
+            logger.warning(tr("Refusing to overwrite Splash test script: $1")
+                           .subst(sOutputPath));
+            setCommandOnDP("error: test script exists; force is required");
+            return;
+          }
+
+          dyn_string dsFolders = strsplit(sOutputRelativePath, "/");
+          string sDir = getPath(SCRIPTS_REL_PATH);
 
           for (int i = 1; i < dynlen(dsFolders); i++)
           {
@@ -194,14 +249,14 @@ class Splash
           DebugTN("finished recording", sFilename);
 
           inputRecorderStop();
-
           string script = inputRecorderGetScript();
+
           strreplace(script, "InputEventPlayer player;", "");
           strreplace(script, "#uses \"classes/InputEventPlayer\"", "");
 
           script.trim();
 
-          // make methhod play() public
+          // make method play() public
           script = "public int " + script;
           script.remove(script.length() - 1, 1); // remove last }
           // and add return 0; }
@@ -219,15 +274,26 @@ class Splash
           string sContent;
           fileToString(getPath(DATA_REL_PATH, "hsp/templates/scriptEditor/newSplash.ctl"), sContent);
           strreplace(sContent, sParameterPlaceholder, sParameterPlaceholder + sParams);
-          strreplace(sContent, "public play(){}", script);
+          strreplace(sContent, "/** SCRIPT_PLACEHOLDER **/", script);
 
           strreplace(sFilename, ".pnl", ".ctl");
 
           // TODO clarify, Why not to use File class ?
-          const string newGuiTestScriptPath = getScriptPath() + "/" + sFilename;
+          const string newGuiTestScriptPath = getPath(SCRIPTS_REL_PATH) + "/" +
+                                              sOutputRelativePath;
           file fScript = fopen(newGuiTestScriptPath, "w");
           fputs(sContent, fScript);
           fclose(fScript);
+
+          if (!isfile(newGuiTestScriptPath))
+          {
+            OaLogger logger = OaLogger();
+            logger.warning(tr("Failed to write Splash test script: $1")
+                           .subst(newGuiTestScriptPath));
+            setCommandOnDP("error: failed to write test script");
+            return;
+          }
+
           DebugTN("finished recording saved script", sFilename);
 
           // format code by astyle
@@ -242,6 +308,8 @@ class Splash
             remove(newGuiTestScriptPath + ".orig");
 
           setCommandOnDP(sCmdFinished);
+          dpSetWait("_Splash.currentPanel", "{}",
+                    "_Splash.currentTestScript", "{}");
           delay(0, 200);
           exit(0); // TODO clarify, it might looks like a crash, exit() will be better
         }
@@ -400,6 +468,28 @@ class Splash
     // wait, because for possible exit command
     dpSetWait("_Splash.command", sCommand,
               "_Splash.response", "");
+  }
+
+  /**
+    @brief Checks whether a generated test path stays below scripts/tests.
+    @param path Project-relative test script path.
+    @return true when the path is a safe relative .ctl path.
+  */
+  private static bool isSafeTestScriptPath(const string &path)
+  {
+    if (!path.startsWith("tests/") || !path.endsWith(".ctl") ||
+        path.contains("\\") || path.contains(":") || path.contains(".."))
+      return false;
+
+    dyn_string parts = strsplit(path, "/");
+
+    for (int i = 1; i <= dynlen(parts); i++)
+    {
+      if (parts[i] == "" || parts[i] == ".")
+        return false;
+    }
+
+    return dynlen(parts) >= 3;
   }
 
   /**

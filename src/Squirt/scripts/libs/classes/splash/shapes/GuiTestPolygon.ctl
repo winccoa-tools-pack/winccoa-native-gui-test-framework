@@ -31,16 +31,16 @@ class GuiTestPolygon : GuiTestShape
   public mapping getCurrentAttributes()
   {
 
-    bool visible, enabled;
-//     int x, y, w, h;
+    anytype visible, enabled;
+    anytype x, y, w, h;
 //     dyn_dyn_int points;
-    string foreCol, backCol;
+    anytype foreCol, backCol;
 
     getValue(this.testShape,
              "visible", visible,
              "enabled", enabled,
-             /*"position", x, y,
-             "size", w, h*/
+             "position", x, y,
+             "size", w, h,
 //              "points", points,
              "foreCol", foreCol,
              "backCol", backCol);
@@ -49,10 +49,10 @@ class GuiTestPolygon : GuiTestShape
     return makeMapping(
              "visible", visible,
              "enabled", enabled,
-//              "position.x", x,
-//              "position.y", y,
-//              "size.w", w,
-//              "size.h", h,
+             "position.x", x,
+             "position.y", y,
+             "size.w", w,
+             "size.h", h,
 //              "points", jsonEncode(points, true),
              "foreCol", foreCol,
              "backCol", backCol

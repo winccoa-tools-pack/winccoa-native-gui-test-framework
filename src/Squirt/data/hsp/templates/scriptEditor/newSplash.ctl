@@ -26,7 +26,7 @@ class TestReplay : OaGuiTest
 {
 
   //----------------------------------------------------------------------------
-  public play() {}
+  /** SCRIPT_PLACEHOLDER **/
 };
 
 
