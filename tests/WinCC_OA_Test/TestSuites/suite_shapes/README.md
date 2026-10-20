@@ -199,7 +199,7 @@ Each test entry uses **UI manager mode** with the universal `about.pnl`:
 3. **Add to testProj.unit.config:**
 
    ```json
-   { "MANAGER_TYPE" : "UI", "MANAGER_OPTIONS" : "-p about.pnl -s tests/libs/classes/splash/shapes/GuiTest{ShapeName}.ctl -user root:" }
+   { "MANAGER_TYPE" : "UI", "MANAGER_OPTIONS" : "-p about.pnl -s tests/libs/classes/splash/shapes/GuiTest{ShapeName}.ctl " }
    ```
 
 4. **Follow code style:** See [`winccoa-qa`](../../skills/winccoa-qa/) skill for CTL style requirements.
