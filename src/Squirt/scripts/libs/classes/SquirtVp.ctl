@@ -22,10 +22,13 @@ class SquirtVp
     @param vpId Identifier of the VP JSON file.
     @param shapes Shapes used for initial VP content creation.
   */
-  public SquirtVp(const string &vpId, const vector<shape> &shapes)
+  public SquirtVp(string vpId = "", vector<shape> shapes = NULL)
   {
-    this.id = vpId;
-    this.shapes = shapes;
+    if (!vpId.isEmpty())
+    {
+      this.id = vpId;
+      this.shapes = shapes;
+    }
   }
 
   //------------------------------------------------------------------------------
@@ -132,4 +135,62 @@ class SquirtVp
   {
     return "splash/VPs/" + this.id + ".json";
   }
+};
+
+
+/**
+  @brief Visual reference point containing every currently visible panel shape.
+  @AIgeneratedHelpContent
+*/
+class SquirtVpPanel : SquirtVp
+{
+  //@public members
+
+  /**
+    @brief Creates a panel-wide VP from the visible shapes in a panel.
+    @param vpId Identifier of the panel VP JSON file.
+    @param panel Current panel whose visible shapes form the reference.
+  */
+  public SquirtVpPanel(const string &vpId, const shape &panel)
+  {
+    this.panel = panel;
+    this.id = vpId;
+    this.shapes = this.getPanelShapes();
+  }
+
+  //@protected members
+
+  /** Panel whose visible shapes are captured in the VP. */
+  protected shape panel;
+
+  /**
+    @brief Returns the panel VP metadata path relative to DATA_REL_PATH.
+    @return Relative JSON path for this panel VP.
+  */
+  protected string getMetaRelPath()
+  {
+    return "splash/VPs/panels/" + this.id + ".json";
+  }
+
+  /**
+    @brief Resolves all visible shapes from the current panel.
+    @return Vector of visible panel shapes used by the VP.
+  */
+  protected vector<shape> getPanelShapes()
+  {
+    dyn_string dsShapes = getShapes(this.panel.moduleName,
+                                    this.panel.name(), "visible", TRUE);
+    vector<shape> retShapes;
+
+    for (int i = 1; i <= dynlen(dsShapes); i++)
+    {
+      const shape sh = getShape(this.panel.moduleName, this.panel.name(),
+                                dsShapes[i]);
+      retShapes.append(sh);
+    }
+
+    return retShapes;
+  }
+
+  //@private members
 };

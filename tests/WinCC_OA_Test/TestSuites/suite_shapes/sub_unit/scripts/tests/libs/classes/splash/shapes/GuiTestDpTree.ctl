@@ -1,4 +1,4 @@
-﻿/**
+/**
   @file $relPath
   @copyright MIT
   @brief Real tests for classes/splash/shapes/GuiTestDpTree.ctl.
@@ -71,6 +71,9 @@ class TstGuiTestDpTree : OaTest
     this.assertTrue(current.contains("position.y"), "Expected position.y attribute");
     this.assertTrue(current.contains("size.w"), "Expected size.w attribute");
     this.assertTrue(current.contains("size.h"), "Expected size.h attribute");
+    this.assertTrue(current.contains("font"), "Expected font attribute");
+    this.assertTrue(current.contains("lineWidth"), "Expected lineWidth attribute");
+    this.assertTrue(current.contains("rootIsDecorated"), "Expected rootIsDecorated attribute");
 
     this.assertEqual(current.value("position.x"), 10,
                      "Expected wrapper to read the x-position");
@@ -89,6 +92,17 @@ class TstGuiTestDpTree : OaTest
     this.assertEqual(wrapper.getCurrentAttributes().value("visible"), true,
                      "Expected visible state to toggle on");
 
+    return 0;
+  }
+
+  /**
+    @test Verifies the DPE-tree helper rejects an empty element path.
+  */
+  public int testExpandElementRejectsEmptyPath()
+  {
+    GuiTestDpTree wrapper = GuiTestDpTree(testShape);
+    this.assertEqual(wrapper.expandElement(""), -2,
+                     "Expected an empty DPE path to be rejected");
     return 0;
   }
 
