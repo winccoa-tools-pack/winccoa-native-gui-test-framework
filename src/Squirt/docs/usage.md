@@ -44,6 +44,15 @@ WCCOAui.exe -p "vision/dpe_monitor.pnl" -log "+stderr" -proj "<test-project>" -s
 The VP baseline is committed with Squirt and is resolved from the configured
 subproject; the showcase does not create or modify test-project data.
 
+## Test guide panel
+
+`panels/vision/tc_quide.pnl` is a reusable guide panel for interactive GUI test
+steps. The caller supplies guide values to `SplashGuidedMacroRecorder`, which
+writes project-root `.tcQuide.json`, starts recording, and launches the panel.
+The guide reads the file during initialization and sends a stop payload when
+the user finishes. See the [test guide panel instructions](tc-quide-guide.md)
+for the JSON contract, startup pattern, and command handshake.
+
 ## Input helpers
 
 `SquirtInputEventPlayer` provides address-based actions that wait for visible,
@@ -76,11 +85,35 @@ names. Timeouts are in milliseconds; zero checks the current state once.
 Table cells must already be visible; automatic scrolling is not implemented.
 `pressShortcut` focuses its target by clicking before sending the key.
 
+## Shape wrappers
+
+Typed `GuiTestShape` wrappers provide shape-specific attribute snapshots through
+`getCurrentAttributes()` and semantic actions where raw input is not enough.
+Use `getTestObject(shape)` when the shape type is only known at runtime, or
+construct a typed wrapper when the type is known:
+
+```ctrl
+GuiTestSelectionList choices = GuiTestSelectionList(selectionShape);
+choices.selectItem("Second item");
+
+GuiTestDpTree tree = GuiTestDpTree(dpTreeShape);
+tree.expandElement("System1:ExampleDP.Structure.value");
+```
+
+`GuiTestSelectionList.selectItem()` accepts exact displayed text or a one-based
+item position and returns zero when the selection is applied. Text selection
+uses an exact item lookup rather than keyboard type-to-select. The
+`GuiTestDpTree.expandElement()` helper expands and navigates to a DPE/config
+path, returning a negative status when the path is invalid or cannot be
+selected. DP-tree snapshots include the current selection and tree appearance
+attributes, so `OaGuiTest.assertAttributes()` can check the same state model.
+
 The click helpers honor the inherited `shallMoveCursor()` setting. Double-click
 helpers currently send two press/release sequences and do not guarantee a
-native `DoubleClicked` callback. `dragShape` and tree path actions remain
-experimental: strict live checks have exposed drag-selection and tree-expansion
-failures. They must not be treated as verified interaction APIs yet.
+native `DoubleClicked` callback. `dragShape` remains experimental because strict
+live checks have exposed drag-selection failures. `GuiTestDpTree.expandElement()`
+has a live invalid-path check, but navigation against a populated DPE tree still
+needs a representative fixture before it is considered fully verified.
 
 Reusable standalone checks and their current results are documented in
 [the input-player test directory](../../../tests/WinCC_OA_Test/TestSuites/suite_shapes/sub_unit/scripts/tests/libs/classes/inputPlayer/README.md).

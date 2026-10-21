@@ -71,6 +71,9 @@ class TstGuiTestSelectionList : OaTest
     this.assertTrue(current.contains("position.y"), "Expected position.y attribute");
     this.assertTrue(current.contains("size.w"), "Expected size.w attribute");
     this.assertTrue(current.contains("size.h"), "Expected size.h attribute");
+    this.assertTrue(current.contains("font"), "Expected font attribute");
+    this.assertTrue(current.contains("items"), "Expected items attribute");
+    this.assertTrue(current.contains("selectedItems"), "Expected selectedItems attribute");
 
     this.assertEqual(current.value("position.x"), 10,
                      "Expected wrapper to read the x-position");
@@ -89,6 +92,36 @@ class TstGuiTestSelectionList : OaTest
     this.assertEqual(wrapper.getCurrentAttributes().value("visible"), true,
                      "Expected visible state to toggle on");
 
+    return 0;
+  }
+
+  /**
+    @test Verifies selection by displayed text and one-based item position.
+  */
+  public int testSelectItem()
+  {
+    testShape.deleteAllItems();
+    testShape.appendItem("First item");
+    testShape.appendItem("Second item");
+    GuiTestSelectionList wrapper = GuiTestSelectionList(testShape);
+
+    this.assertEqual(wrapper.selectItem("Second item"), 0,
+                     "Expected the helper to select an item by text");
+    this.assertEqual(testShape.selectedText(), "Second item",
+                     "Expected the selected text to match");
+
+    this.assertEqual(wrapper.selectItem(1), 0,
+                     "Expected the helper to select an item by position");
+    this.assertEqual(testShape.selectedText(), "First item",
+                     "Expected one-based position 1 to select the first item");
+
+    const mapping current = wrapper.getCurrentAttributes();
+    this.assertEqual(current.value("items"),
+                     makeDynString("First item", "Second item"),
+                     "Expected the snapshot to include all list items");
+    this.assertEqual(current.value("selectedItems"),
+                     makeDynString("First item"),
+                     "Expected the snapshot to include selected items");
     return 0;
   }
 
