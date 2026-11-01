@@ -53,6 +53,40 @@ The guide reads the file during initialization and sends a stop payload when
 the user finishes. See the [test guide panel instructions](tc-quide-guide.md)
 for the JSON contract, startup pattern, and command handshake.
 
+## Recorded macro cleanup
+
+Recorded macros are useful starting points, but low-level input events can be
+hard to review. The repository includes a Node.js helper at
+`devTools/simplify-input-macros/simplify-input-macros.mjs`. Run it from the
+repository root; dry-run is the default and does not modify the macro:
+
+```powershell
+node devTools/simplify-input-macros/simplify-input-macros.mjs --dry-run path\to\macros.ctl
+```
+
+Review the candidate locations and warnings before applying safe click
+simplifications:
+
+```powershell
+node devTools/simplify-input-macros/simplify-input-macros.mjs --apply path\to\macros.ctl
+```
+
+The helper only converts matching press/wait/release clicks at the same
+coordinates and modifiers when the recorded hold is at most 100 ms. Longer
+holds are left unchanged. Printable `keyClick` runs and Ctrl+A/Backspace pairs
+are reported as `writeText` or `clearText` suggestions when a preceding
+`makeCurrent` identifies the target; other multi-key sequences need manual
+review. Keyboard and pointer-movement findings are advisory and are not
+rewritten by `--apply`.
+
+Button-free mouse events that repeat or immediately supersede a pointer
+position are reported for manual review. They may be meaningful hover or drag
+motion, so the helper never removes them automatically. Sleeps longer than 10
+seconds are also reported. Add a comment directly above each such sleep to
+explain the UI state or event it waits for; `--apply` refuses to write a file
+with an unexplained long sleep. Prefer a readiness/state check to a long fixed
+delay when one is available.
+
 ## Input helpers
 
 `SquirtInputEventPlayer` provides address-based actions that wait for visible,

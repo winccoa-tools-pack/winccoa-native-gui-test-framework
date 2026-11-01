@@ -1,0 +1,21 @@
+{
+  "id": "dpe_monitor_010",
+  "shapes": {
+    "cmdDPSel": {
+      "visible": true,
+      "enabled": true,
+      "position.x": 495,
+      "position.y": 480,
+      "size.w": 25,
+      "size.h": 25
+    },
+    "cmdAddDPE": {
+      "visible": true,
+      "enabled": true,
+      "position.x": 525,
+      "position.y": 480,
+      "size.w": 25,
+      "size.h": 25
+    }
+  }
+}
