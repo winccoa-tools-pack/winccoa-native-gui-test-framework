@@ -20,6 +20,7 @@
 
 #uses "classes/splash/shapes/GuiTestShape"
 #uses "classes/SquirtVp"
+#uses "classes/SquirtVpPanel"
 #uses "oaGuiTestShapes"
 
 
@@ -156,6 +157,63 @@ class OaGuiTest : OaTest
       const string shapeName = vpShapes.keyAt(i);
 
       if (assertAttributes(shapeName, vpShapes.value(shapeName), note, timeout))
+        return -1;
+    }
+
+    return 0;
+  }
+
+  //------------------------------------------------------------------------------
+  /**
+    @brief Validates every visible shape in a panel against a panel-wide VP.
+    @param vpId Identifier of the panel VP JSON file.
+    @param panel Live panel shape; resolve it first to wait for initialization.
+    @param note Optional assertion note describing the checkpoint.
+    @param timeout Maximum wait time per shape verification.
+        @note Font, text, and cursor values are excluded because they can vary by
+          locale or interaction state; assert dynamic text separately.
+    @return 0 if all visible shapes match, -1 on first mismatch.
+  */
+  protected int assertPanelVP(const string &vpId, const shape &panel,
+                              const string note = "", float timeout = 2.0)
+  {
+    SquirtVpPanel panelVp = SquirtVpPanel(vpPrefix + vpId, panel);
+
+    if (panelVp.init())
+      this.abort(tr("The panel VP $1 can not be initialized!").subst(vpId));
+
+    mapping vpShapes = panelVp.getShapesAndAttributes();
+
+    if (vpShapes.count() == 0)
+      this.abort(tr("The panel VP $1 does not contain any shapes!").subst(vpId));
+
+    int referenceShapeCount = vpShapes.count();
+    int currentShapeCount = panelVp.getCurrentShapeCount();
+
+    if (referenceShapeCount != currentShapeCount)
+      this.abort(tr("The panel VP $1 does not contain the same number of " +
+                    "visible shapes as the current panel!").subst(vpId));
+
+    for (uint index = 0; index < vpShapes.count(); index++)
+    {
+      const string shapeName = vpShapes.keyAt(index);
+      mapping expectedAttributes = vpShapes.value(shapeName);
+      vector<string> attributeNames = expectedAttributes.keys();
+      mapping stableAttributes;
+
+      for (uint attributeIndex = 0;
+           attributeIndex < attributeNames.count(); attributeIndex++)
+      {
+        const string attribute = attributeNames.at(attributeIndex);
+
+        if (attribute == "font" || attribute == "text" ||
+            attribute == "cursor")
+          continue;
+
+        stableAttributes[attribute] = expectedAttributes.value(attribute);
+      }
+
+      if (assertAttributes(shapeName, stableAttributes, note, timeout))
         return -1;
     }
 

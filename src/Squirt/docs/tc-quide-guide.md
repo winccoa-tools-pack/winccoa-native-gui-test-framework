@@ -44,24 +44,35 @@ project's `scripts/libs` directory.
 ## Open the guide
 
 The panel path is relative to the Squirt subproject's `panels` directory. In a
-GUI test, start recording before the interaction, then launch the guide after
-the test reaches the point where the user should follow its instructions:
+GUI test, use `recordGuidedMacro()` for the common flow. It starts recording,
+clicks the trigger shape, launches the guide, waits until the guide sends its
+stop command, and confirms that the macro was saved:
 
 ```ctrl
 #uses "classes/splash/SplashGuidedMacroRecorder"
 
 SplashGuidedMacroRecorder recorder = SplashGuidedMacroRecorder();
-recorder.startRecording("data/tmp/macro_capture.ctl", "macro_selectDP",
-                        "C:\\Project\\scripts\\libs\\macros.ctl");
-// Open the product-specific selector before presenting the guide.
-recorder.startGuide("vision/tc_quide.pnl",
-                    "Choose the requested data point and confirm it.");
+if (recorder.recordGuidedMacro(
+      "data/tmp/macro_capture.ctl", "macro_selectDP",
+      "C:\\Project\\scripts\\libs\\macros.ctl",
+      "Vision_1.Datenpunktelement-Monitor:cmdDPSel",
+      "vision/tc_quide.pnl",
+      "Choose the requested data point and confirm it.", player))
+{
+  this.abort(recorder.getErrorMessage());
+  return -1;
+}
 ```
 
-Check each method's return value and use `getErrorMessage()` for setup failures.
-After launch, wait for `isRecordingStopped()` before checking
-`isRecordingSaved()`. The guide runs in a separate UI process, so its close
-does not terminate the test manager.
+`player` must be a `SquirtInputEventPlayer`; the trigger address identifies the
+product-specific action that opens the interaction to record. The poll interval
+defaults to 100 ms and must be positive. The guide runs in a separate UI
+process, so its close does not terminate the test manager.
+
+For custom flows that need to perform setup between starting the recorder and
+opening the guide, use `startRecording()` and `startGuide()` directly. In that
+case, check both return values, wait for `isRecordingStopped()`, then check
+`isRecordingSaved()`. Use `getErrorMessage()` for setup or save failures.
 
 ## JSON and command handshake
 

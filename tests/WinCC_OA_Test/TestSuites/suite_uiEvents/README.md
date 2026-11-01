@@ -130,6 +130,23 @@ and stdout separate: OaTest results are on stderr, original panel Debug calls
 may write on stdout. A CTRL-manager-only syntax check reports UI APIs/constants
 as undefined and is not authoritative for this UI script.
 
+## Test Guide Panel
+
+The [guide-panel contract test](sub_uiEvents/scripts/tests/panels/vision/tc_quide/tc_quide_010.ctl)
+is owned by Squirt and was moved out of the DPE Monitor product suite.
+It verifies the displayed configuration and the Finish button's Splash stop
+payload. Prepare project-root `.tcQuide.json` with `macroName`, `libraryPath`,
+and `quide`, and ensure the framework's `_Splash` datapoint exists.
+Run without an active recording session because the test clears
+`_Splash.command` and `_Splash.response`.
+
+Use WCCOAui with `-p about.pnl` and
+`-s tests/panels/vision/tc_quide/tc_quide_010.ctl` in a running project that
+includes Squirt and `sub_uiEvents`. The script opens its own `TcQuideUiTest`
+module. It is not in `testProj.events.config`'s unattended manager list while
+its configuration prerequisite remains external. The move preserves test
+behavior; no new runtime pass is claimed.
+
 ## Touch Tests And Examples
 
 The [touch guide](touch.md) documents APIs, complete contact frames, release

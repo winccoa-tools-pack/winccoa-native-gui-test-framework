@@ -16,6 +16,7 @@ concepts, and workflows that do not belong inside code comments.
 | [Usage](usage.md) | How to record, replay, and run GUI tests |
 | [Test guide panel](tc-quide-guide.md) | Configure and use `tc_quide.pnl` from a test caller |
 | [Architecture](architecture.md) | High-level components and execution modes |
+| [Test automation patterns](test-automation-patterns.md) | Reusable practices for spec-driven tests, fixtures, and panel VPs |
 | [Contributing docs](contributing-docs.md) | Where to put new documentation |
 
 The generated help **main page** is the worker [README.md](../README.md).

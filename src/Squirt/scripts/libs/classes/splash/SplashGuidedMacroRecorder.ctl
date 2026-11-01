@@ -6,6 +6,7 @@
 */
 
 #uses "classes/InputEventPlayer"
+#uses "classes/SquirtInputEventPlayer"
 
 /**
   @brief Coordinates input recording with the generic tc_quide panel.
@@ -223,6 +224,61 @@ class SplashGuidedMacroRecorder
     mapping options = makeMapping("program", uiPath,
                                   "arguments", arguments);
     system(options);
+    return 0;
+  }
+
+  /**
+    @brief Records one guided interaction and waits for its saved macro.
+    @param outputRelativePath Temporary file path under data/tmp.
+    @param macroName Name of the reusable macro function.
+    @param libraryPath Full native path under the project scripts/libs.
+    @param triggerAddress Shape clicked to start the interaction being recorded.
+    @param guidePanel Panel path relative to the Squirt panels directory.
+    @param guideText Instructions shown in the guide panel.
+    @param player Squirt input player used to activate the trigger and wait.
+    @param pollIntervalMs Positive interval between stop-state checks.
+    @return 0 when the macro is saved; -1 on setup or save failure.
+  */
+  public int recordGuidedMacro(const string &outputRelativePath,
+                               const string &macroName,
+                               const string &libraryPath,
+                               const string &triggerAddress,
+                               const string &guidePanel,
+                               const string &guideText,
+                               SquirtInputEventPlayer &player,
+                               int pollIntervalMs = 100)
+  {
+    if (pollIntervalMs <= 0)
+    {
+      this.errorMessage = "The recording poll interval must be positive.";
+      return -1;
+    }
+
+    if (this.startRecording(outputRelativePath, macroName, libraryPath))
+      return -1;
+
+    player.clickShape(triggerAddress);
+
+    if (this.startGuide(guidePanel, guideText))
+    {
+      if (inputRecorderIsRecording())
+        inputRecorderStop();
+
+      this.recordingStopped = TRUE;
+      return -1;
+    }
+
+    while (!this.isRecordingStopped())
+      player.sleep(pollIntervalMs);
+
+    if (!this.isRecordingSaved())
+    {
+      if (this.errorMessage.isEmpty())
+        this.errorMessage = "The guided recording was not saved.";
+
+      return -1;
+    }
+
     return 0;
   }
 
