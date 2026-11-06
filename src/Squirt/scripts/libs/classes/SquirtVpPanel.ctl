@@ -11,7 +11,7 @@
 #uses "panel"
 
 /**
-  @brief Visual reference point containing every currently visible panel shape.
+  @brief Panel VP containing visible shapes except non-interactive SPACER items.
   @AIgeneratedHelpContent
 */
 class SquirtVpPanel : SquirtVp
@@ -38,8 +38,8 @@ class SquirtVpPanel : SquirtVp
   }
 
   /**
-    @brief Returns the number of visible shapes in the captured panel.
-    @return Number of visible shapes collected from the panel.
+    @brief Returns the number of capturable visible panel shapes.
+    @return Number of visible shapes collected, excluding SPACER items.
   */
   public int getCurrentShapeCount()
   {
@@ -70,6 +70,7 @@ class SquirtVpPanel : SquirtVp
     {
       const shape panelShape = getShape(this.panel.moduleName,
                                         this.panel.name(), dsShapes[index]);
+
       retShapes.append(panelShape);
     }
 

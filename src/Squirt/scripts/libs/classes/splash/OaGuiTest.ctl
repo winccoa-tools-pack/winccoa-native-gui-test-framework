@@ -17,12 +17,12 @@
 #uses "classes/oaTest/OaTest"
 
 #uses "classes/splash/OaGuiTestScreenCapture"
+#uses "classes/splash/SplashGuidedMacroRecorder"
 
 #uses "classes/splash/shapes/GuiTestShape"
 #uses "classes/SquirtVp"
 #uses "classes/SquirtVpPanel"
 #uses "oaGuiTestShapes"
-
 
 
 
@@ -57,6 +57,9 @@ class OaGuiTest : OaTest
   {
     if (OaTest::setUp())
       return -1;
+
+    // print all characters in the test case data
+    this.tcData.setMaxCountOfPrintedCharacters(0);
 
     waitForPanelInit();
 
@@ -368,6 +371,47 @@ class OaGuiTest : OaTest
   protected void waitForPanelInit()
   {
     delay(2);
+  }
+
+  protected int playOrRecordMacro(const string &macroName, const string &guide)
+  {
+    /*
+
+    const string libraryPath = makeNativePath(
+                                 PROJ_PATH + "scripts/libs/macros.ctl");
+    // const string guide = "In the DPE selector, choose the structured node " +
+    //                      TEST_DP + ", confirm adding all descendant DPEs, " +
+    //                      "then finish the recording.";
+    //                      */
+    string scriptPath = getPath(LIBS_REL_PATH, "macros.ctl");
+
+    if (scriptPath.isEmpty())
+      scriptPath = PROJ_PATH + LIBS_REL_PATH + "macros.ctl";
+
+    const bool teachMode = !isFunctionDefined(macroName) || isDbgFlag("splash.teachMode");
+
+    if (teachMode)
+    {
+      if (!isFunctionDefined(macroName))
+        throwError(makeError("", PRIO_INFO, ERR_CONTROL, 0, "No macro " + macroName + " loaded; recording user action."));
+      else
+        throwError(makeError("", PRIO_WARNING, ERR_CONTROL, 0, "Macro " + macroName + " already loaded; teach mode active."));
+
+      SplashGuidedMacroRecorder recorder = SplashGuidedMacroRecorder();
+
+      if (recorder.recordGuidedMacro(
+            outputRelativePath, macroName, libraryPath,
+            panelAddress + ":cmdDPSel", "vision/tc_quide.pnl", guide, player))
+      {
+        throwError(makeError("", PRIO_SEVERE, ERR_CONTROL, 54, recorder.getErrorMessage()));
+        return -1;
+      }
+    }
+    else
+    {
+      throwError(makeError("", PRIO_INFO, ERR_CONTROL, 0, "Using loaded macro " + macroName + "."));
+      return (int)callFunction(macroName, player);
+    }
   }
 
 //--------------------------------------------------------------------------------

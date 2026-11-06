@@ -35,6 +35,7 @@
 #uses "classes/splash/shapes/GuiTestSelectionList"
 #uses "classes/splash/shapes/GuiTestShape"
 #uses "classes/splash/shapes/GuiTestSlider"
+#uses "classes/splash/shapes/GuiTestSpacer"
 #uses "classes/splash/shapes/GuiTestSpinButton"
 #uses "classes/splash/shapes/GuiTestTab"
 #uses "classes/splash/shapes/GuiTestTable"
@@ -104,6 +105,8 @@ public shared_ptr<GuiTestShape> getTestObject(const shape &testShape)
     case "SELECTION_LIST" : return new GuiTestSelectionList(testShape);
 
     case "SLIDER" : return new GuiTestSlider(testShape);
+
+    case "SPACER" : return new GuiTestSpacer(testShape);
 
     case "SPIN_BUTTON" : return new GuiTestSpinButton(testShape);
 
