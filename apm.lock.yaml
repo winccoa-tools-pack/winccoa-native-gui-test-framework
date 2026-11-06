@@ -1,0 +1,34 @@
+lockfile_version: '1'
+generated_at: '2026-09-18T20:12:11.495748+00:00'
+apm_version: 0.8.10
+dependencies:
+- repo_url: _local/test-ai-skills
+  package_type: apm_package
+  deployed_files:
+  - .github/skills/iec62443-security-linking
+  - .github/skills/squish-at-winccoa
+  - .github/skills/winccoa-basic-components
+  - .github/skills/winccoa-ctrl-test-framework
+  - .github/skills/winccoa-oatest
+  - .github/skills/winccoa-proj-docs
+  - .github/skills/winccoa-project-admin
+  - .github/skills/winccoa-qa
+  - .github/skills/winccoa-repository
+  - .github/skills/winccoa-ui-ctrl-click-testframework
+  - .github/skills/winccoa-version
+  source: local
+  local_path: C:\ws\ETM\test-ai-skills\
+- repo_url: winccoa-ai/wincc-oa-teams/common-ai-skills
+  host: code.siemens.com
+  resolved_commit: a4acc3173624baff0f13da305641b1b86d3ffe0d
+  resolved_ref: main
+  package_type: apm_package
+  deployed_files:
+  - .github/hooks/common-ai-skills-hooks.json
+  - .github/hooks/scripts/common-ai-skills/apm-update.py
+  - .github/skills/nfr-report
+  - .github/skills/winccoa-cli
+  - .github/skills/winccoa-common
+  - .github/skills/winccoa-control-script
+  - .github/skills/winccoa-skills-status
+  content_hash: sha256:f9788b21c5fb82361807b7698dbe88bdaa9b2b36bf1ceec944411779ea0e50b8

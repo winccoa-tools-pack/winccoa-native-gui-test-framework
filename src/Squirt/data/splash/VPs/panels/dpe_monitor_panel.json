@@ -1,0 +1,542 @@
+{
+    "id": "dpe_monitor_panel",
+    "shapes": {
+        "cmdAddDPEGroup": {
+            "visible": true,
+            "updatesEnabled": true,
+            "enabled": true,
+            "toggleState": false,
+            "position.x": 555,
+            "size.w": 25,
+            "position.y": 480,
+            "size.h": 25,
+            "buttonType": 1,
+            "borderStyle": 1,
+            "font": {
+                "de_AT.utf8": "Courier New,-1,12,5,400,0,0,0,0,0,0,0,0,0,0,1",
+                "en_US.utf8": "Courier New,-1,12,5,400,0,0,0,0,0,0,0,0,0,0,1"
+            },
+            "fill": "",
+            "textPosition": "TEXT_RIGHT_OF_PIXMAP",
+            "text": {
+                "de_AT.utf8": "",
+                "en_US.utf8": ""
+            }
+        },
+        "comConfiguration": {
+            "visible": true,
+            "enabled": true,
+            "position.x": 23,
+            "size.w": 85,
+            "position.y": 50,
+            "size.h": 19,
+            "armed": false,
+            "border": "[solid,oneColor,JoinMiter,CapButt,1]",
+            "dashBackCol": "_Transparent",
+            "fill": "[outline]",
+            "text": [{
+                    "de_AT.utf8": "Konfiguration:",
+                    "en_US.utf8": "Configuration:"
+                }],
+            "format": "[0s,,,AlignLeft]",
+            "selected": false
+        },
+        "tabInfo": {
+            "visible": true,
+            "enabled": true,
+            "position.x": 25,
+            "size.w": 761,
+            "position.y": 80,
+            "size.h": 391
+        },
+        "FRAME1": {
+            "visible": true,
+            "enabled": true,
+            "position.x": 15,
+            "size.w": 781,
+            "position.y": 33,
+            "size.h": 518,
+            "selected": false,
+            "armed": false,
+            "border": "[solid,oneColor,JoinMiter,CapButt,0]",
+            "dashBackCol": "_Transparent",
+            "fill": "[outline]"
+        },
+        "comDpe": {
+            "visible": true,
+            "enabled": true,
+            "position.x": 23,
+            "size.w": 37,
+            "position.y": 487,
+            "size.h": 19,
+            "armed": false,
+            "border": "[solid,oneColor,JoinMiter,CapButt,1]",
+            "dashBackCol": "_Transparent",
+            "fill": "[solid]",
+            "text": [{
+                    "de_AT.utf8": "DPE:",
+                    "en_US.utf8": "DPE:"
+                }],
+            "format": "[0s,,,AlignLeft]",
+            "selected": false
+        },
+        "config_comboBox": {
+            "visible": true,
+            "updatesEnabled": true,
+            "enabled": true,
+            "position.x": 115,
+            "position.y": 50,
+            "cursor": 0,
+            "size.w": 286,
+            "size.h": 23,
+            "itemCount": 0,
+            "selectedPos": -1,
+            "editable": false,
+            "selectedText": "",
+            "text": ""
+        },
+        "comNumberOfElements": {
+            "visible": true,
+            "enabled": true,
+            "position.x": 594,
+            "size.w": 130,
+            "position.y": 52,
+            "size.h": 19,
+            "armed": false,
+            "border": "[solid,oneColor,JoinMiter,CapButt,1]",
+            "dashBackCol": "_Transparent",
+            "fill": "[outline]",
+            "text": [{
+                    "de_AT.utf8": "Anzahl der Elemente:",
+                    "en_US.utf8": "Number of elements:"
+                }],
+            "format": "[0s,,,AlignRight]",
+            "selected": false
+        },
+        "cbPermanentUpdate": {
+            "visible": true,
+            "enabled": true,
+            "position.x": 65,
+            "size.w": 217,
+            "position.y": 514,
+            "size.h": 31
+        },
+        "elementsCount": {
+            "visible": true,
+            "enabled": true,
+            "position.x": 728,
+            "size.w": 58,
+            "position.y": 50,
+            "size.h": 23,
+            "max": null,
+            "min": null,
+            "format": "[0s,,,AlignLeft]",
+            "text": "",
+            "updatesEnabled": true,
+            "borderStyle": 1,
+            "editable": false,
+            "font": {
+                "de_AT.utf8": "Arial,-1,13,5,400,0,0,0,0,0,0,0,0,0,0,1",
+                "en_US.utf8": "Arial,-1,13,5,400,0,0,0,0,0,0,0,0,0,0,1"
+            }
+        },
+        "closePanel": {
+            "visible": true,
+            "updatesEnabled": true,
+            "enabled": true,
+            "toggleState": false,
+            "position.x": 708,
+            "size.w": 85,
+            "position.y": 573,
+            "size.h": 25,
+            "buttonType": 0,
+            "borderStyle": 1,
+            "font": {
+                "de_AT.utf8": "Arial,-1,13,5,400,0,0,0,0,0,0,0,0,0,0,1",
+                "en_US.utf8": "Arial,-1,13,5,400,0,0,0,0,0,0,0,0,0,0,1"
+            },
+            "fill": "",
+            "textPosition": "TEXT_RIGHT_OF_PIXMAP",
+            "text": {
+                "de_AT.utf8": "Schließen",
+                "en_US.utf8": "Close"
+            }
+        },
+        "waitText": {
+            "visible": true,
+            "enabled": true,
+            "position.x": 328,
+            "size.w": 126,
+            "position.y": 271,
+            "size.h": 24,
+            "armed": false,
+            "border": "[solid,oneColor,JoinMiter,CapButt,1]",
+            "dashBackCol": "_Transparent",
+            "fill": "[outline]",
+            "text": [{
+                    "de_AT.utf8": "Bitte warten ....",
+                    "en_US.utf8": "Please wait ..."
+                }],
+            "format": "[0s,,,AlignLeft]",
+            "selected": false
+        },
+        "cbOnlyComment": {
+            "visible": true,
+            "enabled": true,
+            "position.x": 284,
+            "size.w": 302,
+            "position.y": 514,
+            "size.h": 31
+        },
+        "printTable": {
+            "visible": true,
+            "updatesEnabled": true,
+            "enabled": true,
+            "toggleState": false,
+            "position.x": 793,
+            "size.w": 85,
+            "position.y": 1388,
+            "size.h": 25,
+            "buttonType": 0,
+            "borderStyle": 1,
+            "font": {
+                "de_AT.utf8": "Arial,-1,13,5,400,0,0,0,0,0,0,0,0,0,0,1",
+                "en_US.utf8": "Arial,-1,13,5,400,0,0,0,0,0,0,0,0,0,0,1"
+            },
+            "fill": "",
+            "textPosition": "TEXT_RIGHT_OF_PIXMAP",
+            "text": {
+                "de_AT.utf8": "Drucken",
+                "en_US.utf8": "Print"
+            }
+        },
+        "dpe_comboBox": {
+            "visible": true,
+            "updatesEnabled": true,
+            "enabled": true,
+            "position.x": 65,
+            "position.y": 483,
+            "cursor": 0,
+            "size.w": 421,
+            "size.h": 24,
+            "itemCount": 0,
+            "selectedPos": -1,
+            "editable": true,
+            "selectedText": "",
+            "text": ""
+        },
+        "cmdAddDPE": {
+            "visible": true,
+            "updatesEnabled": true,
+            "enabled": true,
+            "toggleState": false,
+            "position.x": 525,
+            "size.w": 25,
+            "position.y": 480,
+            "size.h": 25,
+            "buttonType": 1,
+            "borderStyle": 1,
+            "font": {
+                "de_AT.utf8": "Courier New,-1,12,5,400,0,0,0,0,0,0,0,0,0,0,1",
+                "en_US.utf8": "Courier New,-1,12,5,400,0,0,0,0,0,0,0,0,0,0,1"
+            },
+            "fill": "",
+            "textPosition": "TEXT_RIGHT_OF_PIXMAP",
+            "text": {
+                "de_AT.utf8": "",
+                "en_US.utf8": ""
+            }
+        },
+        "cmdUp": {
+            "visible": true,
+            "updatesEnabled": true,
+            "enabled": true,
+            "toggleState": false,
+            "position.x": 610,
+            "size.w": 25,
+            "position.y": 480,
+            "size.h": 25,
+            "buttonType": 1,
+            "borderStyle": 1,
+            "font": {
+                "de_AT.utf8": "Courier New,-1,12,5,400,0,0,0,0,0,0,0,0,0,0,1",
+                "en_US.utf8": "Courier New,-1,12,5,400,0,0,0,0,0,0,0,0,0,0,1"
+            },
+            "fill": "",
+            "textPosition": "TEXT_RIGHT_OF_PIXMAP",
+            "text": {
+                "de_AT.utf8": "",
+                "en_US.utf8": ""
+            }
+        },
+        "cmdDown": {
+            "visible": true,
+            "updatesEnabled": true,
+            "enabled": true,
+            "toggleState": false,
+            "position.x": 640,
+            "size.w": 25,
+            "position.y": 480,
+            "size.h": 25,
+            "buttonType": 1,
+            "borderStyle": 1,
+            "font": {
+                "de_AT.utf8": "Courier New,-1,12,5,400,0,0,0,0,0,0,0,0,0,0,1",
+                "en_US.utf8": "Courier New,-1,12,5,400,0,0,0,0,0,0,0,0,0,0,1"
+            },
+            "fill": "",
+            "textPosition": "TEXT_RIGHT_OF_PIXMAP",
+            "text": {
+                "de_AT.utf8": "",
+                "en_US.utf8": ""
+            }
+        },
+        "cmdDeleteDPE": {
+            "visible": true,
+            "updatesEnabled": true,
+            "enabled": true,
+            "toggleState": false,
+            "position.x": 730,
+            "size.w": 25,
+            "position.y": 480,
+            "size.h": 25,
+            "buttonType": 1,
+            "borderStyle": 1,
+            "font": {
+                "de_AT.utf8": "Courier New,-1,12,5,400,0,0,0,0,0,0,0,0,0,0,1",
+                "en_US.utf8": "Courier New,-1,12,5,400,0,0,0,0,0,0,0,0,0,0,1"
+            },
+            "fill": "",
+            "textPosition": "TEXT_RIGHT_OF_PIXMAP",
+            "text": {
+                "de_AT.utf8": "",
+                "en_US.utf8": ""
+            }
+        },
+        "cmdDeleteAllDPEs": {
+            "visible": true,
+            "updatesEnabled": true,
+            "enabled": true,
+            "toggleState": false,
+            "position.x": 760,
+            "size.w": 25,
+            "position.y": 480,
+            "size.h": 25,
+            "buttonType": 1,
+            "borderStyle": 1,
+            "font": {
+                "de_AT.utf8": "Courier New,-1,12,5,400,0,0,0,0,0,0,0,0,0,0,1",
+                "en_US.utf8": "Courier New,-1,12,5,400,0,0,0,0,0,0,0,0,0,0,1"
+            },
+            "fill": "",
+            "textPosition": "TEXT_RIGHT_OF_PIXMAP",
+            "text": {
+                "de_AT.utf8": "",
+                "en_US.utf8": ""
+            }
+        },
+        "cmdSaveConfig": {
+            "visible": true,
+            "updatesEnabled": true,
+            "enabled": true,
+            "toggleState": false,
+            "position.x": 470,
+            "size.w": 25,
+            "position.y": 50,
+            "size.h": 25,
+            "buttonType": 1,
+            "borderStyle": 1,
+            "font": {
+                "de_AT.utf8": "Courier New,-1,12,5,400,0,0,0,0,0,0,0,0,0,0,1",
+                "en_US.utf8": "Courier New,-1,12,5,400,0,0,0,0,0,0,0,0,0,0,1"
+            },
+            "fill": "",
+            "textPosition": "TEXT_RIGHT_OF_PIXMAP",
+            "text": {
+                "de_AT.utf8": "",
+                "en_US.utf8": ""
+            }
+        },
+        "cmdDeleteKonfiguration": {
+            "visible": true,
+            "updatesEnabled": true,
+            "enabled": true,
+            "toggleState": false,
+            "position.x": 500,
+            "size.w": 25,
+            "position.y": 50,
+            "size.h": 25,
+            "buttonType": 1,
+            "borderStyle": 1,
+            "font": {
+                "de_AT.utf8": "Courier New,-1,12,5,400,0,0,0,0,0,0,0,0,0,0,1",
+                "en_US.utf8": "Courier New,-1,12,5,400,0,0,0,0,0,0,0,0,0,0,1"
+            },
+            "fill": "",
+            "textPosition": "TEXT_RIGHT_OF_PIXMAP",
+            "text": {
+                "de_AT.utf8": "",
+                "en_US.utf8": ""
+            }
+        },
+        "actualizeTable": {
+            "visible": true,
+            "updatesEnabled": true,
+            "enabled": true,
+            "toggleState": false,
+            "position.x": 25,
+            "size.w": 25,
+            "position.y": 516,
+            "size.h": 25,
+            "buttonType": 1,
+            "borderStyle": 1,
+            "font": {
+                "de_AT.utf8": "Courier New,-1,12,5,400,0,0,0,0,0,0,0,0,0,0,1",
+                "en_US.utf8": "Courier New,-1,12,5,400,0,0,0,0,0,0,0,0,0,0,1"
+            },
+            "fill": "",
+            "textPosition": "TEXT_RIGHT_OF_PIXMAP",
+            "text": {
+                "de_AT.utf8": "",
+                "en_US.utf8": ""
+            }
+        },
+        "cmdResetColumn": {
+            "visible": true,
+            "updatesEnabled": true,
+            "enabled": true,
+            "toggleState": false,
+            "position.x": 700,
+            "size.w": 25,
+            "position.y": 480,
+            "size.h": 25,
+            "buttonType": 1,
+            "borderStyle": 1,
+            "font": {
+                "de_AT.utf8": "Courier New,-1,12,5,400,0,0,0,0,0,0,0,0,0,0,1",
+                "en_US.utf8": "Courier New,-1,12,5,400,0,0,0,0,0,0,0,0,0,0,1"
+            },
+            "fill": "",
+            "textPosition": "TEXT_RIGHT_OF_PIXMAP",
+            "text": {
+                "de_AT.utf8": "",
+                "en_US.utf8": ""
+            }
+        },
+        "cmdDPSel": {
+            "visible": true,
+            "updatesEnabled": true,
+            "enabled": true,
+            "toggleState": false,
+            "position.x": 495,
+            "size.w": 25,
+            "position.y": 480,
+            "size.h": 25,
+            "buttonType": 1,
+            "borderStyle": 1,
+            "font": {
+                "de_AT.utf8": "Courier New,-1,12,5,400,0,0,0,0,0,0,0,0,0,0,1",
+                "en_US.utf8": "Courier New,-1,12,5,400,0,0,0,0,0,0,0,0,0,0,1"
+            },
+            "fill": "",
+            "textPosition": "TEXT_RIGHT_OF_PIXMAP",
+            "text": {
+                "de_AT.utf8": "",
+                "en_US.utf8": ""
+            }
+        },
+        "helpButton": {
+            "visible": true,
+            "updatesEnabled": true,
+            "enabled": true,
+            "toggleState": false,
+            "position.x": 408,
+            "size.w": 85,
+            "position.y": 1343,
+            "size.h": 25,
+            "buttonType": 0,
+            "borderStyle": 1,
+            "font": {
+                "de_AT.utf8": "Arial,-1,13,5,400,0,0,0,0,0,0,0,0,0,0,1",
+                "en_US.utf8": "Arial,-1,13,5,400,0,0,0,0,0,0,0,0,0,0,1"
+            },
+            "fill": "",
+            "textPosition": "TEXT_RIGHT_OF_PIXMAP",
+            "text": {
+                "de_AT.utf8": "Hilfe",
+                "en_US.utf8": "Help"
+            }
+        },
+        "PANEL_REF0.LINE1": {
+            "visible": true,
+            "enabled": true,
+            "position.x": 0,
+            "size.w": 810,
+            "position.y": 565,
+            "size.h": 1,
+            "armed": false,
+            "border": "[solid,oneColor,JoinBevel,CapButt,1]",
+            "dashBackCol": "_Transparent",
+            "rotation": 0.0,
+            "selected": false
+        },
+        "cmdNewConfig": {
+            "visible": true,
+            "updatesEnabled": true,
+            "enabled": true,
+            "toggleState": false,
+            "position.x": 440,
+            "size.w": 25,
+            "position.y": 50,
+            "size.h": 25,
+            "buttonType": 1,
+            "borderStyle": 1,
+            "font": {
+                "de_AT.utf8": "Courier New,-1,12,5,400,0,0,0,0,0,0,0,0,0,0,1",
+                "en_US.utf8": "Courier New,-1,12,5,400,0,0,0,0,0,0,0,0,0,0,1"
+            },
+            "fill": "",
+            "textPosition": "TEXT_RIGHT_OF_PIXMAP",
+            "text": {
+                "de_AT.utf8": "",
+                "en_US.utf8": ""
+            }
+        },
+        "cmdLoadConfig": {
+            "visible": true,
+            "updatesEnabled": true,
+            "enabled": true,
+            "toggleState": false,
+            "position.x": 410,
+            "size.w": 25,
+            "position.y": 50,
+            "size.h": 25,
+            "buttonType": 1,
+            "borderStyle": 1,
+            "font": {
+                "de_AT.utf8": "Courier New,-1,12,5,400,0,0,0,0,0,0,0,0,0,0,1",
+                "en_US.utf8": "Courier New,-1,12,5,400,0,0,0,0,0,0,0,0,0,0,1"
+            },
+            "fill": "",
+            "textPosition": "TEXT_RIGHT_OF_PIXMAP",
+            "text": {
+                "de_AT.utf8": "",
+                "en_US.utf8": ""
+            }
+        },
+        "PANEL_REF0.RECTANGLE1": {
+            "visible": true,
+            "enabled": true,
+            "position.x": 0,
+            "size.w": 810,
+            "position.y": 915,
+            "size.h": 45,
+            "armed": false,
+            "border": "[solid,oneColor,JoinBevel,CapButt,1]",
+            "borderStyle": 0,
+            "dashBackCol": "_Transparent",
+            "fill": "[solid]",
+            "selected": false
+        }
+    }
+}

@@ -30,6 +30,8 @@ apm_modules/
 # added by APM install
 .github/skills/
 .github/hooks/
+.agents/
 
 # in case you are using a local Squirt configuration
 src/Squirt/config/config
+tests/WinCC_OA_Test/Projects/Global/config/config.level

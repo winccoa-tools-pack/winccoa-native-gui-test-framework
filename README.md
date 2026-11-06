@@ -2,6 +2,8 @@
 
 <div align="center">
 
+<img src="src/Squirt/docs/images/squirt-logo.svg" alt="Squirt native GUI test framework for WinCC OA" width="560">
+
 ![Version](https://img.shields.io/github/v/release/winccoa-tools-pack/winccoa-native-gui-test-framework?label=version)
 ![License](https://img.shields.io/github/license/winccoa-tools-pack/winccoa-native-gui-test-framework)
 [![Quality gate](https://github.com/winccoa-tools-pack/winccoa-native-gui-test-framework/actions/workflows/ci-cd.yml/badge.svg)](https://github.com/winccoa-tools-pack/winccoa-native-gui-test-framework/actions/workflows/ci-cd.yml)
@@ -58,6 +60,54 @@ for the current status and local execution instructions.
 2. Use your WinCC OA project environment to load and run the Squirt scripts.
 3. Read project-specific details in [src/Squirt/README.md](src/Squirt/README.md).
 4. For TestFramework regression tests, see [tests/WinCC_OA_Test/README.md](tests/WinCC_OA_Test/README.md).
+
+---
+
+## Activate Squirt as WinCC OA sub-project
+
+Register [src/Squirt](src/Squirt) as a (non-runnable) WinCC OA sub-project
+from the repository root. Requires Node.js (`npx`) and a WinCC OA installation.
+
+```powershell
+scripts\activateMe.cmd
+```
+
+```bash
+./scripts/activateMe.sh
+```
+
+Set `WINCCOA_VERSION` (e.g. `3.22`) if more than one WinCC OA version is
+installed. See [scripts/README.md](scripts/README.md) for details.
+
+---
+
+## AI skills
+
+Squirt provides two independently installable APM skill groups:
+
+- [Usage](.apm/skills/usage/squirt-test-authoring/SKILL.md): write product or
+  project tests with Squirt, including fixtures, recording, and unattended replay.
+- [Maintenance](.apm/skills/maintenance/squirt-maintenance/SKILL.md): develop
+  Squirt itself, including its guide panel and shape-wrapper tests.
+
+With [APM](https://microsoft.github.io/apm/) installed and this repository
+checked out locally, run the appropriate command from your consumer project:
+
+```powershell
+$squirtSkills = 'C:/ws/winccoa-tools-pack/winccoa-native-gui-test-framework/.apm/skills'
+
+# Use Squirt to write tests (one skill).
+apm install "$squirtSkills/usage" --only apm --target copilot
+
+# Maintain Squirt itself (three skills).
+apm install "$squirtSkills/maintenance" --only apm --target copilot
+```
+
+Choose one group, or run both commands when you need both roles. Adjust the
+checkout path for your machine. These local-checkout installations were tested
+separately with APM 0.35.0; remote installation and packed distribution are not
+verified. Edit authored skills under `.apm/skills`, not deployed copies under
+`.agents/skills`. See the [skill layout guide](.apm/README.md) for details.
 
 ---
 

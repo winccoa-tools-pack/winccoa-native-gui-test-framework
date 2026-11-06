@@ -1,0 +1,580 @@
+V 14
+3
+LANG:10001 8 main_pnl
+LANG:10000 8 main_pnl
+LANG:10027 8 main_pnl
+PANEL,-1 -1 852 750 N "_3DFace" 0
+E E E E E 1 -1 -1 0  30 30
+""0  1
+E E 3
+"CBRef" "1"
+"EClose" E
+"dpi" "120"
+0 0 0
+"del_en.gif" -1 -1 15 15
+-1
+DISPLAY_LAYER, 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0
+LAYER, 0 
+3
+LANG:10001 0 
+LANG:10000 0 
+LANG:10027 0 
+29 10
+"TEXT_LEFT"
+""
+1 50.03124999999915 440.0000000000001 E E E 1 E 1 E N "_WindowText" E N "_Window" E E
+ E E
+26 0 0 0 0 0
+"main()
+{
+  DebugN(\"focus in: \" + this.name());
+  SELECTION_LIST_RESULTS.appendItem(\"focus in: \" + this.name());
+}" 0
+ "main()
+{
+  DebugN(\"focus in: \" + this.name());
+  SELECTION_LIST_RESULTS.appendItem(\"focus out: \" + this.name());
+}" 0
+ E
+0
+3
+LANG:10001 0 
+LANG:10000 0 
+LANG:10027 0 
+
+3
+"acceptDrops" ""
+"DragDrop" "main(string information, int dragType)
+{
+  DebugN(\"Drag and Dropped: \" + information);
+  SELECTION_LIST_RESULTS.appendItem(\"Drag and Drop: \");
+  SELECTION_LIST_RESULTS.appendItem(jsonEncode(information, true));
+}"
+"layoutAlignment" "AlignNone"
+3
+LANG:10001 30 Noto Sans,-1,16,5,50,0,0,0,0,0
+LANG:10000 30 Noto Sans,-1,16,5,50,0,0,0,0,0
+LANG:10027 30 Noto Sans,-1,16,5,50,0,0,0,0,0
+0  50.03124999999915 439.9999999999999 270.0312499999991 539
+15 PVSS.TextEdit.1
+0
+"main()
+{
+  SELECTION_LIST_RESULTS.appendItem(\"init: \" + this.name());
+}" 0
+29 24
+"TEXT_RIGHT"
+""
+1 310 440 E E E 1 E 1 E N "_WindowText" E N "_Window" E E
+ E E
+30 0 0 0 0 0
+"main()
+{
+  DebugN(\"focus in: \" + this.name());
+  SELECTION_LIST_RESULTS.appendItem(\"focus in: \" + this.name());
+}" 0
+ "main()
+{
+  DebugN(\"focus in: \" + this.name());
+  SELECTION_LIST_RESULTS.appendItem(\"focus out: \" + this.name());
+}" 0
+ E
+0
+3
+LANG:10001 0 
+LANG:10000 0 
+LANG:10027 0 
+
+3
+"acceptDrops" ""
+"DragDrop" "main(string information, int dragType)
+{
+  DebugN(\"Drag and Drop: \" + information);
+  SELECTION_LIST_RESULTS.appendItem(\"Drag and Drop: \");
+  SELECTION_LIST_RESULTS.appendItem(jsonEncode(information, true));
+
+}"
+"layoutAlignment" "AlignNone"
+3
+LANG:10001 30 Noto Sans,-1,16,5,50,0,0,0,0,0
+LANG:10000 30 Noto Sans,-1,16,5,50,0,0,0,0,0
+LANG:10027 30 Noto Sans,-1,16,5,50,0,0,0,0,0
+0  309.9999999999998 440 539.9999999999999 540
+15 PVSS.TextEdit.1
+0
+"main()
+{
+  SELECTION_LIST_RESULTS.appendItem(\"init: \" + this.name());
+}" 0
+13 25
+"PUSH_BUTTON_CLICK"
+""
+1 50.01269531249968 76.28467039484531 E E E 1 E 1 E N "_ButtonText" E N "_Button" E E
+ E E
+6 0 0 0 0 0
+E E E
+8
+3
+LANG:10001 0 
+LANG:10000 0 
+LANG:10027 0 
+
+1
+"layoutAlignment" "AlignNone"
+3
+LANG:10001 30 Noto Sans,-1,16,5,50,0,0,0,0,0
+LANG:10000 30 Noto Sans,-1,16,5,50,0,0,0,0,0
+LANG:10027 30 Noto Sans,-1,16,5,50,0,0,0,0,0
+0  48.01269531249969 38.01958179473876 242.0048828124999 141.9804182052612
+
+T 
+3
+LANG:10001 17 PUSH_BUTTON_CLICK
+LANG:10000 17 PUSH_BUTTON_CLICK
+LANG:10027 17 PUSH_BUTTON_CLICK
+"main(mapping event)
+{
+  DebugN(event);
+  SELECTION_LIST_RESULTS.appendItem(\"single left click: \");
+  SELECTION_LIST_RESULTS.appendItem(jsonEncode(event, true));
+}" 0
+ E E "main()
+{
+  SELECTION_LIST_RESULTS.appendItem(\"init: \" + this.name());
+}" 0
+
+28 23
+"TAB1"
+""
+1 578.7099609375001 285.1876138790312 E E E 1 E 1 E N "_3DText" E N "_3DFace" E E
+ E E
+24 0 0 0 0 0
+E E E
+0
+3
+LANG:10001 0 
+LANG:10000 0 
+LANG:10027 0 
+
+1
+"layoutAlignment" "AlignNone"
+3
+LANG:10001 30 Noto Sans,-1,16,5,50,0,0,0,0,0
+LANG:10000 30 Noto Sans,-1,16,5,50,0,0,0,0,0
+LANG:10027 30 Noto Sans,-1,16,5,50,0,0,0,0,0
+0  576.7099609375001 283.1876138790312 797.2255859375 426.1301054104032
+"main()
+{
+  SELECTION_LIST_RESULTS.appendItem(\"init: \" + this.name());
+}" 0
+2 "RegisterPanel1" 3
+LANG:10001 2 #1
+LANG:10000 3 RP1
+LANG:10027 2 #1
+1 "UiEventTestPanels/RegisterPanel1.pnl" 3
+LANG:10001 0 
+LANG:10000 0 
+LANG:10027 0 
+0
+
+"RegisterPanel2" 3
+LANG:10001 2 #2
+LANG:10000 3 RP2
+LANG:10027 2 #2
+1 "UiEventTestPanels/RegisterPanel2.pnl" 3
+LANG:10001 0 
+LANG:10000 0 
+LANG:10027 0 
+0
+
+
+17 27
+"SELECTION_LIST_RESULTS"
+""
+1 9.937499999999488 540 E E E 1 E 1 E N "_WindowText" E N "_Window" E E
+ E "main(mapping event)
+{
+  DebugN(this.items());
+}" 0
+
+31 0 0 0 0 0
+E E E
+0
+3
+LANG:10001 0 
+LANG:10000 0 
+LANG:10027 0 
+
+1
+"layoutAlignment" "AlignNone"
+3
+LANG:10001 30 Noto Sans,-1,16,5,50,0,0,0,0,0
+LANG:10000 30 Noto Sans,-1,16,5,50,0,0,0,0,0
+LANG:10027 30 Noto Sans,-1,16,5,50,0,0,0,0,0
+0  7.937499999999488 538 841.9375000000005 722
+0
+
+E
+E
+E
+
+0 0
+13 31
+"PUSH_BUTTON_DELETERESULTS"
+""
+1 800 515 E E E 1 E 1 E N "_ButtonText" E N "_Button" E E
+ E E
+37 0 0 0 0 0
+E E E
+8
+3
+LANG:10001 0 
+LANG:10000 0 
+LANG:10027 0 
+
+1
+"layoutAlignment" "AlignNone"
+3
+LANG:10001 30 Noto Sans,-1,16,5,50,0,0,0,0,0
+LANG:10000 30 Noto Sans,-1,16,5,50,0,0,0,0,0
+LANG:10027 30 Noto Sans,-1,16,5,50,0,0,0,0,0
+0  798 508 842 542
+
+T 
+3
+LANG:10001 1 X
+LANG:10000 1 X
+LANG:10027 1 X
+"main(mapping event)
+{
+  SELECTION_LIST_RESULTS.deleteAllItems();
+  TEXT_LEFT.text();
+  TEXT_RIGHT.text();
+}" 0
+ E E E
+13 32
+"SCREENSHOT"
+"WF"
+1 50.01342773437467 254.2307928082515 E E E 1 E 1 E N "_ButtonText" E N "_Button" E E
+ E E
+36 0 0 0 0 0
+E E E
+8
+3
+LANG:10001 0 
+LANG:10000 0 
+LANG:10027 0 
+
+3
+"hoverfclr" "N \"Yellow\""
+"hoverbclr" "N \"Yellow\""
+"layoutAlignment" "AlignNone"
+3
+LANG:10001 30 Noto Sans,-1,16,5,50,0,0,0,0,0
+LANG:10000 30 Noto Sans,-1,16,5,50,0,0,0,0,0
+LANG:10027 30 Noto Sans,-1,16,5,50,0,0,0,0,0
+0  48.01342773437467 157.8416410112489 552.9509277343759 426.1312660428563
+
+P 
+4294967295
+"pictures/SplashLogo.jpg"
+3
+LANG:10001 0 
+LANG:10000 0 
+LANG:10027 0 
+"main(mapping event)
+{
+  this.imageToFile(PROJ_PATH + DATA_REL_PATH + \"screen.png\");
+}" 0
+ E E "main()
+{
+  SELECTION_LIST_RESULTS.appendItem(\"init: \" + this.name());
+}" 0
+
+13 37
+"PUSH_BUTTON_DBLCLICK"
+""
+1 260 80 E E E 1 E 1 E N "_ButtonText" E N "_Button" E E
+ E "main(mapping event)
+{
+  DebugN(event);
+  SELECTION_LIST_RESULTS.appendItem(\"double left click: \");
+  SELECTION_LIST_RESULTS.appendItem(jsonEncode(event, true));
+}" 0
+
+9 0 0 0 0 0
+E E E
+8
+3
+LANG:10001 0 
+LANG:10000 0 
+LANG:10027 0 
+
+1
+"layoutAlignment" "AlignNone"
+3
+LANG:10001 30 Noto Sans,-1,16,5,50,0,0,0,0,0
+LANG:10000 30 Noto Sans,-1,16,5,50,0,0,0,0,0
+LANG:10027 30 Noto Sans,-1,16,5,50,0,0,0,0,0
+0  258 38 482.0000000000001 142
+
+T 
+3
+LANG:10001 20 PUSH_BUTTON_DBLCLICK
+LANG:10000 20 PUSH_BUTTON_DBLCLICK
+LANG:10027 20 PUSH_BUTTON_DBLCLICK
+E E E "main()
+{
+  SELECTION_LIST_RESULTS.appendItem(\"init: \" + this.name());
+}" 0
+
+13 38
+"PUSH_BUTTON_PRESS_RELEASE"
+""
+1 490 80 E E E 1 E 1 E N "_ButtonText" E N "_Button" E E
+ "main(mapping event)
+{
+  DebugN(event);
+  SELECTION_LIST_RESULTS.appendItem(\"right mouse pressed: \");
+  SELECTION_LIST_RESULTS.appendItem(jsonEncode(event, true));
+}
+" 0
+ E
+22 0 0 0 0 0
+E E E
+8
+3
+LANG:10001 0 
+LANG:10000 0 
+LANG:10027 0 
+
+1
+"layoutAlignment" "AlignNone"
+3
+LANG:10001 30 Noto Sans,-1,16,5,50,0,0,0,0,0
+LANG:10000 30 Noto Sans,-1,16,5,50,0,0,0,0,0
+LANG:10027 30 Noto Sans,-1,16,5,50,0,0,0,0,0
+0  488 38 812.0000000000001 142
+
+T 
+3
+LANG:10001 25 PUSH_BUTTON_PRESS_RELEASE
+LANG:10000 25 PUSH_BUTTON_PRESS_RELEASE
+LANG:10027 25 PUSH_BUTTON_PRESS_RELEASE
+E "main(mapping event)
+{
+  DebugN(event);
+  SELECTION_LIST_RESULTS.appendItem(\"left mouse pressed: \");
+  SELECTION_LIST_RESULTS.appendItem(jsonEncode(event, true));
+}" 0
+ "main(mapping event)
+{
+  DebugN(event);
+  SELECTION_LIST_RESULTS.appendItem(\"left mouse released: \");
+  SELECTION_LIST_RESULTS.appendItem(jsonEncode(event, true));
+}" 0
+ "main()
+{
+  SELECTION_LIST_RESULTS.appendItem(\"init: \" + this.name());
+}" 0
+
+13 39
+"PUSH_BUTTON_TXTVERIFICATION"
+""
+1 573.9355468750001 478.3333333333333 E E E 1 E 1 E N "_ButtonText" E N "_Button" E E
+ E E
+38 0 0 0 0 0
+E E E
+8
+3
+LANG:10001 0 
+LANG:10000 0 
+LANG:10027 0 
+
+1
+"layoutAlignment" "AlignNone"
+3
+LANG:10001 30 Noto Sans,-1,16,5,50,0,0,0,0,0
+LANG:10000 30 Noto Sans,-1,16,5,50,0,0,0,0,0
+LANG:10027 30 Noto Sans,-1,16,5,50,0,0,0,0,0
+0  571.9355468750001 453 772 527
+
+T 
+3
+LANG:10001 23 Text_Right Verification
+LANG:10000 23 Text_Right Verification
+LANG:10027 23 Text_Right Verification
+"main(mapping event)
+{
+  SELECTION_LIST_RESULTS.appendItem(\"Textfield_RIGHT, Value is: \" + TEXT_RIGHT.value);
+}" 0
+ E E "main()
+{
+  SELECTION_LIST_RESULTS.appendItem(\"init: \" + this.name());
+}" 0
+
+25 40
+"TABLE1"
+""
+1 570 160 E E E 1 E 1 E N "_WindowText" E N "_Window" E E
+ E E
+39 0 0 0 0 0
+E E E
+0
+3
+LANG:10001 0 
+LANG:10000 0 
+LANG:10027 0 
+
+1
+"layoutAlignment" "AlignNone"
+3
+LANG:10001 30 Noto Sans,-1,20,5,50,0,0,0,0,0
+LANG:10000 30 Noto Sans,-1,20,5,50,0,0,0,0,0
+LANG:10027 30 Noto Sans,-1,20,5,50,0,0,0,0,0
+0  568 158 812 282
+"main()
+{
+  shape table=getShape(\"TABLE1\");
+
+dyn_string d1, d2, d3;
+
+dyn_dyn_string fnam, snam;
+
+// The entries in the Forename column
+
+d1=makeDynString(\"Peter\");
+
+d2=makeDynString(\"Martin\");
+
+d3=makeDynString(\"Christian\");
+
+// Transfer to the dyn_dyn array
+
+fnam[1]=d1;
+
+fnam[2]=d2;
+
+fnam[3]=d3;
+
+// The entries in the Surname column
+
+d1=makeDynString(\"Baker\");
+
+d2=makeDynString(\"Miller\");
+
+d3=makeDynString(\"Smith\");
+
+// Transfer to the dyn_dyn array
+
+snam[1]=d1;
+
+snam[2]=d2;
+
+snam[3]=d3;
+
+// Appending the three lines
+
+table.appendLines(3,\"Forename\",fnam,\"Surname\",snam);
+}" 0
+"main(int row, string column, string value)
+{
+  DebugTN(row, column, value);
+  SELECTION_LIST_RESULTS.appendItem(\"Zeile: \" + row);
+  SELECTION_LIST_RESULTS.appendItem(\"Spalte: \" + column);
+  SELECTION_LIST_RESULTS.appendItem(\"Value: \" + value);
+}" 0
+ 1 0 1 3 3 "Forename" 5 1 0 "[0s,,,AlignLeft]" 3
+LANG:10001 8 Forename
+LANG:10000 8 Forename
+LANG:10027 8 Forename
+E
+3
+LANG:10001 5 Table
+LANG:10000 5 Table
+LANG:10027 5 Table
+
+100 "Surname" 5 1 0 "s" 3
+LANG:10001 7 Surname
+LANG:10000 7 Surname
+LANG:10027 7 Surname
+E
+3
+LANG:10001 0 
+LANG:10000 0 
+LANG:10027 0 
+
+100 "Column3" 1 0 0 "s" 3
+LANG:10001 2 #3
+LANG:10000 3 #C3
+LANG:10027 2 #3
+E
+3
+LANG:10001 0 
+LANG:10000 0 
+LANG:10027 0 
+
+34 
+26 26 "" 1 3
+LANG:10001 2 #1
+LANG:10000 3 #R1
+LANG:10027 2 #1
+"" 1 3
+LANG:10001 2 #2
+LANG:10000 3 #R2
+LANG:10027 2 #2
+"" 1 3
+LANG:10001 2 #3
+LANG:10000 3 #R3
+LANG:10027 2 #3
+10 0
+3
+LANG:10001 30 Noto Sans,-1,20,5,50,0,0,0,0,0
+LANG:10000 30 Noto Sans,-1,20,5,50,0,0,0,0,0
+LANG:10027 30 Noto Sans,-1,20,5,50,0,0,0,0,0
+0 0 1 1 1 7
+1 0
+0
+LAYER, 1 
+3
+LANG:10001 0 
+LANG:10000 0 
+LANG:10027 0 
+0
+LAYER, 2 
+3
+LANG:10001 0 
+LANG:10000 0 
+LANG:10027 0 
+0
+LAYER, 3 
+3
+LANG:10001 0 
+LANG:10000 0 
+LANG:10027 0 
+0
+LAYER, 4 
+3
+LANG:10001 0 
+LANG:10000 0 
+LANG:10027 0 
+0
+LAYER, 5 
+3
+LANG:10001 0 
+LANG:10000 0 
+LANG:10027 0 
+0
+LAYER, 6 
+3
+LANG:10001 0 
+LANG:10000 0 
+LANG:10027 0 
+0
+LAYER, 7 
+3
+LANG:10001 0 
+LANG:10000 0 
+LANG:10027 0 
+0
+0
