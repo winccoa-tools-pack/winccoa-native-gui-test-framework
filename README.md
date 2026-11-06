@@ -63,6 +63,24 @@ for the current status and local execution instructions.
 
 ---
 
+## Activate Squirt as WinCC OA sub-project
+
+Register [src/Squirt](src/Squirt) as a (non-runnable) WinCC OA sub-project
+from the repository root. Requires Node.js (`npx`) and a WinCC OA installation.
+
+```powershell
+scripts\activateMe.cmd
+```
+
+```bash
+./scripts/activateMe.sh
+```
+
+Set `WINCCOA_VERSION` (e.g. `3.22`) if more than one WinCC OA version is
+installed. See [scripts/README.md](scripts/README.md) for details.
+
+---
+
 ## AI skills
 
 Squirt provides two independently installable APM skill groups:
