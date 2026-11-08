@@ -150,7 +150,7 @@ has a live invalid-path check, but navigation against a populated DPE tree still
 needs a representative fixture before it is considered fully verified.
 
 Reusable standalone checks and their current results are documented in
-[the input-player test directory](../../../tests/WinCC_OA_Test/TestSuites/suite_shapes/sub_unit/scripts/tests/libs/classes/inputPlayer/README.md).
+[the input-player test directory](https://github.com/winccoa-tools-pack/winccoa-native-gui-test-framework/tree/main/tests/WinCC_OA_Test/TestSuites/suite_shapes/sub_unit/scripts/tests/libs/classes/inputPlayer).
 The existing combined test script is preserved separately.
 
 ## Touch input
@@ -160,7 +160,7 @@ The existing combined test script is preserved separately.
 tests with `-touch -style fusion`. Injection alone does not establish gesture
 recognition; assert the widget's actual callbacks and state.
 
-The [touch input guide](../../../tests/WinCC_OA_Test/TestSuites/suite_uiEvents/touch.md)
+The [touch input guide](https://github.com/winccoa-tools-pack/winccoa-native-gui-test-framework/blob/main/tests/WinCC_OA_Test/TestSuites/suite_uiEvents/touch.md)
 covers frame lifecycle, timing, bounds, readiness, release policy, cleanup and
 concurrency limits. Two self-terminating, fixture-based examples live under
 the suite's `sub_uiEvents/scripts/examples`, not the Squirt subproject.

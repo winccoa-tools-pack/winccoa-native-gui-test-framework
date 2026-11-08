@@ -373,6 +373,12 @@ class OaGuiTest : OaTest
     delay(2);
   }
 
+  /**
+    @brief Plays a loaded macro or records it through the guided workflow.
+    @param macroName Macro function name to execute or record.
+    @param guide Instructions displayed during guided recording.
+    @return Macro result, zero when recording succeeds, or -1 on failure.
+  */
   protected int playOrRecordMacro(const string &macroName, const string &guide)
   {
     /*

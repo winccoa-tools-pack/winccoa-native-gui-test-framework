@@ -1,5 +1,5 @@
 /**
-  @file src/Squirt/scripts/libs/classes/SquirtInputEventPlayer.ctl
+  @file $relPath
   @copyright MIT
 */
 
@@ -34,7 +34,7 @@ class SquirtInputEventPlayer : InputEventPlayer
     negative and sub-millisecond scaled values directly to delay().
     Nonpositive requests or time factors and effective waits below 1 ms
     are ignored rather than passed to the native delay function.
-    @override
+    @return No value.
     @AIgeneratedHelpContent
   */
   public sleep(int milli)
@@ -61,7 +61,7 @@ class SquirtInputEventPlayer : InputEventPlayer
 
     @param shapeName Fully qualified shape address.
     @param timeout Timeout in milliseconds.
-    @override
+    @return No value; throws when the shape cannot be resolved.
   */
   public makeCurrent(string shapeName, int timeout = 5000)
   {
@@ -163,6 +163,7 @@ class SquirtInputEventPlayer : InputEventPlayer
     @param x Relative x coordinate inside the current shape.
     @param y Relative y coordinate inside the current shape.
     @param modifiers Keyboard modifiers pressed during the click.
+    @return No value.
   */
   public rightMouseClick(int x, int y, int modifiers = 0)
   {
@@ -175,6 +176,7 @@ class SquirtInputEventPlayer : InputEventPlayer
     @param x Relative x coordinate inside the target shape.
     @param y Relative y coordinate inside the target shape.
     @param modifiers Keyboard modifiers pressed during the click.
+    @return No value.
   */
   public rightMouseClickOnShape(shape sh, int x, int y, int modifiers = 0)
   {
@@ -187,6 +189,7 @@ class SquirtInputEventPlayer : InputEventPlayer
     @param y Relative y coordinate inside the current shape.
     @param buttons Mouse button bitmask to press.
     @param modifiers Keyboard modifier bitmask.
+    @return No value.
   */
   public mouseClick(int x, int y, int buttons, int modifiers = 0)
   {
@@ -200,6 +203,7 @@ class SquirtInputEventPlayer : InputEventPlayer
     @param y Relative y coordinate inside the target shape.
     @param buttons Mouse button bitmask to press.
     @param modifiers Keyboard modifier bitmask.
+    @return No value.
     @AIgeneratedHelpContent
   */
   public mouseClickOnShape(shape sh, int x, int y, int buttons, int modifiers = 0)
@@ -216,6 +220,7 @@ class SquirtInputEventPlayer : InputEventPlayer
     @param x Relative x coordinate inside the current shape.
     @param y Relative y coordinate inside the current shape.
     @param modifiers Keyboard modifiers pressed during the click.
+    @return No value.
     @AIgeneratedHelpContent
   */
   public rightMouseDoubleClick(int x, int y, int modifiers = 0)
@@ -229,6 +234,7 @@ class SquirtInputEventPlayer : InputEventPlayer
     @param x Relative x coordinate inside the current shape.
     @param y Relative y coordinate inside the current shape.
     @param modifiers Keyboard modifiers pressed during the click.
+    @return No value.
   */
   public leftMouseDoubleClick(int x, int y, int modifiers = 0)
   {
@@ -242,6 +248,7 @@ class SquirtInputEventPlayer : InputEventPlayer
     @param x Relative x coordinate inside the target shape.
     @param y Relative y coordinate inside the target shape.
     @param modifiers Keyboard modifiers pressed during the click.
+    @return No value.
   */
   public leftMouseDoubleClickOnShape(shape sh, int x, int y, int modifiers = 0)
   {
@@ -267,6 +274,7 @@ class SquirtInputEventPlayer : InputEventPlayer
     @param x Relative x coordinate inside the current shape.
     @param y Relative y coordinate inside the current shape.
     @param modifiers Keyboard modifiers pressed during the click.
+    @return No value.
   */
   public leftMouseClick(int x, int y, int modifiers = 0)
   {
@@ -284,6 +292,7 @@ class SquirtInputEventPlayer : InputEventPlayer
     @param y Relative y coordinate inside the target shape.
     @param buttons Mouse button bitmask to press.
     @param modifiers Keyboard modifier bitmask.
+    @return No value.
   */
   public mouseDoubleClickOnShape(shape sh, int x, int y, int buttons, int modifiers = 0)
   {
@@ -916,7 +925,7 @@ class SquirtInputEventPlayer : InputEventPlayer
     @brief Dispatches a validated frame to the native UI touch injector.
     @param target Resolved target shape.
     @param points Complete contact frame.
-    @noExternalUse
+    @NoExternalUse
     @AIgeneratedHelpContent
   */
   protected void dispatchTouchFrame(const shape &target,
