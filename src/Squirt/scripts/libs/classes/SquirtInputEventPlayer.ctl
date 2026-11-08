@@ -262,6 +262,7 @@ class SquirtInputEventPlayer : InputEventPlayer
     @param x Relative x coordinate inside the target shape.
     @param y Relative y coordinate inside the target shape.
     @param modifiers Keyboard modifiers pressed during the click.
+    @return No value.
   */
   public leftMouseClickOnShape(shape sh, int x, int y, int modifiers = 0)
   {

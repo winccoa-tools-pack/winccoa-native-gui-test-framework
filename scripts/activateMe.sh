@@ -5,7 +5,7 @@ set -euo pipefail
 script_dir="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
 squirt_path="$(cd -- "${script_dir}/../src/Squirt" && pwd)"
 
-if [[ ! -d "${squirt_path}/config" ]]; then
+if [[ ! -d "${squirt_path}/scripts" ]]; then
   printf 'activateMe: Squirt project not found: %s\n' "${squirt_path}" >&2
   exit 1
 fi
