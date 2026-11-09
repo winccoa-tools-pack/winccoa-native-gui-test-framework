@@ -32,6 +32,17 @@ product-specific selectors in the framework.
    Require a fresh OaTest summary with its Failed and Aborted counts; an exit
    code of zero or a successful syntax check alone is not a runtime verdict.
 
+## OaGuiTest Case Names
+
+`OaGuiTest` overrides OaTest discovery: each public `int` method whose name
+starts with `play` is reported as a testcase using that full method name. Give
+each case a unique, stable name containing its case ID, such as
+`play_testCase010()` or `play_testCase020()`. Do not reuse the generic `play()`
+name across scripts; duplicate method names make aggregated testcase results
+ambiguous. Keep the standard `test.startAll()` entry point unchanged. Classes
+that extend plain `OaTest` instead should follow `test_` method naming in
+`oaTestGuidelines.md`.
+
 ## Datapoint Fixtures And Permissions
 
 - Prefer suite-owned ASCII DPL files under the subproject's `dplist/` directory
