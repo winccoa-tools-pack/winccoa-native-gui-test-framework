@@ -272,7 +272,7 @@ class Splash
           // TODO, see also HspScript::makeScriptFromTemlate() how to handle with script templates
           // and replace keywords like author ...
           string sContent;
-          fileToString(getPath(DATA_REL_PATH, "hsp/templates/scriptEditor/newSplash.ctl"), sContent);
+          fileToString(getPath(DATA_REL_PATH, "hsp/templates/scriptEditor/newSplash.ctl"), sContent, "UTF-8");
           strreplace(sContent, sParameterPlaceholder, sParameterPlaceholder + sParams);
           strreplace(sContent, "/** SCRIPT_PLACEHOLDER **/", script);
 

@@ -16,16 +16,21 @@
 class SquirtVp
 {
 
+  public static bool teachMode = isDbgFlag("splash.teachMode");
+
   //------------------------------------------------------------------------------
   /**
     @brief Creates a VP instance for one identifier and shape list.
     @param vpId Identifier of the VP JSON file.
     @param shapes Shapes used for initial VP content creation.
   */
-  public SquirtVp(const string &vpId, const vector<shape> &shapes)
+  public SquirtVp(string vpId = "", vector<shape> shapes = NULL)
   {
-    this.id = vpId;
-    this.shapes = shapes;
+    if (!vpId.isEmpty())
+    {
+      this.id = vpId;
+      this.shapes = shapes;
+    }
   }
 
   //------------------------------------------------------------------------------
@@ -44,13 +49,23 @@ class SquirtVp
 
     JsonFile metaFile = this.getMetaFile();
 
-    if (!metaFile.exists())
+    if (!metaFile.exists() && !teachMode)
+      throwError(makeError("", PRIO_WARNING, ERR_CONTROL, 54, "The VP $1 does not exist and teach mode is off".subst(this.id)));
+
+    if (teachMode)
     {
+      throwError(makeError("", PRIO_WARNING, ERR_CONTROL, 0, "The teach mode is active for VP $1, it will be created or updated as needed".subst(this.id)));
       const string fullVpPath = PROJ_PATH + DATA_REL_PATH + this.getMetaRelPath();
-      throwError(makeError("", PRIO_INFO, ERR_CONTROL, 0, "The VP $1 does not exists, this will be created under $2".subst(this.id, fullVpPath)));
-      mkdir(dirName(fullVpPath));
       metaFile.setPath(fullVpPath);
-      metaFile.create();
+
+      if (!metaFile.exists())
+      {
+        throwError(makeError("", PRIO_WARNING, ERR_CONTROL, 0, "The VP $1 does not exists, this will be created under $2".subst(this.id, fullVpPath)));
+        mkdir(dirName(fullVpPath));
+
+        metaFile.create();
+      }
+
       mapping map;
 
       for (int i = 0; i < shapes.count(); i++)
