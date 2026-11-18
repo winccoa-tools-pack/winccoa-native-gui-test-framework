@@ -50,4 +50,13 @@ class GuiTestTable : GuiTestShape
            );
   }
 
+  public anytype getRC(int row, const string &column)
+  {
+    anytype value;
+    getValue(this.testShape,
+             "cellValueRC", row, column, value);
+    return value;
+  }
+
+
 };

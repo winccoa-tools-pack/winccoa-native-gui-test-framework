@@ -79,7 +79,7 @@ class GuiTestDpTree : GuiTestShape
   {
 
     anytype visible, enabled, x, y, w, h;
-    anytype font, cursor, selectedItem, layoutDirection, updatesEnabled;
+    anytype selectedItem, layoutDirection, updatesEnabled;
     anytype headerHidden, itemsExpandable, lineWidth, midLineWidth;
     anytype rootIsDecorated, selectionBehavior, selectionMode;
     anytype sortingEnabled, uniformRowHeights;
@@ -89,8 +89,6 @@ class GuiTestDpTree : GuiTestShape
              "enabled", enabled,
              "position", x, y,
              "size", w, h,
-             "font", font,
-             "cursor", cursor,
              "selectedItem", selectedItem,
              "layoutDirection", layoutDirection,
              "updatesEnabled", updatesEnabled,
@@ -111,9 +109,7 @@ class GuiTestDpTree : GuiTestShape
              "position.y", y,
              "size.w", w,
              "size.h", h,
-             "font", font,
              "selectedItem", selectedItem,
-             "cursor", cursor,
              "updatesEnabled", updatesEnabled,
              "layoutDirection", layoutDirection,
              "headerHidden", headerHidden,

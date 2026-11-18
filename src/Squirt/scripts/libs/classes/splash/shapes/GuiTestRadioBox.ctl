@@ -32,14 +32,13 @@ class GuiTestRadioBox : GuiTestShape
   {
 
     anytype visible, enabled, updatesEnabled;
-    anytype x, y, w, h, cursor, number;
+    anytype x, y, w, h, number;
 
     getValue(this.testShape,
              "visible", visible,
              "enabled", enabled,
              "position", x, y,
              "size", w, h,
-             "cursor", cursor,
              "number", number,
              "updatesEnabled", updatesEnabled);
 
@@ -50,7 +49,6 @@ class GuiTestRadioBox : GuiTestShape
              "position.y", y,
              "size.w", w,
              "size.h", h,
-             "cursor", cursor,
              "number", number,
              "updatesEnabled", updatesEnabled
            );

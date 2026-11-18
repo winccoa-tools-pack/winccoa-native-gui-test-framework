@@ -21,7 +21,6 @@ class GuiTestTextField : GuiTestShape
     anytype visible, enabled;
     anytype x, y, w, h;
 
-    anytype font;
     anytype max, min, text;
     anytype borderStyle, format;
     anytype updatesEnabled, editable;
@@ -38,7 +37,6 @@ class GuiTestTextField : GuiTestShape
              "updatesEnabled", updatesEnabled,
              "borderStyle", borderStyle,
              "editable", editable,
-             "font", font,
              "format", format);
 
     return makeMapping(
@@ -55,7 +53,6 @@ class GuiTestTextField : GuiTestShape
              "updatesEnabled", updatesEnabled,
              "borderStyle", borderStyle,
              "editable", editable,
-             "font", font,
              "format", format
            );
   }

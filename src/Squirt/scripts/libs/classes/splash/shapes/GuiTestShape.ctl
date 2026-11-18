@@ -25,7 +25,11 @@ class GuiTestShape
   */
   public int assertAttributes(const mapping &referenceAttributes, dyn_string &fails)
   {
-    throwError(makeError("", PRIO_INFO, ERR_CONTROL, 0, tr("Validate shape $1 of type $2").subst(toString(), testShape.shapeType)));
+    if (firstTimeCheck)
+    {
+      throwError(makeError("", PRIO_INFO, ERR_CONTROL, 0, tr("Validate shape $1 of type $2").subst(toString(), testShape.shapeType)));
+      firstTimeCheck = false;
+    }
 
 
 
@@ -42,14 +46,43 @@ class GuiTestShape
 
       if (!currentAttributes.contains(attribute))
       {
-        fails.append(tr("The shape $1 does not contains atribute $2").subst(this.toString(), attribute));
+        fails.append(tr("The shape $1 does not contains atribute $2.").subst(this.toString(), attribute));
+        continue;
       }
 
-      const anytype currentValue = currentAttributes.value(attribute);
+      mixed currentValue = currentAttributes.value(attribute);
       const anytype referencetValue = referenceAttributes.value(attribute);
+
+      if (this.isNull(currentValue) != this.isNull(referencetValue))
+      {
+        // when current and reference nullity differs
+        if (this.isNull(currentValue))
+        {
+          fails.append(tr("The shape $1 has a null value for attribute $2").subst(this.toString(), attribute));
+          continue;
+        }
+
+        if (this.isNull(referencetValue))
+        {
+          fails.append(tr("The reference value for attribute $2 is null on shape $1").subst(attribute, this.toString()));
+          continue;
+        }
+      }
+
+      // Handle special cases for language string types before comparison
+      // WinCC OA lang string in saved in JSON as mapping <language, text>
+      if (getType(currentValue) == LANGSTRING_VAR && getType(referencetValue) == MAPPING_VAR)
+      {
+        currentValue = jsonDecode(jsonEncode(currentValue, /*compactMode*/ false))[1];
+      }
+      else if (getType(currentValue) == DYN_LANGSTRING_VAR && getType(referencetValue) == DYN_ANYTYPE_VAR)
+      {
+        currentValue = jsonDecode(jsonEncode(currentValue, /*compactMode*/ false));
+      }
 
       if (currentValue != referencetValue)
       {
+        // DebugTN(currentValue, referencetValue, currentValue != referencetValue);
         fails.append("    + " + tr("Current value on the atribute '$1' does not equals with reference value\n").subst(attribute) +
                      "        " + tr("Current: $1").subst(currentValue) + "\n" +
                      "        " + tr("Reference: $1").subst(referencetValue));
@@ -88,25 +121,11 @@ class GuiTestShape
     int x, y;
     getValue(this.testShape, "position", x, y);
 
-    DebugTN("position", x, y);
-
-//      DebugN("ÖÖÖÖÖÖÖÖÖÖÖÖÖÖÖÖÖÖÖÖÖÖ pos 120/100 ?????",x,y);
-
     getValue(this.testShape, "refPoint", x, y);
-    DebugTN("refPoint", x, y);
-
-//      DebugN("ÖÖÖÖÖÖÖÖÖÖÖÖÖÖÖÖÖÖÖÖÖÖ pos 120/100 ????? ref",x,y);
-//     center of the shape
     int w, h;
     getValue(this.testShape, "size", w, h);
-    DebugTN("size", w, h);
     x += w / 2;
     y += h / 2;
-//  DebugN("ÖÖÖÖÖÖÖÖÖÖÖÖÖÖÖÖÖÖÖÖÖÖ pos 120/100",x,y);
-//     getValue(this.testShape, "mapFromGlobal", x,y,x,y);
-//     getValue(this.testShape, "mapToGlobal", x,y,x,y);
-//   this.mapToGlobal(x,y, gx,gy)
-
 
     shape panel = this.testShape.shapeType == "PANEL" ? this.testShape : this.testShape.panel;
     shape shEwo = addShape(panel, 8, "AttentionEffect_ewo", "recordInspection");
@@ -114,20 +133,18 @@ class GuiTestShape
     if (state == "OK")
       shEwo.color1 = "green";
 
-
     int w, h;
     getValue(shEwo, "size", w, h);
 
-    DebugTN("size ewo", w, h);
     float f;
     getZoomFactor(f, panel.moduleName);
     shEwo.position(x, y);
     shEwo.start();
 
     if (state == "OK")
-      delay(0, 500);
+      delay(0, 100);
     else
-      delay(2);
+      delay(5);
 
     removeShape(shEwo);
   }
@@ -147,4 +164,24 @@ class GuiTestShape
   /// Holder to real shape.
   protected shape testShape;
 
+//-----------------------------------------------------------------------------
+//@private members
+//-----------------------------------------------------------------------------
+  bool firstTimeCheck = true;
+
+  //------------------------------------------------------------------------------
+  private bool isNull(const anytype &value)
+  {
+    const int exprType = getType(value);
+
+    switch (exprType)
+    {
+      case ANYTYPE_VAR:
+      case MIXED_VAR:
+        return TRUE;
+
+      default:
+        return FALSE;
+    }
+  }
 };

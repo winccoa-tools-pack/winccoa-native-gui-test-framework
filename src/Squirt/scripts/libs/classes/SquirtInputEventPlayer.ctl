@@ -134,11 +134,11 @@ class SquirtInputEventPlayer : InputEventPlayer
       lastReason.clear();
 
       if (!isModuleOpen(moduleName))
-        lastReason = "The odule $1 is not openned".subst(moduleName);
+        lastReason = tr("The module '$1' is not openned").subst(moduleName);
       else if (!isPanelOpen(panelName, moduleName))
-        lastReason = "The panel $1 in the module $2 is not openned".subst(panelName, moduleName);
+        lastReason = tr("The panel '$1' in the module '$2' is not openned").subst(panelName, moduleName);
       else if (!shapeExists(shapeName))
-        lastReason = "The shape $1 does not exists".subst(shapeName);
+        lastReason = tr("The shape '$1' does not exists").subst(shapeName);
       else
         break;
 
@@ -147,7 +147,7 @@ class SquirtInputEventPlayer : InputEventPlayer
 
     if (!lastReason.isEmpty())
     {
-      throwError(makeError("", PRIO_INFO, ERR_CONTROL, 0, lastReason));
+      throwError(makeError("", PRIO_WARNING, ERR_CONTROL, 0, lastReason));
       this.printViewInfo(moduleName, panelName);
 
 
@@ -1157,7 +1157,9 @@ class SquirtInputEventPlayer : InputEventPlayer
   //-----------------------------------------------------------------------------
   private printViewInfo(const string & moduleName, const string & panelName)
   {
+    setThrowErrorAsException(true);
     dyn_string visibleShapes = getShapes(moduleName, panelName, "visible", true);
+    setThrowErrorAsException(false);
     throwError(makeError("", PRIO_INFO, ERR_CONTROL, 0,
                          "Module name:\n\t" + moduleName +
                          "\nPanel name:\n\t" + panelName +

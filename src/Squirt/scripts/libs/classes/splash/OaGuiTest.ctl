@@ -58,13 +58,11 @@ class OaGuiTest : OaTest
     if (OaTest::setUp())
       return -1;
 
-    // print all characters in the test case data
-    this.tcData.setMaxCountOfPrintedCharacters(0);
-
     waitForPanelInit();
 
     this.player.setMoveCursor(true);
-//     this.player.setTimeFactor(0.1);
+    // this.player.setTimeFactor(0.1);
+    this.player.enablePrintWievInfoOnPanelSwtich = false;
 
     return 0;
   }
@@ -77,6 +75,9 @@ class OaGuiTest : OaTest
   */
   public int beforeTc(const string &testCaseId)
   {
+    if (VERSION_NUMERIC >= 321000) // the function setMaxCountOfPrintedCharacters is available since 3.21
+      this.tcData.setMaxCountOfPrintedCharacters(0);
+
     string tcRelDir;
     int idx = strpos(rootTestFileName, SCRIPTS_REL_PATH + "splash/");
 
@@ -135,7 +136,6 @@ class OaGuiTest : OaTest
   */
   protected int assertVP(const string &vpId, const vector<shape> &shapes, const string note = "", float timeout = 2.0)
   {
-//     DebugN(classInfo(this));
     SquirtVp vp = SquirtVp(vpPrefix + vpId, shapes);
 
     if (vp.init())
@@ -173,13 +173,12 @@ class OaGuiTest : OaTest
     @param panel Live panel shape; resolve it first to wait for initialization.
     @param note Optional assertion note describing the checkpoint.
     @param timeout Maximum wait time per shape verification.
-        @note Font, text, and cursor values are excluded because they can vary by
-          locale or interaction state; assert dynamic text separately.
     @return 0 if all visible shapes match, -1 on first mismatch.
   */
   protected int assertPanelVP(const string &vpId, const shape &panel,
                               const string note = "", float timeout = 2.0)
   {
+    this.info(tr("Verifying panel VP $1").subst(vpId));
     SquirtVpPanel panelVp = SquirtVpPanel(vpPrefix + vpId, panel);
 
     if (panelVp.init())
@@ -201,22 +200,10 @@ class OaGuiTest : OaTest
     {
       const string shapeName = vpShapes.keyAt(index);
       mapping expectedAttributes = vpShapes.value(shapeName);
-      vector<string> attributeNames = expectedAttributes.keys();
-      mapping stableAttributes;
 
-      for (uint attributeIndex = 0;
-           attributeIndex < attributeNames.count(); attributeIndex++)
-      {
-        const string attribute = attributeNames.at(attributeIndex);
+      this.info(tr("Verifying shape $1 against expected attributes").subst(shapeName));
 
-        if (attribute == "font" || attribute == "text" ||
-            attribute == "cursor")
-          continue;
-
-        stableAttributes[attribute] = expectedAttributes.value(attribute);
-      }
-
-      if (assertAttributes(shapeName, stableAttributes, note, timeout))
+      if (assertAttributes(shapeName, expectedAttributes, note, timeout))
         return -1;
     }
 
@@ -272,7 +259,7 @@ class OaGuiTest : OaTest
     int rc = -1;
     time timeOut = getCurrentTime() + timeout;
 
-    while (timeOut > getCurrentTime())
+    while (timeOut >= getCurrentTime())
     {
       fails.clear();
       rc = testShape.assertAttributes(testAttributes, fails);
@@ -298,8 +285,8 @@ class OaGuiTest : OaTest
       capture.printLastLocation();
       testShape.showAttention("FAIL");
 
-      this.tcData.setCurrentValue(testShape.getCurrentAttributes());
-      this.tcData.setReferenceValue(testAttributes);
+      this.tcData.setCurrentValue(jsonEncode(testShape.getCurrentAttributes(), /*compactMode*/ false));
+      this.tcData.setReferenceValue(jsonEncode(testAttributes, /*compactMode*/ false));
 
       string errorMsg = tr("We found some mismatches by chekcing the shape $1\n$2").subst(testShape.toString(), strjoin(fails, "\n"));
 
@@ -379,8 +366,10 @@ class OaGuiTest : OaTest
     @param guide Instructions displayed during guided recording.
     @return Macro result, zero when recording succeeds, or -1 on failure.
   */
-  protected int playOrRecordMacro(const string &macroName, const string &guide)
+  protected int playOrRecordMacro(const string &macroName, const string &guide, const string &triggerAddress)
   {
+
+
     /*
 
     const string libraryPath = makeNativePath(
@@ -389,10 +378,12 @@ class OaGuiTest : OaTest
     //                      TEST_DP + ", confirm adding all descendant DPEs, " +
     //                      "then finish the recording.";
     //                      */
-    string scriptPath = getPath(LIBS_REL_PATH, "macros.ctl");
+    string libraryPath = getPath(LIBS_REL_PATH, "macros.ctl");
 
-    if (scriptPath.isEmpty())
-      scriptPath = PROJ_PATH + LIBS_REL_PATH + "macros.ctl";
+    if (!libraryPath.isEmpty() && !isfile(PROJ_PATH + LIBS_REL_PATH + "macros.ctl"))
+      copyFile(libraryPath, PROJ_PATH + LIBS_REL_PATH + "macros.ctl");
+
+    libraryPath = PROJ_PATH + LIBS_REL_PATH + "macros.ctl";
 
     const bool teachMode = !isFunctionDefined(macroName) || isDbgFlag("splash.teachMode");
 
@@ -404,10 +395,11 @@ class OaGuiTest : OaTest
         throwError(makeError("", PRIO_WARNING, ERR_CONTROL, 0, "Macro " + macroName + " already loaded; teach mode active."));
 
       SplashGuidedMacroRecorder recorder = SplashGuidedMacroRecorder();
+      recorder.teachMode = teachMode;
 
       if (recorder.recordGuidedMacro(
-            outputRelativePath, macroName, libraryPath,
-            panelAddress + ":cmdDPSel", "vision/tc_quide.pnl", guide, player))
+            macroName, libraryPath,
+            triggerAddress, "vision/tc_quide.pnl", guide, player))
       {
         throwError(makeError("", PRIO_SEVERE, ERR_CONTROL, 54, recorder.getErrorMessage()));
         return -1;

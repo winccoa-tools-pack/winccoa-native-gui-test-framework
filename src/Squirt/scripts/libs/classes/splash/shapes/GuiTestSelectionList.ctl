@@ -80,8 +80,8 @@ class GuiTestSelectionList : GuiTestShape
   public mapping getCurrentAttributes()
   {
 
-    anytype visible, enabled, font, updatesEnabled, alternatingRowColors;
-    anytype x, y, w, h, itemCount, selectedPos, cursor;
+    anytype visible, enabled, updatesEnabled, alternatingRowColors;
+    anytype x, y, w, h, itemCount, selectedPos;
     anytype items, selectedItems, selectedText;
 
     getValue(this.testShape,
@@ -89,10 +89,8 @@ class GuiTestSelectionList : GuiTestShape
              "enabled", enabled,
              "position", x, y,
              "size", w, h,
-             "font", font,
              "itemCount", itemCount,
              "selectedPos", selectedPos,
-             "cursor", cursor,
              "updatesEnabled", updatesEnabled,
              "items", items,
              "selectedItems", selectedItems,
@@ -106,10 +104,8 @@ class GuiTestSelectionList : GuiTestShape
              "position.y", y,
              "size.w", w,
              "size.h", h,
-             "font", font,
              "itemCount", itemCount,
              "selectedPos", selectedPos,
-             "cursor", cursor,
              "updatesEnabled", updatesEnabled,
              "items", items,
              "selectedItems", selectedItems,

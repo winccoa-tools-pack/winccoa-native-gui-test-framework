@@ -19,6 +19,7 @@
 class SplashGuidedMacroRecorder
 {
 //@public members
+  public bool teachMode;
 
 //@protected members
   /** Whether the guide has sent its stop command. */
@@ -137,32 +138,40 @@ class SplashGuidedMacroRecorder
         outputRelativePath.contains("..") ||
         outputRelativePath.contains("\\"))
     {
-      this.errorMessage = "Macro output must be a data/tmp/*.ctl path.";
+      this.errorMessage = "Macro output must be a data/tmp/*.ctl path. " + outputRelativePath;
       return -1;
     }
 
-    string normalizedLibraryPath = libraryPath;
-    strreplace(normalizedLibraryPath, "\\", "/");
-    string scriptsLibsPath = PROJ_PATH + "scripts/libs";
-    strreplace(scriptsLibsPath, "\\", "/");
+    string normalizedLibraryPath = makeUnixPath(libraryPath);
+    string scriptsLibsPath = makeUnixPath(PROJ_PATH + "scripts/libs");
     const string validMacroCharacters =
       "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_";
     bool validMacroName = macroName.startsWith("macro_");
 
-    for (int charIndex = 0; charIndex < strlen(macroName); charIndex++)
+    if (!validMacroName)
     {
-      if (strpos(validMacroCharacters, substr(macroName, charIndex, 1)) < 0)
-        validMacroName = FALSE;
+      this.errorMessage = "Macro name must start with 'macro_'. " + macroName;
+      return -1;
     }
 
-    if (!validMacroName ||
-        !normalizedLibraryPath.startsWith(scriptsLibsPath + "/") ||
+    for (int charIndex = 0; charIndex < strlen(macroName); charIndex++)
+    {
+      string c = macroName[charIndex];
+
+      if (strpos(validMacroCharacters, c) < 0)
+      {
+        this.errorMessage = "Invalid macro name character '" + c + "' at position " + (charIndex + 1) + " in " + macroName;
+        return -1;
+      }
+    }
+
+    if (!normalizedLibraryPath.startsWith(scriptsLibsPath + "/") ||
         !normalizedLibraryPath.endsWith(".ctl") ||
         normalizedLibraryPath.contains("/../") ||
         normalizedLibraryPath.endsWith("/..") ||
         normalizedLibraryPath.contains("|"))
     {
-      this.errorMessage = "Invalid macro name or scripts/libs library path.";
+      this.errorMessage = "Invalid lib path. " + libraryPath + " or not under scripts/libs. " + scriptsLibsPath;
       return -1;
     }
 
@@ -181,8 +190,13 @@ class SplashGuidedMacroRecorder
 
     if (isfile(this.recordedMacroPath))
     {
-      this.errorMessage = "Refusing to overwrite recorded macro.";
-      return -1;
+      if (!this.teachMode)
+      {
+        this.errorMessage = "Refusing to overwrite recorded macro.";
+        return -1;
+      }
+
+      remove(this.recordedMacroPath);
     }
 
     dpSetWait("_Splash.command", "", "_Splash.response", "");
@@ -229,7 +243,7 @@ class SplashGuidedMacroRecorder
 
   /**
     @brief Records one guided interaction and waits for its saved macro.
-    @param outputRelativePath Temporary file path under data/tmp.
+
     @param macroName Name of the reusable macro function.
     @param libraryPath Full native path under the project scripts/libs.
     @param triggerAddress Shape clicked to start the interaction being recorded.
@@ -239,14 +253,14 @@ class SplashGuidedMacroRecorder
     @param pollIntervalMs Positive interval between stop-state checks.
     @return 0 when the macro is saved; -1 on setup or save failure.
   */
-  public int recordGuidedMacro(const string &outputRelativePath,
-                               const string &macroName,
-                               const string &libraryPath,
-                               const string &triggerAddress,
-                               const string &guidePanel,
-                               const string &guideText,
-                               SquirtInputEventPlayer &player,
-                               int pollIntervalMs = 100)
+  public int recordGuidedMacro(
+    const string &macroName,
+    const string &libraryPath,
+    const string &triggerAddress,
+    const string &guidePanel,
+    const string &guideText,
+    SquirtInputEventPlayer &player,
+    int pollIntervalMs = 100)
   {
     if (pollIntervalMs <= 0)
     {
@@ -254,7 +268,21 @@ class SplashGuidedMacroRecorder
       return -1;
     }
 
-    if (this.startRecording(outputRelativePath, macroName, libraryPath))
+    // outputTmpPath Temporary file path under data/tmp.
+    const string outputTmpPath = PROJ_PATH + "data/tmp/";
+
+    if (!isdir(PROJ_PATH + outputTmpPath))
+    {
+      mkdir(PROJ_PATH + outputTmpPath);
+
+      if (getPath("data/tmp/" + macroName + ".ctl") != "")
+      {
+        copyFile(getPath("data/tmp/" + macroName + ".ctl"), PROJ_PATH + outputTmpPath + macroName + ".ctl");
+        throwError(makeError("", PRIO_WARNING, ERR_CONTROL, 0, "The file " + outputTmpPath + macroName + ".ctl will be used for temporary macro storage."));
+      }
+    }
+
+    if (this.startRecording("data/tmp/" + macroName + ".ctl", macroName, libraryPath))
       return -1;
 
     player.clickShape(triggerAddress);
