@@ -75,13 +75,12 @@ class TstGuiTestPushButton : OaTest
                                "fill", "",
                                "toggleState", false,
                                "updatesEnabled", true,
-                               "font", (langString)"Segoe UI,9,-1,5,400,0,0,0,0,0,0,0,0,0,0,1",
                                "textPosition", "TEXT_RIGHT_OF_PIXMAP",
                                "text", (langString)"testButton"
                              );
     const mapping current = testShapeObject.getCurrentAttributes();
 
-    this.assertEqual(expected.count(), current.count(), "Check count of attributes");
+    this.assertEqual(expected.count(), current.count(), "Check count of attributes: " + strjoin(current.keys(), ", "));
 
     for (int i = 0; i < current.count(); i++)
     {

@@ -138,7 +138,7 @@ class TstUiEvents : OaTest
     player.mouseEventTableCell(1, 0, 0, 0);
     expectCount(3);
     assertEqual(results.items(), makeDynString("Zeile: 1",
-        "Spalte: Forename", "Value: Martin"), "Ordered table callback records");
+                "Spalte: Forename", "Value: Martin"), "Ordered table callback records");
     return 0;
   }
 
@@ -178,6 +178,7 @@ class TstUiEvents : OaTest
   */
   public int testTextClipboardFocus()
   {
+    this.tcData.setMaxCountOfPrintedCharacters(0);
     clearResults();
     shape rightEditor = player.getShapeWait(address("TEXT_RIGHT"));
     this.info("TEXT_RIGHT enabled=" + rightEditor.enabled +
@@ -187,8 +188,7 @@ class TstUiEvents : OaTest
     player.keyClick("", 16777249, 0);
     player.keyClick("\x03", 67, KEY_CONTROL);
     player.keyClick("", 16777249, 0);
-    player.makeCurrent(address("TEXT_RIGHT"));
-    player.leftMouseClick(50, 50);
+    player.keyClick("", KEY_TAB, 0);
     player.sleep(300);
     player.keyClick("\x01", 65, KEY_CONTROL);
     player.keyClick("\x16", 86, KEY_CONTROL);
@@ -197,9 +197,9 @@ class TstUiEvents : OaTest
     player.clickShape(address("PUSH_BUTTON_TXTVERIFICATION"));
     expectCount(5);
     assertEqual(results.items(), makeDynString("focus in: TEXT_LEFT",
-        "focus out: TEXT_LEFT", "focus in: TEXT_RIGHT",
-        "focus out: TEXT_RIGHT",
-        "Textfield_RIGHT, Value is: Tool Verification 2"),
+                "focus out: TEXT_LEFT", "focus in: TEXT_RIGHT",
+                "focus out: TEXT_RIGHT",
+                "Textfield_RIGHT, Value is: Tool Verification 2"),
                 "Focus transitions precede verification of the pasted text");
     return 0;
   }
@@ -226,7 +226,7 @@ class TstUiEvents : OaTest
   private SquirtInputEventPlayer player;
   private shape results;
 
-  private string address(const string & shapeName)
+  private string address(const string &shapeName)
   {
     return moduleName + ".main_pnl:" + shapeName;
   }
@@ -253,8 +253,8 @@ class TstUiEvents : OaTest
     assertEqual(dynlen(entries), expected, "Exact callback record count");
   }
 
-  private void expectMouse(int index, const string & prefix,
-                           const string & eventType, int button,
+  private void expectMouse(int index, const string &prefix,
+                           const string &eventType, int button,
                            int buttons, int modifiers)
   {
     dyn_string entries = results.items();

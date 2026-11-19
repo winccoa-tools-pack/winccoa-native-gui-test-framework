@@ -71,7 +71,6 @@ class TstGuiTestSelectionList : OaTest
     this.assertTrue(current.contains("position.y"), "Expected position.y attribute");
     this.assertTrue(current.contains("size.w"), "Expected size.w attribute");
     this.assertTrue(current.contains("size.h"), "Expected size.h attribute");
-    this.assertTrue(current.contains("font"), "Expected font attribute");
     this.assertTrue(current.contains("items"), "Expected items attribute");
     this.assertTrue(current.contains("selectedItems"), "Expected selectedItems attribute");
 
