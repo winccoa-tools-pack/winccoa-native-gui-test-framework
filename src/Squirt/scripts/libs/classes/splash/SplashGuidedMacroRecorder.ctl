@@ -19,6 +19,10 @@
 class SplashGuidedMacroRecorder
 {
 //@public members
+  /**
+    @brief Allows guided recording to replace an existing macro file.
+    @AIgeneratedHelpContent
+  */
   public bool teachMode;
 
 //@protected members

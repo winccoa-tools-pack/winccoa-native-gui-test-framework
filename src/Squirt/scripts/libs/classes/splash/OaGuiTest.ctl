@@ -364,7 +364,9 @@ class OaGuiTest : OaTest
     @brief Plays a loaded macro or records it through the guided workflow.
     @param macroName Macro function name to execute or record.
     @param guide Instructions displayed during guided recording.
+    @param triggerAddress Shape address clicked to start the interaction.
     @return Macro result, zero when recording succeeds, or -1 on failure.
+    @AIgeneratedHelpContent
   */
   protected int playOrRecordMacro(const string &macroName, const string &guide, const string &triggerAddress)
   {
