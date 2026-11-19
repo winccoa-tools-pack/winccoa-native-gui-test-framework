@@ -32,7 +32,7 @@ class GuiTestComboBox : GuiTestShape
   {
 
     anytype visible, enabled, updatesEnabled, editable;
-    anytype x, y, w, h, cursor, itemCount, selectedPos;
+    anytype x, y, w, h, itemCount, selectedPos;
     anytype selectedText, text;
 
     getValue(this.testShape,
@@ -41,7 +41,6 @@ class GuiTestComboBox : GuiTestShape
              "position", x, y,
              "size", w, h,
              "updatesEnabled", updatesEnabled,
-             "cursor", cursor,
              "itemCount", itemCount,
              "selectedPos", selectedPos,
              "editable", editable,
@@ -56,7 +55,6 @@ class GuiTestComboBox : GuiTestShape
              "size.w", w,
              "size.h", h,
              "updatesEnabled", updatesEnabled,
-             "cursor", cursor,
              "itemCount", itemCount,
              "selectedPos", selectedPos,
              "editable", editable,

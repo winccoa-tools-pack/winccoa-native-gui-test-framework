@@ -1,0 +1,6 @@
+name: squirt-usage-skills
+version: 0.1.0
+description: AI skills for writing product and project tests with Squirt.
+dependencies:
+  apm:
+    - path: ./squirt-test-authoring

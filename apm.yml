@@ -7,3 +7,5 @@ dependencies:
   apm:
     - git: https://code.siemens.com/winccoa-ai/wincc-oa-teams/test-ai-skills.git
       ref: main
+    - ./.apm/skills/maintenance
+    - ./.apm/skills/usage

@@ -34,7 +34,7 @@ class GuiTestSlider : GuiTestShape
     anytype visible, enabled;
     anytype invertedAppearance, invertedControls, isActiveWindow, sliderDown, tracking, updatesEnabled, windowModified, focus;
     anytype x1, y1, w, h;
-    anytype cursor, height, lineStep, maximum, maxValue, minimum, minValue, pageStep, singleStep, sliderPosition, tickInterval, toolTipDuration,
+    anytype height, lineStep, maximum, maxValue, minimum, minValue, pageStep, singleStep, sliderPosition, tickInterval, toolTipDuration,
             value, Value, width, x, y, BorderWidth;
     anytype accessibleDescription, accessibleName, contextMenuPolicy, inputMethodHints, layoutDirection, orientation, statusTip,
             styleSheet, tickPosition;
@@ -54,7 +54,6 @@ class GuiTestSlider : GuiTestShape
              "statusTip", statusTip,
              "styleSheet", styleSheet,
              "tickPosition", tickPosition,
-             "cursor", cursor,
              "focus", focus,
              "height", height,
              "lineStep", lineStep,
@@ -99,7 +98,6 @@ class GuiTestSlider : GuiTestShape
              "statusTip", statusTip,
              "styleSheet", styleSheet,
              "tickPosition", tickPosition,
-             "cursor", cursor,
              "focus", focus,
              "height", height,
              "lineStep", lineStep,

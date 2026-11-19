@@ -1,9 +1,17 @@
 ---
 name: winccoa-gui-shape-tests
-description: GUI shape unit testing with panel isolation and dynamic shape creation. Use when creating or debugging OaTest-based GUI shape tests with ModuleOnWithPanel(), addShape(), and GuiTest* wrapper validation.
+description: >
+  Use when maintaining Squirt's GuiTest* shape wrappers and their framework
+  unit tests with ModuleOnWithPanel(), addShape(), isolated panels, and
+  attribute or event validation. For product tests that consume Squirt,
+  use squirt-test-authoring.
 ---
 
 # winccoa-gui-shape-tests
+
+This is a focused [Squirt maintenance skill](../squirt-maintenance/SKILL.md).
+For product test authoring, fixtures, and recorded macro workflows, use
+[Squirt test authoring](../squirt-test-authoring/SKILL.md).
 
 Purpose
 -------

@@ -1,0 +1,8 @@
+name: squirt-maintenance-skills
+version: 0.1.0
+description: AI skills for maintaining the Squirt framework.
+dependencies:
+  apm:
+    - path: ./squirt-maintenance
+    - path: ./tc-quide-panel
+    - path: ./winccoa-gui-shape-tests

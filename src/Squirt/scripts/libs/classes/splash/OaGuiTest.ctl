@@ -17,11 +17,12 @@
 #uses "classes/oaTest/OaTest"
 
 #uses "classes/splash/OaGuiTestScreenCapture"
+#uses "classes/splash/SplashGuidedMacroRecorder"
 
 #uses "classes/splash/shapes/GuiTestShape"
 #uses "classes/SquirtVp"
+#uses "classes/SquirtVpPanel"
 #uses "oaGuiTestShapes"
-
 
 
 
@@ -60,7 +61,8 @@ class OaGuiTest : OaTest
     waitForPanelInit();
 
     this.player.setMoveCursor(true);
-//     this.player.setTimeFactor(0.1);
+    // this.player.setTimeFactor(0.1);
+    this.player.enablePrintWievInfoOnPanelSwtich = false;
 
     return 0;
   }
@@ -73,6 +75,9 @@ class OaGuiTest : OaTest
   */
   public int beforeTc(const string &testCaseId)
   {
+    if (VERSION_NUMERIC >= 321000) // the function setMaxCountOfPrintedCharacters is available since 3.21
+      this.tcData.setMaxCountOfPrintedCharacters(0);
+
     string tcRelDir;
     int idx = strpos(rootTestFileName, SCRIPTS_REL_PATH + "splash/");
 
@@ -131,7 +136,6 @@ class OaGuiTest : OaTest
   */
   protected int assertVP(const string &vpId, const vector<shape> &shapes, const string note = "", float timeout = 2.0)
   {
-//     DebugN(classInfo(this));
     SquirtVp vp = SquirtVp(vpPrefix + vpId, shapes);
 
     if (vp.init())
@@ -156,6 +160,50 @@ class OaGuiTest : OaTest
       const string shapeName = vpShapes.keyAt(i);
 
       if (assertAttributes(shapeName, vpShapes.value(shapeName), note, timeout))
+        return -1;
+    }
+
+    return 0;
+  }
+
+  //------------------------------------------------------------------------------
+  /**
+    @brief Validates every visible shape in a panel against a panel-wide VP.
+    @param vpId Identifier of the panel VP JSON file.
+    @param panel Live panel shape; resolve it first to wait for initialization.
+    @param note Optional assertion note describing the checkpoint.
+    @param timeout Maximum wait time per shape verification.
+    @return 0 if all visible shapes match, -1 on first mismatch.
+  */
+  protected int assertPanelVP(const string &vpId, const shape &panel,
+                              const string note = "", float timeout = 2.0)
+  {
+    this.info(tr("Verifying panel VP $1").subst(vpId));
+    SquirtVpPanel panelVp = SquirtVpPanel(vpPrefix + vpId, panel);
+
+    if (panelVp.init())
+      this.abort(tr("The panel VP $1 can not be initialized!").subst(vpId));
+
+    mapping vpShapes = panelVp.getShapesAndAttributes();
+
+    if (vpShapes.count() == 0)
+      this.abort(tr("The panel VP $1 does not contain any shapes!").subst(vpId));
+
+    int referenceShapeCount = vpShapes.count();
+    int currentShapeCount = panelVp.getCurrentShapeCount();
+
+    if (referenceShapeCount != currentShapeCount)
+      this.abort(tr("The panel VP $1 does not contain the same number of " +
+                    "visible shapes as the current panel!").subst(vpId));
+
+    for (uint index = 0; index < vpShapes.count(); index++)
+    {
+      const string shapeName = vpShapes.keyAt(index);
+      mapping expectedAttributes = vpShapes.value(shapeName);
+
+      this.info(tr("Verifying shape $1 against expected attributes").subst(shapeName));
+
+      if (assertAttributes(shapeName, expectedAttributes, note, timeout))
         return -1;
     }
 
@@ -211,7 +259,7 @@ class OaGuiTest : OaTest
     int rc = -1;
     time timeOut = getCurrentTime() + timeout;
 
-    while (timeOut > getCurrentTime())
+    while (timeOut >= getCurrentTime())
     {
       fails.clear();
       rc = testShape.assertAttributes(testAttributes, fails);
@@ -237,8 +285,8 @@ class OaGuiTest : OaTest
       capture.printLastLocation();
       testShape.showAttention("FAIL");
 
-      this.tcData.setCurrentValue(testShape.getCurrentAttributes());
-      this.tcData.setReferenceValue(testAttributes);
+      this.tcData.setCurrentValue(jsonEncode(testShape.getCurrentAttributes(), /*compactMode*/ false));
+      this.tcData.setReferenceValue(jsonEncode(testAttributes, /*compactMode*/ false));
 
       string errorMsg = tr("We found some mismatches by chekcing the shape $1\n$2").subst(testShape.toString(), strjoin(fails, "\n"));
 
@@ -310,6 +358,60 @@ class OaGuiTest : OaTest
   protected void waitForPanelInit()
   {
     delay(2);
+  }
+
+  /**
+    @brief Plays a loaded macro or records it through the guided workflow.
+    @param macroName Macro function name to execute or record.
+    @param guide Instructions displayed during guided recording.
+    @param triggerAddress Shape address clicked to start the interaction.
+    @return Macro result, zero when recording succeeds, or -1 on failure.
+    @AIgeneratedHelpContent
+  */
+  protected int playOrRecordMacro(const string &macroName, const string &guide, const string &triggerAddress)
+  {
+
+
+    /*
+
+    const string libraryPath = makeNativePath(
+                                 PROJ_PATH + "scripts/libs/macros.ctl");
+    // const string guide = "In the DPE selector, choose the structured node " +
+    //                      TEST_DP + ", confirm adding all descendant DPEs, " +
+    //                      "then finish the recording.";
+    //                      */
+    string libraryPath = getPath(LIBS_REL_PATH, "macros.ctl");
+
+    if (!libraryPath.isEmpty() && !isfile(PROJ_PATH + LIBS_REL_PATH + "macros.ctl"))
+      copyFile(libraryPath, PROJ_PATH + LIBS_REL_PATH + "macros.ctl");
+
+    libraryPath = PROJ_PATH + LIBS_REL_PATH + "macros.ctl";
+
+    const bool teachMode = !isFunctionDefined(macroName) || isDbgFlag("splash.teachMode");
+
+    if (teachMode)
+    {
+      if (!isFunctionDefined(macroName))
+        throwError(makeError("", PRIO_INFO, ERR_CONTROL, 0, "No macro " + macroName + " loaded; recording user action."));
+      else
+        throwError(makeError("", PRIO_WARNING, ERR_CONTROL, 0, "Macro " + macroName + " already loaded; teach mode active."));
+
+      SplashGuidedMacroRecorder recorder = SplashGuidedMacroRecorder();
+      recorder.teachMode = teachMode;
+
+      if (recorder.recordGuidedMacro(
+            macroName, libraryPath,
+            triggerAddress, "vision/tc_quide.pnl", guide, player))
+      {
+        throwError(makeError("", PRIO_SEVERE, ERR_CONTROL, 54, recorder.getErrorMessage()));
+        return -1;
+      }
+    }
+    else
+    {
+      throwError(makeError("", PRIO_INFO, ERR_CONTROL, 0, "Using loaded macro " + macroName + "."));
+      return (int)callFunction(macroName, player);
+    }
   }
 
 //--------------------------------------------------------------------------------

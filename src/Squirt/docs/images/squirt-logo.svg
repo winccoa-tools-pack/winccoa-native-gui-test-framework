@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 300" role="img" aria-labelledby="title description">
+  <title id="title">Splash</title>
+  <desc id="description">Splash, the native GUI test framework for WinCC OA</desc>
+  <g fill="none" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="150" cy="132" r="92" stroke="#173B4A" stroke-width="18"/>
+    <path d="M215 199l68 68" stroke="#173B4A" stroke-width="24"/>
+    <rect x="91" y="77" width="118" height="91" rx="9" fill="#F4F8F7" stroke="#173B4A" stroke-width="8"/>
+    <path d="M94 101h112" stroke="#173B4A" stroke-width="8"/>
+    <circle cx="105" cy="89" r="3.5" fill="#32A9A2" stroke="none"/>
+    <circle cx="117" cy="89" r="3.5" fill="#D75B63" stroke="none"/>
+    <rect x="108" y="117" width="34" height="35" rx="4" fill="#32A9A2" stroke="none"/>
+    <rect x="155" y="117" width="38" height="15" rx="3" fill="#DCE8E6" stroke="none"/>
+    <rect x="155" y="139" width="27" height="13" rx="3" fill="#DCE8E6" stroke="none"/>
+    <path d="M179 154l-29 39 2-23-20 10 47-26z" fill="#F4C95D" stroke="#173B4A" stroke-width="7"/>
+  </g>
+  <text x="330" y="157" fill="#173B4A" font-family="Trebuchet MS, Arial, sans-serif" font-size="112" font-weight="700">Splash</text>
+  <text x="338" y="214" fill="#50717A" font-family="Trebuchet MS, Arial, sans-serif" font-size="29" letter-spacing="1">GUI TEST FRAMEWORK</text>
+  <text x="338" y="252" fill="#50717A" font-family="Trebuchet MS, Arial, sans-serif" font-size="25">for native WinCC OA panels</text>
+</svg>

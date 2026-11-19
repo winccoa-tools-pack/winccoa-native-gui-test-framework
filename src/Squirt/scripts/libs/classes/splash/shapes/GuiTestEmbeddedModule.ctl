@@ -34,7 +34,7 @@ class GuiTestEmbeddedModule : GuiTestShape
     anytype visible, enabled, focus, isActiveWindow, newPanelAnimateOpacity, newPanelAnimateSize, oldPanelAnimateOpacity, oldPanelAnimateSize, updatesEnabled,
             windowModified;
     anytype x1, y1, w, h;
-    anytype        contentsHeight, contentsWidth, contentsX, contentsY, cursor, frameWidth, height, lineWidth, midLineWidth, newPanelAnimDuration,
+    anytype        contentsHeight, contentsWidth, contentsX, contentsY, frameWidth, height, lineWidth, midLineWidth, newPanelAnimDuration,
                    oldPanelAnimDuration, toolTipDuration, visibleHeight, visibleWidth, width, x, y;
     anytype      windowOpacity;
     anytype     accessibleDescription, accessibleName, alignment, frameShadow, frameShape, horizontalScrollBarPolicy,
@@ -59,7 +59,6 @@ class GuiTestEmbeddedModule : GuiTestShape
              "contentsWidth", contentsWidth,
              "contentsX", contentsX,
              "contentsY", contentsY,
-             "cursor", cursor,
              "frameWidth", frameWidth,
              "height", height,
              "lineWidth", lineWidth,
@@ -112,7 +111,6 @@ class GuiTestEmbeddedModule : GuiTestShape
              "contentsWidth", contentsWidth,
              "contentsX", contentsX,
              "contentsY", contentsY,
-             "cursor", cursor,
              "frameWidth", frameWidth,
              "height", height,
              "lineWidth", lineWidth,

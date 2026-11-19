@@ -50,4 +50,20 @@ class GuiTestTable : GuiTestShape
            );
   }
 
+  /**
+    @brief Returns the value of one table cell.
+    @param row Row index of the cell.
+    @param column Column name of the cell.
+    @return The value stored at the specified row and column.
+    @AIgeneratedHelpContent
+  */
+  public anytype getRC(int row, const string &column)
+  {
+    anytype value;
+    getValue(this.testShape,
+             "cellValueRC", row, column, value);
+    return value;
+  }
+
+
 };
