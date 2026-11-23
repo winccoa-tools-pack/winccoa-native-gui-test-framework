@@ -173,10 +173,12 @@ class TstUiEvents : OaTest
   }
 
   /**
-    @test Text entry, clipboard transfer and focus callbacks retain exact order.
+    @brief Text entry, clipboard transfer and focus callbacks retain exact order.
+    @todo Deactivated (not discovered as test) until verified on 3.21 and 3.22,
+          see https://github.com/winccoa-tools-pack/winccoa-native-gui-test-framework/issues/56
     @AIgeneratedHelpContent
   */
-  public int testTextClipboardFocus()
+  public int skipTextClipboardFocus()
   {
     this.tcData.setMaxCountOfPrintedCharacters(0);
     clearResults();

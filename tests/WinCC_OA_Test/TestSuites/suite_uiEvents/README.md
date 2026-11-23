@@ -87,8 +87,11 @@ It adapts the current UiFiles HSP `newUnitTest.ctl` structure and uses
 - `testTableCell`: row 1, column Forename, value Martin, in exact record order.
 - `testTabs`: mouse selection and right-arrow navigation, each followed by
 	the RP2 button's actual prefix/JSON callback pair.
-- `testTextClipboardFocus`: keyboard entry, select-all/copy/paste shortcuts,
-	four ordered focus transitions and exact pasted-text verification.
+- `skipTextClipboardFocus` (deactivated, was `testTextClipboardFocus`):
+	keyboard entry, select-all/copy/paste shortcuts, four ordered focus
+	transitions and exact pasted-text verification. Behavior differs between
+	WinCC OA 3.21 and 3.22; see
+	[#56](https://github.com/winccoa-tools-pack/winccoa-native-gui-test-framework/issues/56).
 - `testNativeDoubleClick`: actual native `MouseButtonDblClick`, not two
 	ordinary clicks or a manually invoked callback.
 
