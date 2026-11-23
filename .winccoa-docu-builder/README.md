@@ -3,7 +3,7 @@
 Project-local advanced documentation config and related assets for
 `@winccoa-tools-pack/npm-winccoa-docu-builder`.
 
-Merged into `src/Squirt/data/projectDocu` at docs-build time via
+Merged into `src/Splash/data/projectDocu` at docs-build time via
 `--project-docu` / action input `project-docu-paths` (later paths override
 earlier for non-advanced files; advanced configs concatenate).
 
@@ -24,7 +24,7 @@ locally by the helpers).
 ## Local prepare / build
 
 ```powershell
-# Merge theme + this folder into src/Squirt/data/projectDocu
+# Merge theme + this folder into src/Splash/data/projectDocu
 .\.winccoa-docu-builder\scripts\prepare-project-docu.ps1
 
 # Optional: full CLI build (requires WinCC OA + Node)
@@ -59,7 +59,7 @@ artifacts (action still merges again via the npm package):
 ```
 
 Generated copies under `.docu-builder-theme/` and
-`src/Squirt/data/projectDocu/*` (except README) are gitignored.
+`src/Splash/data/projectDocu/*` (except README) are gitignored.
 
 ---
 

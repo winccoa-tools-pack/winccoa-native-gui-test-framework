@@ -5,7 +5,7 @@
   @AIgeneratedHelpContent
 */
 
-#uses "classes/SquirtInputEventPlayer"
+#uses "classes/SplashInputEventPlayer"
 #uses "classes/oaTest/OaTest"
 #uses "panel"
 
@@ -13,7 +13,7 @@
   @brief Isolated widget input tests without shared panel dependencies.
   @AIgeneratedHelpContent
 */
-class TstSquirtStandaloneWidgetInput : OaTest
+class TstSplashStandaloneWidgetInput : OaTest
 {
 //@public members
   /**
@@ -26,19 +26,19 @@ class TstSquirtStandaloneWidgetInput : OaTest
     if (OaTest::setUp() != 0)
       return -1;
 
-    ModuleOnWithPanel("squirtStandaloneWidget", -1, -1, 700, 500, 2, 2, "",
+    ModuleOnWithPanel("splashStandaloneWidget", -1, -1, 700, 500, 2, 2, "",
                       "about.pnl", "standaloneWidget", makeDynString());
-    player.waitForPanelOpen("squirtStandaloneWidget", "standaloneWidget");
-    checkbox = addShape("squirtStandaloneWidget", "standaloneWidget", 1,
+    player.waitForPanelOpen("splashStandaloneWidget", "standaloneWidget");
+    checkbox = addShape("splashStandaloneWidget", "standaloneWidget", 1,
                         "CHECK_BOX", "widgetCheckbox");
     setValue(checkbox, "position", 20, 20, "size", 240, 70,
              "visible", true, "enabled", true);
-    combo = addShape("squirtStandaloneWidget", "standaloneWidget", 1,
+    combo = addShape("splashStandaloneWidget", "standaloneWidget", 1,
                      "COMBO_BOX", "widgetCombo");
     setValue(combo, "position", 300, 20, "size", 240, 35,
              "items", makeDynString("First", "Middle", "Last"),
              "visible", true, "enabled", true);
-    table = addShape("squirtStandaloneWidget", "standaloneWidget", 1,
+    table = addShape("splashStandaloneWidget", "standaloneWidget", 1,
                      "TABLE", "widgetTable");
     setValue(table, "position", 20, 170, "size", 400, 180,
              "visible", true, "enabled", true);
@@ -169,23 +169,23 @@ class TstSquirtStandaloneWidgetInput : OaTest
   */
   public int tearDown()
   {
-    moduleOff("squirtStandaloneWidget");
-    player.waitForPanelClosed("squirtStandaloneWidget", "standaloneWidget");
+    moduleOff("splashStandaloneWidget");
+    player.waitForPanelClosed("splashStandaloneWidget", "standaloneWidget");
     return OaTest::tearDown();
   }
 
 //@protected members
 //@private members
-  private SquirtInputEventPlayer player;
+  private SplashInputEventPlayer player;
   private shape checkbox;
   private shape combo;
   private shape table;
   private string checkboxAddress =
-    "squirtStandaloneWidget.standaloneWidget:widgetCheckbox";
+    "splashStandaloneWidget.standaloneWidget:widgetCheckbox";
   private string comboAddress =
-    "squirtStandaloneWidget.standaloneWidget:widgetCombo";
+    "splashStandaloneWidget.standaloneWidget:widgetCombo";
   private string tableAddress =
-    "squirtStandaloneWidget.standaloneWidget:widgetTable";
+    "splashStandaloneWidget.standaloneWidget:widgetTable";
 };
 
 /**
@@ -196,7 +196,7 @@ void main(...)
 {
   va_list arguments;
   int count = va_start(arguments);
-  TstSquirtStandaloneWidgetInput test;
+  TstSplashStandaloneWidgetInput test;
   test.cla.readArguments(arguments, count);
   va_end(arguments);
   test.startAll();

@@ -1,0 +1,136 @@
+# Splash - WinCC OA GUI test framework
+
+is a framework to test WinCC OA native panels (GUI) provided in the .pnl or .xml format.
+
+Narrative guides live under [docs/](docs/README.md). API reference is generated
+from CTL Doxygen comments; this README is the help **main page**.
+
+----
+
+## Usage
+
++ provide tests by macro recording
++ provide verification points by macro recording
++ replay and execute tests
++ logs all verification points (asserts)
++ create screenshots on assertions
++ bind tests into WinCC OA test frameworks
++ ...
+
+For a longer walkthrough, see [docs/usage.md](docs/usage.md).
+
+Splash GUI tests are based on the WinCC OA `OaTest` class and therefore follow the WinCC OA Test concept.
+
+Execution options:
+
++ run in GEDI with HSP (High-Speed Programming) for local user tests in the WinCC OA IDE
++ run from command line
++ run fully automated in WinCC OA TestFramework for CI/CD
+
+----
+
+## Configuration
+
+TBD — extend [docs/](docs/README.md) when configuration details stabilize.
+
+### Splash Command-Line Interface
+
+The `splash-cli` wrappers require the WinCC OA `bin` directory and
+`src/Splash/bin` to be on `PATH`. For example, in PowerShell:
+
+```powershell
+$env:PATH = "C:\Program Files\Siemens\WinCC_OA\3.22\bin;C:\ws\winccoa-tools-pack\winccoa-native-gui-test-framework\src\Splash\bin;$env:PATH"
+```
+
+Start a recording with a panel path relative to `panels/` and a test-script
+path relative to `scripts/`:
+
+```text
+splash-cli.cmd DPE_monitor_test_3.22 record -winccoa-tools-pack.splash.panel.path=/vision/login.pnl -winccoa-tools-pack.splash.testScript.path=tests/vision/login/tc1.ctl -winccoa-tools-pack.splash.testScript.force=true
+```
+
+The POSIX wrapper is named `splash-cli.sh` and accepts the same project, command,
+and settings. `pause`, `resume`, and `status` operate on the current session.
+Stop the current recording and save it to its configured path with:
+
+```text
+splash-cli.cmd DPE_monitor_test_3.22 stop -winccoa-tools-pack.splash.testScript.path=tests/vision/login/tc1.ctl -winccoa-tools-pack.splash.testScript.force=true
+```
+
+`testScript.force=true` allows an existing output script to be overwritten.
+Only project-relative paths under `scripts/tests/` are accepted for generated
+test scripts.
+
+The headless CLI validation suite is `suite_CLI`; it checks accepted and
+rejected project-relative panel and script paths without launching WCCOAui.
+See the [suite documentation](https://github.com/winccoa-tools-pack/winccoa-native-gui-test-framework/blob/main/tests/WinCC_OA_Test/TestSuites/suite_CLI/README.md)
+for execution details. Recording and playback lifecycle integration still
+requires a display and is not part of this headless suite.
+
+----
+
+## Examples
+
+TBD
+
+----
+
+## Roadmap
+
++ VS Code integration is coming soon.
++ AI repository instructions are available in the repository root at
+  `../../.github/copilot-instructions.md`.
++ GitHub Actions integration is coming soon.
++ GitHub Actions overview plan:
+  + Phase 1: repository checks (lint/format checks and basic documentation validation).
+  + Phase 2: automated test execution (WinCC OA test runs and result publishing).
+  + Phase 3: release packaging of the final WinCC OA subproject artifact.
+  + Phase 4: publish package through standard GitHub Releases.
+  + Phase 5: publish built help in two targets: inside the package for local use and on GitHub Pages from the latest main branch.
+
+----
+
+## Contributing
+
+### Code Style
+
+TBD
+
+### Code coverage
+
+TBD
+
+### Documentation
+
+- API docs: Doxygen in `.ctl` sources
+- Guides and concepts: [docs/](docs/README.md)
+- See [docs/contributing-docs.md](docs/contributing-docs.md)
+
+----
+
+## License
+
+MIT License. See [../../LICENSE](../../LICENSE).
+
+## Limitation
+
+Only WinCC OA shapes are possible to record / re-play. That means no file-selector, printers ... can be recorded.
+
+## Do not ...
+
++ Do not use **:** in the panel name, otherwise it is not possible to address the shape (moduleName.panelName:shapeName).
++ Do not use empty shape name, otherwise it is not possible to address the shape (moduleName.panelName:shapeName).
++ Use unique shape name, otherwise you will have conflict in the Tab shape
++ Do not use random generated module, shape and panel names, otherwise the player can not address the shape.
+
+## Best practice
+
++ Create smaller test cases instead of complex long duration tests. It will help you for analysis and you does not need
+  to record whole scenario, when something changes
+
+----
+
+---
+
+<!-- markdownlint-disable-next-line MD033 -->
+<center>Made with ❤️ for and by the WinCC OA community</center>

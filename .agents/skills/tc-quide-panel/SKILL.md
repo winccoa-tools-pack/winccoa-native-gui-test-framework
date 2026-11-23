@@ -1,17 +1,17 @@
 ---
 name: tc-quide-panel
-description: "Use when developing, testing, or debugging Squirt's tc_quide.pnl test guide, its project-root .tcQuide.json configuration, or the _Splash.command stop handshake."
+description: "Use when developing, testing, or debugging Splash's tc_quide.pnl test guide, its project-root .tcQuide.json configuration, or the _Splash.command stop handshake."
 ---
 
-# Squirt Test Guide Panel
+# Splash Test Guide Panel
 
-Use this skill when changing or using `src/Squirt/panels/vision/tc_quide.pnl`
+Use this skill when changing or using `src/Splash/panels/vision/tc_quide.pnl`
 or a test that opens it.
 
 ## Ownership and runtime
 
-- The panel is a framework resource under `src/Squirt/panels/vision`.
-- The worker project runs it from the attached/installed Squirt subproject at
+- The panel is a framework resource under `src/Splash/panels/vision`.
+- The worker project runs it from the attached/installed Splash subproject at
   `panels/vision/tc_quide.pnl`; do not treat the worker project as the source
   of truth for this reusable UI.
 - The caller supplies guide values to `SplashGuidedMacroRecorder`; the helper
@@ -47,7 +47,7 @@ Call `startRecording()` before the UI actions to capture, then call
 and verify `isRecordingSaved()`; report `getErrorMessage()` on failure. Keep
 product-specific UI interaction and assertions in the product test.
 
-See [the user guide](../../../src/Squirt/docs/tc-quide-guide.md) for the JSON
+See [the user guide](../../../src/Splash/docs/tc-quide-guide.md) for the JSON
 example, startup sequence, and complete handshake details.
 
 ---

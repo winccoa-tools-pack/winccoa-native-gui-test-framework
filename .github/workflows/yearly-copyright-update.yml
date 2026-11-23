@@ -25,7 +25,7 @@ jobs:
         with:
           targets: |
             .
-            src/Squirt
+            src/Splash
             tests/WinCC_OA_Test
           exclude_paths: |
             .github/workflows

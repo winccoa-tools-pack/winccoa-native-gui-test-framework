@@ -3,7 +3,7 @@
 
 
 pw.cmd
-tests/WinCC_OA_Test/Projects/TfCustomizedSquirt/config/config
+tests/WinCC_OA_Test/Projects/TfCustomizedSplash/config/config
 tests/WinCC_OA_Test/Projects/Stored
 !tests/WinCC_OA_Test/Projects/Stored/README.md
 tests/WinCC_OA_Test/Results
@@ -12,17 +12,17 @@ tests/WinCC_OA_Test/Projects/Running
 
 # WinCC OA artifacts and logs
 .artifacts/
-tests/WinCC_OA_Test/Projects/TfCustomizedSquirt/log/
+tests/WinCC_OA_Test/Projects/TfCustomizedSplash/log/
 
 # Docu-builder local helpers / merge outputs
 .docu-builder-theme/
-src/Squirt/data/projectDocu/*
-!src/Squirt/data/projectDocu/README.md
+src/Splash/data/projectDocu/*
+!src/Splash/data/projectDocu/README.md
 node_modules/
 package-lock.json
-src/Squirt/help/html/
-src/Squirt/log/
-src/Squirt/data/help.qhc
+src/Splash/help/html/
+src/Splash/log/
+src/Splash/data/help.qhc
 .help/
 
 # APM dependencies
@@ -32,8 +32,8 @@ apm_modules/
 .github/hooks/
 .agents/
 
-# in case you are using a local Squirt configuration
-src/Squirt/config/config
+# in case you are using a local Splash configuration
+src/Splash/config/config
 tests/WinCC_OA_Test/Projects/Global/config/config.level
 
 # Graft local graph and cache

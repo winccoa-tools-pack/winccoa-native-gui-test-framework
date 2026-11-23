@@ -12,7 +12,7 @@ This document describes the required GitHub Actions that the CI pipeline depends
 
 | Input | Required | Type | Description |
 | ----- | -------- | ---- | ----------- |
-| `project-path` | yes | string | Path to the main WinCC OA project directory (e.g., `src/Squirt`) |
+| `project-path` | yes | string | Path to the main WinCC OA project directory (e.g., `src/Splash`) |
 | `sub-project-ids` | no | string | Optional space-separated sub-project identifiers loaded before the main project |
 | `resolve-project-id-command` | no | string | Shell command template used to resolve one project ID to a project path. Use `{id}` as placeholder. Required when `sub-project-ids` is set. |
 | `languages` | yes | string | Languages to configure, space-separated full locale names (e.g., `en_US.utf8 de_AT.utf8`) |
@@ -47,9 +47,9 @@ This document describes the required GitHub Actions that the CI pipeline depends
 
 | Input | Required | Type | Description |
 | ----- | -------- | ---- | ----------- |
-| `project-path` | yes | string | Path to the Squirt project (e.g., `src/Squirt`) |
+| `project-path` | yes | string | Path to the Splash project (e.g., `src/Splash`) |
 | `test-project-path` | yes | string | Path to the test project (e.g., `tests/WinCC_OA_Test`) |
-| `test-run-id` | yes | string | Unique test run identifier (e.g., `Squirt-regression`) |
+| `test-run-id` | yes | string | Unique test run identifier (e.g., `Splash-regression`) |
 | `languages` | yes | string | Test languages, space-separated full locale names (e.g., `en_US.utf8 de_AT.utf8`) |
 | `winccoa-version` | yes | string | WinCC OA version (e.g., `3.21`) |
 | `upload-artifacts` | no | boolean | Upload failed tests and results as artifacts (default: `true`) |
@@ -105,7 +105,7 @@ Generated and uploaded automatically (when enabled via inputs):
 
 | Input | Required | Type | Description |
 | ----- | -------- | ---- | ----------- |
-| `path` | yes | string | Runnable worker project path (e.g. `src/Squirt`) |
+| `path` | yes | string | Runnable worker project path (e.g. `src/Splash`) |
 | `source-path` | yes | string | Directory of CTL sources to check |
 | `winccoa-version` | yes | string | WinCC OA version |
 | `docker-image` | yes | string | Container image used for execution |

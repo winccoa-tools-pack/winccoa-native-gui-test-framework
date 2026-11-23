@@ -4,7 +4,7 @@ Administration helper scripts for this repository.
 
 ## activateMe
 
-Registers [src/Squirt](../src/Squirt) as a non-runnable WinCC OA sub-project
+Registers [src/Splash](../src/Splash) as a non-runnable WinCC OA sub-project
 using [`@winccoa-tools-pack/npm-winccoa-register-project`](https://github.com/winccoa-tools-pack/npm-winccoa-register-project).
 
 | Script | Platform |
@@ -30,7 +30,7 @@ $env:WINCCOA_VERSION = '3.22'; scripts\activateMe.cmd
 WINCCOA_VERSION=3.22 ./scripts/activateMe.sh
 ```
 
-The scripts resolve the Squirt path relative to their own location, so they
+The scripts resolve the Splash path relative to their own location, so they
 can be called from any working directory. The exit code of the registration is
 returned, `0` means success.
 

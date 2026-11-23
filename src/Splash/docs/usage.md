@@ -1,0 +1,191 @@
+# Usage
+
+Splash GUI tests follow the WinCC OA `OaTest` concept.
+
+## Typical workflow
+
+1. Record macros and verification points against native panels (`.pnl` / `.xml`).
+2. Replay tests locally (GEDI + HSP) or from the command line.
+3. Run the same suites under WinCC OA TestFramework in CI/CD.
+4. Review assertion logs and screenshots on failures.
+
+## Execution modes
+
+| Mode | When to use |
+| --- | --- |
+| GEDI + HSP | Interactive development and local debugging |
+| Command line | Repeatable local runs without the IDE UI |
+| TestFramework / CI | Automated gates and release validation |
+
+## Shape addressing constraints
+
+- Do not use `:` in panel names.
+- Do not leave shape names empty.
+- Prefer unique shape names (especially inside Tab shapes).
+- Avoid randomly generated module, panel, or shape names.
+
+Only WinCC OA shapes can be recorded and replayed (no file selectors,
+printers, and similar OS dialogs).
+
+## DPE monitor showcase
+
+`scripts/examples/splash/vision/dpe_monitor/DpeMonitorShowcase.ctl` is a small
+hand-authored example of `OaGuiTest`: it toggles the comment-display checkbox,
+refreshes the empty table, restores the checkbox, and compares the stable
+`FRAME1` shape with the stored VP at
+`data/splash/VPs/dpe_monitor_showcase.json`.
+
+Run it with the DPE monitor panel available in the test project:
+
+```text
+WCCOAui.exe -p "vision/dpe_monitor.pnl" -log "+stderr" -proj "<test-project>" -s "<Splash-subproject>/scripts/examples/splash/vision/dpe_monitor/DpeMonitorShowcase.ctl"
+```
+
+The VP baseline is committed with Splash and is resolved from the configured
+subproject; the showcase does not create or modify test-project data.
+
+## Test guide panel
+
+`panels/vision/tc_quide.pnl` is a reusable guide panel for interactive GUI test
+steps. The caller supplies guide values to `SplashGuidedMacroRecorder`, which
+writes project-root `.tcQuide.json`, starts recording, and launches the panel.
+The guide reads the file during initialization and sends a stop payload when
+the user finishes. See the [test guide panel instructions](tc-quide-guide.md)
+for the JSON contract, startup pattern, and command handshake.
+
+## Recorded macro cleanup
+
+Recorded macros are useful starting points, but low-level input events can be
+hard to review. The repository includes a Node.js helper at
+`devTools/simplify-input-macros/simplify-input-macros.mjs`. Run it from the
+repository root; dry-run is the default and does not modify the macro:
+
+```powershell
+node devTools/simplify-input-macros/simplify-input-macros.mjs --dry-run path\to\macros.ctl
+```
+
+Review the candidate locations and warnings before applying safe click
+simplifications:
+
+```powershell
+node devTools/simplify-input-macros/simplify-input-macros.mjs --apply path\to\macros.ctl
+```
+
+The helper only converts matching press/wait/release clicks at the same
+coordinates and modifiers when the recorded hold is at most 100 ms. Longer
+holds are left unchanged. Printable `keyClick` runs and Ctrl+A/Backspace pairs
+are reported as `writeText` or `clearText` suggestions when a preceding
+`makeCurrent` identifies the target; other multi-key sequences need manual
+review. Keyboard and pointer-movement findings are advisory and are not
+rewritten by `--apply`.
+
+Button-free mouse events that repeat or immediately supersede a pointer
+position are reported for manual review. They may be meaningful hover or drag
+motion, so the helper never removes them automatically. Sleeps longer than 10
+seconds are also reported. Add a comment directly above each such sleep to
+explain the UI state or event it waits for; `--apply` refuses to write a file
+with an unexplained long sleep. Prefer a readiness/state check to a long fixed
+delay when one is available.
+
+## Input helpers
+
+`SplashInputEventPlayer` provides address-based actions that wait for visible,
+enabled, nonempty targets before sending input:
+
+```ctrl
+player.replaceText("Vision_1.MyPanel:editor", "System1:Example.value");
+player.clearText("Vision_1.MyPanel:editor");
+player.writeText("Vision_1.MyPanel:editor", "replacement");
+player.commitText("Vision_1.MyPanel:editor");
+player.setChecked("Vision_1.MyPanel:options", 0, true);
+player.clickShape("Vision_1.MyPanel:refresh");
+```
+
+Text actions send keyboard input rather than assigning widget text. Text is
+not included in helper diagnostics. Text entry first clicks the target to
+focus it, so caret placement follows that click; it does not preserve a
+previous selection. `clearText` uses Select All and Backspace. `replaceText`
+combines clearing with whole-string input. Only `commitText` explicitly sends
+Return. Editable text fields are covered by live tests; read-only and other
+editor types still need dedicated validation.
+
+`waitForAttribute` waits for a scalar readable attribute. `waitForPanelOpen`
+and `waitForPanelClosed` take module and panel instance names, not panel file
+names. Timeouts are in milliseconds; zero checks the current state once.
+
+`selectComboItemByText` selects an exact, unique label through keyboard input.
+`clickTableCell` uses zero-based row and column indexes, while
+`selectTableRowByValue` takes a column name and rejects ambiguous matches.
+Table cells must already be visible; automatic scrolling is not implemented.
+`pressShortcut` focuses its target by clicking before sending the key.
+
+## Shape wrappers
+
+Typed `GuiTestShape` wrappers provide shape-specific attribute snapshots through
+`getCurrentAttributes()` and semantic actions where raw input is not enough.
+Use `getTestObject(shape)` when the shape type is only known at runtime, or
+construct a typed wrapper when the type is known:
+
+```ctrl
+GuiTestSelectionList choices = GuiTestSelectionList(selectionShape);
+choices.selectItem("Second item");
+
+GuiTestDpTree tree = GuiTestDpTree(dpTreeShape);
+tree.expandElement("System1:ExampleDP.Structure.value");
+```
+
+`GuiTestSelectionList.selectItem()` accepts exact displayed text or a one-based
+item position and returns zero when the selection is applied. Text selection
+uses an exact item lookup rather than keyboard type-to-select. The
+`GuiTestDpTree.expandElement()` helper expands and navigates to a DPE/config
+path, returning a negative status when the path is invalid or cannot be
+selected. DP-tree snapshots include the current selection and tree appearance
+attributes, so `OaGuiTest.assertAttributes()` can check the same state model.
+
+The click helpers honor the inherited `shallMoveCursor()` setting. Double-click
+helpers currently send two press/release sequences and do not guarantee a
+native `DoubleClicked` callback. `dragShape` remains experimental because strict
+live checks have exposed drag-selection failures. `GuiTestDpTree.expandElement()`
+has a live invalid-path check, but navigation against a populated DPE tree still
+needs a representative fixture before it is considered fully verified.
+
+Reusable standalone checks and their current results are documented in
+[the input-player test directory](https://github.com/winccoa-tools-pack/winccoa-native-gui-test-framework/tree/main/tests/WinCC_OA_Test/TestSuites/suite_shapes/sub_unit/scripts/tests/libs/classes/inputPlayer).
+The existing combined test script is preserved separately.
+
+## Touch input
+
+`SplashInputEventPlayer` offers `touchFrame`, `tapShape`, `doubleTapShape`,
+`longPressShape`, `swipeShape` and `twoContactGesture`. Run native UI touch
+tests with `-touch -style fusion`. Injection alone does not establish gesture
+recognition; assert the widget's actual callbacks and state.
+
+The [touch input guide](https://github.com/winccoa-tools-pack/winccoa-native-gui-test-framework/blob/main/tests/WinCC_OA_Test/TestSuites/suite_uiEvents/touch.md)
+covers frame lifecycle, timing, bounds, readiness, release policy, cleanup and
+concurrency limits. Two self-terminating, fixture-based examples live under
+the suite's `sub_uiEvents/scripts/examples`, not the Splash subproject.
+
+## CLI tests
+
+The `suite_CLI` test run exercises the path validation shared by `splash-cli` and
+the production CLI. It runs under a CTRL manager with `-n`, does not start a UI
+manager, and can run in a headless environment such as the current GitHub
+Actions image.
+
+Run it locally through CtrlTF:
+
+```powershell
+& '<WinCC OA installation>/bin/WCCOActrl.exe' -proj TfCustomizedSplash testRunner.ctl cli -n -log +stderr
+```
+
+The test suite and its coverage are documented in
+[`suite_CLI`](https://github.com/winccoa-tools-pack/winccoa-native-gui-test-framework/blob/main/tests/WinCC_OA_Test/TestSuites/suite_CLI/README.md).
+
+The suite does not start or stop WCCOAui. Recording, pause/resume, stop, and
+replay integration checks require a working display and a test project with
+the panel available. Run those checks locally; they are excluded from
+headless CI until a display is available in the GH image.
+
+---
+
+<center>Made with ❤️ for and by the WinCC OA community</center>

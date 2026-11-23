@@ -9,12 +9,12 @@
 #   merge-project-docu.sh [source_dir ...]
 # Env:
 #   REPO_ROOT   repository root (default: auto from script location)
-#   WORKER_PATH worker project relative to REPO_ROOT (default: src/Squirt)
+#   WORKER_PATH worker project relative to REPO_ROOT (default: src/Splash)
 set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 REPO_ROOT="${REPO_ROOT:-$(cd "${SCRIPT_DIR}/../.." && pwd)}"
-WORKER_PATH="${WORKER_PATH:-src/Squirt}"
+WORKER_PATH="${WORKER_PATH:-src/Splash}"
 ADVANCED_NAME="advanced_doxygenConfig.txt"
 
 SKIP_NAMES="README.md LICENSE .gitignore .gitattributes .editorconfig .generated-by-docu-builder"

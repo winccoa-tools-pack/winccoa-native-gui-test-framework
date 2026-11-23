@@ -19,7 +19,7 @@ set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 REPO_ROOT="${REPO_ROOT:-$(cd "${SCRIPT_DIR}/../.." && pwd)}"
-WORKER_PATH="${WORKER_PATH:-src/Squirt}"
+WORKER_PATH="${WORKER_PATH:-src/Splash}"
 WINCCOA_VERSION="${WINCCOA_VERSION:-3.21}"
 COMPANY_NAME="${COMPANY_NAME:-winccoa-tools-pack}"
 PACKAGE_VERSION="${PACKAGE_VERSION:-0.2.1}"

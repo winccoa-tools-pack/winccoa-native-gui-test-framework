@@ -16,7 +16,7 @@ This suite tests non-GUI CTRL behavior in `classes/splash/Splash` using
 
 [testProj.unit.config](testProj.unit.config) registers the test manager.
 The `unit` entry in [testRuns.config](../../testRuns.config) selects this suite.
-The test project must include the Squirt source subproject and the installed
+The test project must include the Splash source subproject and the installed
 WinCC OA OaTest libraries in its search paths.
 
 ## Coverage
@@ -56,16 +56,16 @@ outside this database-independent unit suite.
 
 ## Execution
 
-With `TfCustomizedSquirt` registered and configured for this checkout, run:
+With `TfCustomizedSplash` registered and configured for this checkout, run:
 
 ```powershell
-& '<WinCC OA installation>/bin/WCCOActrl.exe' -proj TfCustomizedSquirt testRunner.ctl unit -n -log +stderr
+& '<WinCC OA installation>/bin/WCCOActrl.exe' -proj TfCustomizedSplash testRunner.ctl unit -n -log +stderr
 ```
 
 CtrlTF prepares the test project, runs the configured manager and collects the
 OaTest results. No UI manager or launcher panel is required.
 
-For a direct run in a registered project whose search paths include Squirt and
+For a direct run in a registered project whose search paths include Splash and
 `sub_unit`:
 
 ```powershell

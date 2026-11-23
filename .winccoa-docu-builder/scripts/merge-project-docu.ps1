@@ -16,7 +16,7 @@
   Repository root. Default: parent of .winccoa-docu-builder.
 
 .PARAMETER WorkerPath
-  Worker project relative to RepoRoot. Default: src/Squirt.
+  Worker project relative to RepoRoot. Default: src/Splash.
 #>
 [CmdletBinding()]
 param(
@@ -24,7 +24,7 @@ param(
     [string[]] $Source,
 
     [string] $RepoRoot = "",
-    [string] $WorkerPath = "src/Squirt"
+    [string] $WorkerPath = "src/Splash"
 )
 
 $ErrorActionPreference = "Stop"

@@ -3,7 +3,7 @@
 These standalone OaTest scripts create their own named modules and dynamic
 widgets. They do not modify the existing combined player test or require a
 hand-authored shape panel. Run them sequentially in a running test project
-with Squirt configured as a subproject and a desktop display available.
+with Splash configured as a subproject and a desktop display available.
 
 | Script | Coverage |
 | --- | --- |

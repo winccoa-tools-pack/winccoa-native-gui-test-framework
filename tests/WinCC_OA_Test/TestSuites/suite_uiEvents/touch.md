@@ -1,6 +1,6 @@
 # Touch Input Guide
 
-`SquirtInputEventPlayer` injects native UI touch frames through
+`SplashInputEventPlayer` injects native UI touch frames through
 `sendTouchEvent`. Injection is not proof that a widget recognized a gesture.
 Check its callbacks and resulting state, as the runnable examples do.
 These helpers do not change existing mouse APIs.
@@ -8,7 +8,7 @@ These helpers do not change existing mouse APIs.
 ## APIs
 
 All addresses have the form `module.panelInstance:shapeName`. Include
-`#uses "classes/SquirtInputEventPlayer"` in the UI script.
+`#uses "classes/SplashInputEventPlayer"` in the UI script.
 
 | Method | Behavior |
 | --- | --- |
@@ -113,7 +113,7 @@ native pinch recognition. Zoom changes and gesture payloads provide that evidenc
 ## Run Examples And Tests
 
 Use an interactive desktop with the already-running `DPE_monitor_test_3.22`.
-Its existing configuration includes Squirt and this suite's `sub_uiEvents`.
+Its existing configuration includes Splash and this suite's `sub_uiEvents`.
 Do not restart CtrlTF or edit configuration. Use current
 `main/UiFiles/scripts/libs/classes/InputEventPlayer.ctl` and
 `main/Test/CtrlTF/WinCC_OA_Test/TestSuites/suite_MultiTouch` as authoring references,
@@ -129,7 +129,7 @@ $scripts = @(
   'examples\touchSpreadPinch.ctl',
   'tests\panels\touchEvents.ctl',
   'tests\panels\multiTouchEvents.ctl',
-  'tests\libs\classes\SquirtTouchFrames.ctl'
+  'tests\libs\classes\SplashTouchFrames.ctl'
 )
 $stamp = Get-Date -Format 'yyyyMMdd-HHmmss'
 foreach ($relative in $scripts) {
@@ -176,7 +176,7 @@ All fresh logs are in `C:\Users\atw12ru2\AppData\Local\Temp`:
 | --- | --- | --- |
 | `touchEvents.ctl` | 44 | `touchEvents-fresh-20261020-000058.err.log` |
 | `multiTouchEvents.ctl` | 18 | `multiTouchEvents-fresh-20261020-000058.err.log` |
-| `SquirtTouchFrames.ctl` | 161 | `SquirtTouchFrames-fresh-20261020-000058.err.log` |
+| `SplashTouchFrames.ctl` | 161 | `SplashTouchFrames-fresh-20261020-000058.err.log` |
 | `touchTap.ctl` | 5 | `touchTap-fresh-20261020-000058.err.log` |
 | `touchSpreadPinch.ctl` | 8 | `touchSpreadPinch-fresh-20261020-000058.err.log` |
 
@@ -209,7 +209,7 @@ the mouse run did not. Every run exited zero and emitted `Checks done`.
 | --- | --- | --- | --- |
 | `touchEvents.ctl` | 44 | 0 | 0 |
 | `multiTouchEvents.ctl` | 18 | 0 | 0 |
-| `SquirtTouchFrames.ctl` | 161 | 0 | 0 |
+| `SplashTouchFrames.ctl` | 161 | 0 | 0 |
 | `touchTap.ctl` | 5 | 0 | 0 |
 | `touchSpreadPinch.ctl` | 8 | 0 | 0 |
 | `uiEvents.ctl` | 139 | 2 | 0 |
@@ -221,7 +221,7 @@ Logs are in the same temporary directory as above, named
 The missing JPG pixmap warning remains unsuppressed.
 
 Native UI syntax checks passed for the four updated CTL files: `uiEvents`,
-`touchEvents`, `SquirtTouchFrames` and `touchTap`. Their logs use
+`touchEvents`, `SplashTouchFrames` and `touchTap`. Their logs use
 `ui-event-rename-<script-stem>-syntax-20261020-001549.err.log`.
 All six renamed main/child-panel references resolve. The suite has zero
 obsolete-label matches in content and filenames, including ignored files.

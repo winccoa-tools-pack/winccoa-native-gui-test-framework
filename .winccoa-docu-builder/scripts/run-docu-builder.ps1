@@ -15,7 +15,7 @@ param(
     [string] $Command = "build",
 
     [string] $RepoRoot = "",
-    [string] $WorkerPath = "src/Squirt",
+    [string] $WorkerPath = "src/Splash",
     [string] $WinccoaVersion = "3.21",
     [string] $CompanyName = "winccoa-tools-pack",
     [string] $PackageVersion = "0.2.1",

@@ -5,7 +5,7 @@
   @AIgeneratedHelpContent
 */
 
-#uses "classes/SquirtInputEventPlayer"
+#uses "classes/SplashInputEventPlayer"
 #uses "classes/oaTest/OaTest"
 #uses "panel"
 
@@ -13,7 +13,7 @@
   @brief Isolated readiness failures and keyboard/mouse input tests.
   @AIgeneratedHelpContent
 */
-class TstSquirtStandaloneReadinessAndDrag : OaTest
+class TstSplashStandaloneReadinessAndDrag : OaTest
 {
 //@public members
   /**
@@ -26,10 +26,10 @@ class TstSquirtStandaloneReadinessAndDrag : OaTest
     if (OaTest::setUp() != 0)
       return -1;
 
-    ModuleOnWithPanel("squirtStandaloneReadiness", -1, -1, 700, 500, 2, 2, "",
+    ModuleOnWithPanel("splashStandaloneReadiness", -1, -1, 700, 500, 2, 2, "",
                       "about.pnl", "standaloneReadiness", makeDynString());
-    player.waitForPanelOpen("squirtStandaloneReadiness", "standaloneReadiness");
-    editor = addShape("squirtStandaloneReadiness", "standaloneReadiness", 1,
+    player.waitForPanelOpen("splashStandaloneReadiness", "standaloneReadiness");
+    editor = addShape("splashStandaloneReadiness", "standaloneReadiness", 1,
                       "TEXT_FIELD", "readinessEditor");
     setValue(editor, "position", 20, 20, "size", 240, 35,
              "visible", true, "enabled", true);
@@ -43,15 +43,15 @@ class TstSquirtStandaloneReadinessAndDrag : OaTest
   */
   public int testImmediatePanelStates()
   {
-    player.waitForPanelOpen("squirtStandaloneReadiness", "standaloneReadiness", 0);
+    player.waitForPanelOpen("splashStandaloneReadiness", "standaloneReadiness", 0);
     this.assertTrue(isPanelOpen("standaloneReadiness",
-                                "squirtStandaloneReadiness"),
+                                "splashStandaloneReadiness"),
                     "Owned panel is immediately open");
-    player.waitForPanelClosed("squirtStandaloneReadiness", "absentPanel", 0);
-    this.assertTrue(!isPanelOpen("absentPanel", "squirtStandaloneReadiness"),
+    player.waitForPanelClosed("splashStandaloneReadiness", "absentPanel", 0);
+    this.assertTrue(!isPanelOpen("absentPanel", "splashStandaloneReadiness"),
                     "Missing panel in an open module is immediately closed");
-    player.waitForPanelClosed("squirtStandaloneAbsent", "absentPanel", 0);
-    this.assertTrue(!isModuleOpen("squirtStandaloneAbsent"),
+    player.waitForPanelClosed("splashStandaloneAbsent", "absentPanel", 0);
+    this.assertTrue(!isModuleOpen("splashStandaloneAbsent"),
                     "Missing module is immediately closed");
     player.waitForAttribute(address, "visible", true, 0);
     this.assertTrue(editor.visible, "Visible attribute matches immediately");
@@ -69,7 +69,7 @@ class TstSquirtStandaloneReadinessAndDrag : OaTest
 
     try
     {
-      player.waitForPanelOpen("squirtStandaloneReadiness", "absentPanel", 80);
+      player.waitForPanelOpen("splashStandaloneReadiness", "absentPanel", 80);
     }
     catch { rejected = true; }
 
@@ -78,7 +78,7 @@ class TstSquirtStandaloneReadinessAndDrag : OaTest
 
     try
     {
-      player.waitForPanelClosed("squirtStandaloneReadiness",
+      player.waitForPanelClosed("splashStandaloneReadiness",
                                 "standaloneReadiness", 80);
     }
     catch { rejected = true; }
@@ -131,7 +131,7 @@ class TstSquirtStandaloneReadinessAndDrag : OaTest
   public int testMissingTimeout()
   {
     string missing =
-      "squirtStandaloneReadiness.standaloneReadiness:missingEditor";
+      "splashStandaloneReadiness.standaloneReadiness:missingEditor";
     bool rejected = false;
 
     try { player.clickShape(missing, 80); }
@@ -239,17 +239,17 @@ class TstSquirtStandaloneReadinessAndDrag : OaTest
   */
   public int tearDown()
   {
-    moduleOff("squirtStandaloneReadiness");
-    player.waitForPanelClosed("squirtStandaloneReadiness", "standaloneReadiness");
+    moduleOff("splashStandaloneReadiness");
+    player.waitForPanelClosed("splashStandaloneReadiness", "standaloneReadiness");
     return OaTest::tearDown();
   }
 
 //@protected members
 //@private members
-  private SquirtInputEventPlayer player;
+  private SplashInputEventPlayer player;
   private shape editor;
   private string address =
-    "squirtStandaloneReadiness.standaloneReadiness:readinessEditor";
+    "splashStandaloneReadiness.standaloneReadiness:readinessEditor";
 };
 
 /**
@@ -260,7 +260,7 @@ void main(...)
 {
   va_list arguments;
   int count = va_start(arguments);
-  TstSquirtStandaloneReadinessAndDrag test;
+  TstSplashStandaloneReadinessAndDrag test;
   test.cla.readArguments(arguments, count);
   va_end(arguments);
   test.startAll();

@@ -258,8 +258,8 @@ For comprehensive guidance on different aspects of this test suite, see:
 
 ### Using WinCC OA TestFramework (Recommended)
 
-Register Project TfCustomizedSquirt as runnable project
-Start the WinCC OA Console whithin TfCustomizedSquirt
+Register Project TfCustomizedSplash as runnable project
+Start the WinCC OA Console whithin TfCustomizedSplash
 Start the WinCC OA ctrl manager testRunner.ctl
 
 ### Using GEDI (Interactive)

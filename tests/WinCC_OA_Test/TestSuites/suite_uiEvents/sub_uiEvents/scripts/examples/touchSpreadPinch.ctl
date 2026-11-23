@@ -4,7 +4,7 @@
   @copyright MIT
   @AIgeneratedHelpContent
 */
-#uses "classes/SquirtInputEventPlayer"
+#uses "classes/SplashInputEventPlayer"
 #uses "classes/oaTest/OaTest"
 
 /**
@@ -66,7 +66,7 @@ class TouchSpreadPinchExample : OaTest
 
 //@private members
   private string moduleName = "suite_uiEvents_example_spread_pinch";
-  private SquirtInputEventPlayer player;
+  private SplashInputEventPlayer player;
   private shape surface;
 
   private void expectZoomCallbacks()

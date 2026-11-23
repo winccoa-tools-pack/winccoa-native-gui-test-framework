@@ -1,9 +1,9 @@
 HAVE_DOT               = YES
 DOT_PATH               =
-QHP_NAMESPACE          = "winccoa_%WINCCOA_VERSION%_squirt_en"
+QHP_NAMESPACE          = "winccoa_%WINCCOA_VERSION%_splash_en"
 QHP_VIRTUAL_FOLDER     = "doc"
 
-QHP_SECT_FILTER_ATTRS = "winccoa squirt %WINCCOA_VERSION% en de"
+QHP_SECT_FILTER_ATTRS = "winccoa splash %WINCCOA_VERSION% en de"
 CLASS_GRAPH            = NO
 COLLABORATION_GRAPH    = NO
 GROUP_GRAPHS           = NO
@@ -16,7 +16,7 @@ DIRECTORY_GRAPH        = NO
 GENERATE_LEGEND        = NO
 IMAGE_PATH             =
 
-PROJECT_NAME           = "Squirt  %WINCCOA_VERSION%"
+PROJECT_NAME           = "Splash  %WINCCOA_VERSION%"
 PROJECT_NUMBER         = ""
 
 GENERATE_BUGLIST       = YES

@@ -3,18 +3,18 @@
 
 frontend:
   - changed-files:
-      - any-glob-to-any-file: 'src/Squirt/panels/**'
+      - any-glob-to-any-file: 'src/Splash/panels/**'
 
 
 backend:
   - changed-files:
-      - any-glob-to-any-file: 'src/Squirt/scripts/**'
-      - any-glob-to-any-file: 'src/Squirt/dplist/**'
+      - any-glob-to-any-file: 'src/Splash/scripts/**'
+      - any-glob-to-any-file: 'src/Splash/dplist/**'
 
       
 localization:
   - changed-files:
-      - any-glob-to-any-file: 'src/Squirt/msg/**'
+      - any-glob-to-any-file: 'src/Splash/msg/**'
 
 ci:
   - changed-files:
@@ -32,4 +32,4 @@ tests:
 
 API:
   - changed-files:
-      - any-glob-to-any-file: 'src/Squirt/data/hsp/**'
+      - any-glob-to-any-file: 'src/Splash/data/hsp/**'

@@ -4,7 +4,7 @@
   @copyright MIT
   @AIgeneratedHelpContent
 */
-#uses "classes/SquirtInputEventPlayer"
+#uses "classes/SplashInputEventPlayer"
 #uses "classes/oaTest/OaTest"
 
 /**
@@ -226,7 +226,7 @@ class TstUiEvents : OaTest
 
 //@private members
   private string moduleName = "suite_uiEvents_native";
-  private SquirtInputEventPlayer player;
+  private SplashInputEventPlayer player;
   private shape results;
 
   private string address(const string &shapeName)

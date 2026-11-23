@@ -7,7 +7,7 @@ Shell helpers to prepare the shared documentation theme and run
 
 1. Resolve the org theme (`winccoa-tools-pack/docu-builder-theme`)
 2. Copy **top-level** theme files into `.docu-builder-theme/` when needed
-3. Merge theme + `.winccoa-docu-builder` into `src/Squirt/data/projectDocu`
+3. Merge theme + `.winccoa-docu-builder` into `src/Splash/data/projectDocu`
 4. Optionally invoke `winccoa-docu-builder build|register`
 
 Merge rules match the npm package:
@@ -63,7 +63,7 @@ Optional env:
 | `THEME_REF` | `main` | Git ref |
 | `THEME_SOURCE` | empty | Local theme tree (preferred over clone) |
 | `SKIP_THEME_FETCH` | `0` | Fail if theme missing instead of cloning |
-| `WORKER_PATH` | `src/Squirt` | Worker project |
+| `WORKER_PATH` | `src/Splash` | Worker project |
 | `WINCCOA_VERSION` | `3.21` | Passed to CLI |
 | `COMPANY_NAME` | `winccoa-tools-pack` | Passed to build |
 | `PACKAGE_VERSION` | `0.2.1` | npm bootstrap version |
@@ -92,7 +92,7 @@ checkout+merge unless you need the prepared tree as an artifact.
 ## Generated paths (gitignored)
 
 - `.docu-builder-theme/` - local theme checkout/sync
-- `src/Squirt/data/projectDocu/*` except `README.md` - merged runtime files
+- `src/Splash/data/projectDocu/*` except `README.md` - merged runtime files
 - `node_modules/` - optional local CLI bootstrap from `run-docu-builder.*`
 
 ---

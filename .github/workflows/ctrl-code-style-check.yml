@@ -28,7 +28,7 @@ jobs:
     env:
       WINCCOA_VERSION: '3.21'
       # Runnable worker project (StyleCheck is registered as non-runnable sub-project)
-      PROJECT_PATH: src/Squirt
+      PROJECT_PATH: src/Splash
       WINCCOA_IMAGE: ghcr.io/winccoa-tools-pack/winccoa-images:3.21.6-debian12-amd64-all
     steps:
       - name: Checkout repository
@@ -48,13 +48,13 @@ jobs:
             exit 1
           fi
 
-      - name: Check CTL style (Squirt)
-        id: style-squirt
+      - name: Check CTL style (Splash)
+        id: style-splash
         continue-on-error: true
         uses: winccoa-tools-pack/github-actions-winccoa/actions/winccoa-style-check@main
         with:
           path: ${{ env.PROJECT_PATH }}
-          source-path: src/Squirt
+          source-path: src/Splash
           winccoa-version: ${{ env.WINCCOA_VERSION }}
           docker-image: ${{ env.WINCCOA_IMAGE }}
           command: check
@@ -63,8 +63,8 @@ jobs:
           fail-on-error: 'true'
           package-version: '0.2.1'
           report-format: sarif
-          report-path: .artifacts/style-check-squirt.sarif
-          log-path: .artifacts/style-check-squirt.log
+          report-path: .artifacts/style-check-splash.sarif
+          log-path: .artifacts/style-check-splash.log
 
       - name: Check CTL style (tests)
         id: style-tests
@@ -93,20 +93,20 @@ jobs:
         with:
           name: ctrl-style-check-logs
           path: |
-            .artifacts/style-check-squirt.log
+            .artifacts/style-check-splash.log
             .artifacts/style-check-tests.log
-            .artifacts/style-check-squirt.sarif
+            .artifacts/style-check-splash.sarif
             .artifacts/style-check-tests.sarif
-            ${{ steps.style-squirt.outputs.log-path }}
+            ${{ steps.style-splash.outputs.log-path }}
             ${{ steps.style-tests.outputs.log-path }}
           if-no-files-found: warn
 
-      - name: Publish Squirt SARIF to code scanning
-        if: always() && steps.style-squirt.outputs.report-path != '' && (github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository)
+      - name: Publish Splash SARIF to code scanning
+        if: always() && steps.style-splash.outputs.report-path != '' && (github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository)
         uses: github/codeql-action/upload-sarif@v4
         with:
-          sarif_file: ${{ steps.style-squirt.outputs.report-path }}
-          category: winccoa-ctl-style-squirt
+          sarif_file: ${{ steps.style-splash.outputs.report-path }}
+          category: winccoa-ctl-style-splash
 
       - name: Publish test SARIF to code scanning
         if: always() && steps.style-tests.outputs.report-path != '' && (github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository)
@@ -115,14 +115,14 @@ jobs:
           sarif_file: ${{ steps.style-tests.outputs.report-path }}
           category: winccoa-ctl-style-tests
 
-      - name: Report style findings on PR (Squirt)
-        id: report-squirt
+      - name: Report style findings on PR (Splash)
+        id: report-splash
         if: always() && github.event_name == 'pull_request'
         uses: winccoa-tools-pack/github-actions-winccoa/actions/winccoa-logs-to-pr-review@main
         with:
-          log-path: ${{ steps.style-squirt.outputs.log-path || '.artifacts/style-check-squirt.log' }}
-          title: CTL style check report (Squirt)
-          comment-marker: '<!-- winccoa-style-check-squirt-report -->'
+          log-path: ${{ steps.style-splash.outputs.log-path || '.artifacts/style-check-splash.log' }}
+          title: CTL style check report (Splash)
+          comment-marker: '<!-- winccoa-style-check-splash-report -->'
           include-error-types: CTRL
           review-comments: 'true'
           comment-on-pr: 'true'
@@ -151,19 +151,19 @@ jobs:
         if: always()
         run: |
           if [ "${{ github.event_name }}" = "pull_request" ]; then
-            S="${{ steps.report-squirt.outputs.finding-count }}"
+            S="${{ steps.report-splash.outputs.finding-count }}"
             T="${{ steps.report-tests.outputs.finding-count }}"
             S="${S:-0}"
             T="${T:-0}"
             FINDINGS=$((S + T))
-            echo "Active findings Squirt=${S} tests=${T} total=${FINDINGS}"
+            echo "Active findings Splash=${S} tests=${T} total=${FINDINGS}"
             if [ "$FINDINGS" -gt 0 ]; then
               echo "::error::CTL style check has ${FINDINGS} active finding(s) in PR-changed files."
               exit 1
             fi
             exit 0
           fi
-          if [ "${{ steps.style-squirt.outcome }}" = "failure" ] || \
+          if [ "${{ steps.style-splash.outcome }}" = "failure" ] || \
              [ "${{ steps.style-tests.outcome }}" = "failure" ]; then
             echo "::error::CTL style check failed (see log artifacts)."
             exit 1
