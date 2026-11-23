@@ -1,0 +1,18 @@
+{
+    "id": "dpe_monitor_showcase",
+    "shapes": {
+        "FRAME1": {
+            "visible": true,
+            "enabled": true,
+            "position.x": 15,
+            "size.w": 781,
+            "position.y": 33,
+            "size.h": 518,
+            "selected": false,
+            "armed": false,
+            "border": "[solid,oneColor,JoinMiter,CapButt,0]",
+            "dashBackCol": "_Transparent",
+            "fill": "[outline]"
+        }
+    }
+}

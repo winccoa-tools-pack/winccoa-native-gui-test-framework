@@ -33,7 +33,7 @@ class GuiTestTree : GuiTestShape
 
     anytype visible, enabled;
     anytype x, y, w, h;
-    anytype cursor, lineWidth, midLineWidth, treeStepSize;
+    anytype lineWidth, midLineWidth, treeStepSize;
     anytype updatesEnabled, itemsExpandable, headerHidden, rootIsDecorated, sortingEnabled; //, uniformRowHeights;
     anytype uniformRowHeights;
     anytype layoutDirection, selectionBehavior, selectionMode;
@@ -43,7 +43,6 @@ class GuiTestTree : GuiTestShape
              "enabled", enabled,
              "position", x, y,
              "size", w, h,
-             "cursor", cursor,
              "updatesEnabled", updatesEnabled,
              "enabled", enabled,
              "layoutDirection", layoutDirection,
@@ -65,7 +64,6 @@ class GuiTestTree : GuiTestShape
              "position.y", y,
              "size.w", w,
              "size.h", h,
-             "cursor", cursor,
              "updatesEnabled", updatesEnabled,
              "layoutDirection", layoutDirection,
              "headerHidden", headerHidden,

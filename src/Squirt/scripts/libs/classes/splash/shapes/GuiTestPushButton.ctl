@@ -36,7 +36,6 @@ class GuiTestPushButton : GuiTestShape
             toggleState, updatesEnabled,
             buttonType,
             borderStyle, fill, textPosition,
-            font,
             text;
 
     getValue(this.testShape,
@@ -51,7 +50,6 @@ class GuiTestPushButton : GuiTestShape
              "borderStyle", borderStyle,
              "fill", fill,
              "textPosition", textPosition,
-             "font", font,
              "text", text);
 
     if (fill.startsWith("[pattern"))
@@ -77,7 +75,6 @@ class GuiTestPushButton : GuiTestShape
              "borderStyle", borderStyle,
              "fill", fill,
              "textPosition", textPosition,
-             "font", font,
              "text", text
            );
   }

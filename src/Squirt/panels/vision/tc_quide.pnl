@@ -1,0 +1,431 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<panel version="14">
+ <properties>
+  <prop name="Name">
+   <prop name="en_US.utf8">DPE Monitor 010 Recording Guide</prop>
+  </prop>
+  <prop name="Size">616 348</prop>
+  <prop name="BackColor">WF_PanelBackground</prop>
+  <prop name="RefPoint">0 0</prop>
+  <prop name="InitAndTermRef">False</prop>
+  <prop name="SendClick">False</prop>
+  <prop name="RefFileName"></prop>
+  <prop name="KeepInMemory">False</prop>
+  <prop name="Type">WF</prop>
+  <prop name="DPI">96</prop>
+  <prop name="PDPI">96</prop>
+  <prop name="layoutType">HBox</prop>
+ </properties>
+ <events>
+  <script isEscaped="1" name="ScopeLib"><![CDATA[void stopSelectorRecording()
+{
+  if (g_stopCommandSent)
+    return;
+
+  string macroName = macroNameInput.text;
+  string libraryPath = libraryPathInput.text;
+
+  if (macroName == &quot;&quot; || libraryPath == &quot;&quot;)
+    return;
+
+  dpSetWait(&quot;_Splash.command&quot;, &quot;stop|&quot; + macroName + &quot;|&quot; + libraryPath,
+            &quot;_Splash.response&quot;, &quot;&quot;);
+  g_stopCommandSent = TRUE;
+}
+
+bool g_stopCommandSent = FALSE;
+]]></script>
+  <script isEscaped="1" name="Close"><![CDATA[main()
+{
+  stopSelectorRecording();
+}]]></script>
+  <script isEscaped="1" name="Initialize"><![CDATA[main()
+{
+  if (isfile(PROJ_PATH + &quot;.tcQuide.json&quot;))
+  {
+    string json;
+    fileToString(PROJ_PATH + &quot;.tcQuide.json&quot;, json);
+    mapping jsonData = jsonDecode(json);
+
+    macroNameInput.text(jsonData.value(&quot;macroName&quot;, &quot;macro_&quot;));
+    libraryPathInput.text(jsonData.value(&quot;libraryPath&quot;, &quot;macros.ctl&quot;));
+    libraryPathInput.toolTipText(tr(&quot;Relative path to $1&quot;).subst(PROJ_PATH + SCRIPTS_REL_PATH));
+    guideText.text(jsonData.value(&quot;quide&quot;, &quot;....&quot;));
+  }
+}
+]]></script>
+ </events>
+ <layers>
+  <layer layerId="0">
+   <prop name="Visible">True</prop>
+   <prop name="Name">Layer1</prop>
+  </layer>
+ </layers>
+ <shapes>
+  <shape Name="macroNameLabel" layerId="0" shapeType="PRIMITIVE_TEXT">
+   <properties>
+    <prop name="serialId">3</prop>
+    <prop name="Type"></prop>
+    <prop name="RefPoint">24 155</prop>
+    <prop name="Enable">True</prop>
+    <prop name="Visible">True</prop>
+    <prop name="ForeColor">_WindowText</prop>
+    <prop name="BackColor">_Transparent</prop>
+    <prop name="TabOrder">0</prop>
+    <prop name="ToolTipText">
+     <prop name="de_AT.utf8"></prop>
+    </prop>
+    <prop name="sizePolicy">
+     <sizePolicy horizontal="Minimum" vertical="Preferred"/>
+    </prop>
+    <prop name="layoutAlignment">AlignCenter</prop>
+    <prop name="snapMode">Point</prop>
+    <prop name="DashBackColor">_Transparent</prop>
+    <prop name="AntiAliased">False</prop>
+    <prop name="LineType">[solid,oneColor,JoinMiter,CapButt,0]</prop>
+    <prop name="BorderZoomable">False</prop>
+    <prop name="BorderScalable">False</prop>
+    <prop name="FillType">[outline]</prop>
+    <prop name="Location">24 155</prop>
+    <prop name="Font">
+     <prop name="en_US.utf8">Arial,-1,13,5,400,0,0,0,0,0,0,0,0,0,0,1</prop>
+    </prop>
+    <prop name="Text">
+     <prop name="en_US.utf8">Macro name</prop>
+    </prop>
+    <prop name="Distance">2</prop>
+    <prop name="BorderOffset">2</prop>
+    <prop name="Bordered">False</prop>
+    <prop name="Fit">True</prop>
+    <prop name="Transformable">True</prop>
+    <prop name="TextFormat">[0s,,,AlignLeft]</prop>
+   </properties>
+  </shape>
+  <shape Name="macroNameInput" layerId="0" shapeType="TEXT_FIELD">
+   <properties>
+    <prop name="serialId">4</prop>
+    <prop name="Type">WF</prop>
+    <prop name="RefPoint">210 149.5</prop>
+    <prop name="Enable">True</prop>
+    <prop name="Visible">True</prop>
+    <prop name="ForeColor">STD_inputfield_text</prop>
+    <prop name="BackColor">STD_inputfield_back</prop>
+    <prop name="TabOrder">0</prop>
+    <prop name="ToolTipText">
+     <prop name="de_AT.utf8"></prop>
+    </prop>
+    <prop name="minimumSize">500 -1</prop>
+    <prop name="sizePolicy">
+     <sizePolicy horizontal="Expanding" vertical="Fixed"/>
+    </prop>
+    <prop name="layoutAlignment">AlignRight|AlignTrailing</prop>
+    <prop name="snapMode">Point</prop>
+    <prop name="Font">
+     <prop name="de_AT.utf8">Segoe UI,-1,12,5,400,0,0,0,0,0,0,0,0,0,0,1</prop>
+    </prop>
+    <prop name="Location">210 149.5</prop>
+    <prop name="Size">486 26</prop>
+    <prop name="BorderStyle">Normal</prop>
+    <prop name="Editable">True</prop>
+    <prop name="ClearButtonEnabled">False</prop>
+    <prop name="TextFormat">[0s,,,AlignLeft]</prop>
+    <prop name="AllowEmptyNumeric">False</prop>
+    <prop name="ulcClientSideWidget">False</prop>
+   </properties>
+  </shape>
+  <shape Name="libraryPathLabel" layerId="0" shapeType="PRIMITIVE_TEXT">
+   <properties>
+    <prop name="serialId">5</prop>
+    <prop name="Type"></prop>
+    <prop name="RefPoint">24 200</prop>
+    <prop name="Enable">True</prop>
+    <prop name="Visible">True</prop>
+    <prop name="ForeColor">_WindowText</prop>
+    <prop name="BackColor">_Transparent</prop>
+    <prop name="TabOrder">0</prop>
+    <prop name="ToolTipText">
+     <prop name="de_AT.utf8"></prop>
+    </prop>
+    <prop name="sizePolicy">
+     <sizePolicy horizontal="Minimum" vertical="Preferred"/>
+    </prop>
+    <prop name="layoutAlignment">AlignCenter</prop>
+    <prop name="snapMode">Point</prop>
+    <prop name="DashBackColor">_Transparent</prop>
+    <prop name="AntiAliased">False</prop>
+    <prop name="LineType">[solid,oneColor,JoinMiter,CapButt,0]</prop>
+    <prop name="BorderZoomable">False</prop>
+    <prop name="BorderScalable">False</prop>
+    <prop name="FillType">[outline]</prop>
+    <prop name="Location">24 200</prop>
+    <prop name="Font">
+     <prop name="en_US.utf8">Arial,-1,13,5,400,0,0,0,0,0,0,0,0,0,0,1</prop>
+    </prop>
+    <prop name="Text">
+     <prop name="en_US.utf8">Library path</prop>
+    </prop>
+    <prop name="Distance">2</prop>
+    <prop name="BorderOffset">2</prop>
+    <prop name="Bordered">False</prop>
+    <prop name="Fit">True</prop>
+    <prop name="Transformable">True</prop>
+    <prop name="TextFormat">[0s,,,AlignLeft]</prop>
+   </properties>
+  </shape>
+  <shape Name="libraryPathInput" layerId="0" shapeType="TEXT_FIELD">
+   <properties>
+    <prop name="serialId">6</prop>
+    <prop name="Type">WF</prop>
+    <prop name="RefPoint">210 194.5</prop>
+    <prop name="Enable">True</prop>
+    <prop name="Visible">True</prop>
+    <prop name="ForeColor">STD_inputfield_text</prop>
+    <prop name="BackColor">STD_inputfield_back</prop>
+    <prop name="TabOrder">0</prop>
+    <prop name="ToolTipText">
+     <prop name="de_AT.utf8"></prop>
+    </prop>
+    <prop name="minimumSize">500 -1</prop>
+    <prop name="sizePolicy">
+     <sizePolicy horizontal="MinimumExpanding" vertical="Preferred"/>
+    </prop>
+    <prop name="layoutAlignment">AlignTrailing|AlignTop</prop>
+    <prop name="snapMode">Point</prop>
+    <prop name="Font">
+     <prop name="de_AT.utf8">Segoe UI,-1,12,5,400,0,0,0,0,0,0,0,0,0,0,1</prop>
+    </prop>
+    <prop name="Location">210 194.5</prop>
+    <prop name="Size">486 26</prop>
+    <prop name="BorderStyle">Normal</prop>
+    <prop name="Editable">True</prop>
+    <prop name="ClearButtonEnabled">False</prop>
+    <prop name="TextFormat">[0s,,,AlignLeft]</prop>
+    <prop name="AllowEmptyNumeric">False</prop>
+    <prop name="ulcClientSideWidget">False</prop>
+   </properties>
+  </shape>
+  <shape Name="finishButton" layerId="0" shapeType="PUSH_BUTTON">
+   <properties>
+    <prop name="serialId">2</prop>
+    <prop name="Type">WF</prop>
+    <prop name="RefPoint">580 330</prop>
+    <prop name="Enable">True</prop>
+    <prop name="Visible">True</prop>
+    <prop name="ForeColor">_ButtonText</prop>
+    <prop name="BackColor">_Button</prop>
+    <prop name="TabOrder">0</prop>
+    <prop name="ToolTipText">
+     <prop name="de_AT.utf8"></prop>
+    </prop>
+    <prop name="minimumSize">-1 32</prop>
+    <prop name="sizePolicy">
+     <sizePolicy horizontal="Preferred" vertical="Fixed"/>
+    </prop>
+    <prop name="layoutAlignment">AlignCenter</prop>
+    <prop name="snapMode">Point</prop>
+    <prop name="Font">
+     <prop name="en_US.utf8">Arial,-1,13,5,400,0,0,0,0,0,0,0,0,0,0,1</prop>
+    </prop>
+    <prop name="Location">580 330</prop>
+    <prop name="Size">116 30</prop>
+    <prop name="BorderStyle">Normal</prop>
+    <prop name="Text">
+     <prop name="en_US.utf8">Finish recording</prop>
+    </prop>
+   </properties>
+   <events>
+    <script isEscaped="1" name="Clicked"><![CDATA[main()
+{
+  stopSelectorRecording();
+  PanelOff();
+}]]></script>
+   </events>
+  </shape>
+  <shape Name="SPACER1" layerId="0" shapeType="SPACER">
+   <properties>
+    <prop name="serialId">8</prop>
+    <prop name="Type"></prop>
+    <prop name="RefPoint">160 160</prop>
+    <prop name="Enable">True</prop>
+    <prop name="Visible">True</prop>
+    <prop name="ForeColor">{0,0,0}</prop>
+    <prop name="BackColor">{255,255,255}</prop>
+    <prop name="TabOrder">0</prop>
+    <prop name="ToolTipText">
+     <prop name="de_AT.utf8"></prop>
+    </prop>
+    <prop name="TransparentForMouse">True</prop>
+    <prop name="sizePolicy">
+     <sizePolicy horizontal="Preferred" vertical="Ignored"/>
+    </prop>
+    <prop name="layoutAlignment">AlignNone</prop>
+    <prop name="snapMode">Point</prop>
+    <prop name="Location">160 160</prop>
+    <prop name="Size">21 11</prop>
+    <prop name="Orientation">horizontal</prop>
+   </properties>
+  </shape>
+  <shape Name="SPACER2" layerId="0" shapeType="SPACER">
+   <properties>
+    <prop name="serialId">9</prop>
+    <prop name="Type"></prop>
+    <prop name="RefPoint">150 200</prop>
+    <prop name="Enable">True</prop>
+    <prop name="Visible">True</prop>
+    <prop name="ForeColor">{0,0,0}</prop>
+    <prop name="BackColor">{255,255,255}</prop>
+    <prop name="TabOrder">1</prop>
+    <prop name="ToolTipText">
+     <prop name="de_AT.utf8"></prop>
+    </prop>
+    <prop name="TransparentForMouse">True</prop>
+    <prop name="sizePolicy">
+     <sizePolicy horizontal="Expanding" vertical="Ignored"/>
+    </prop>
+    <prop name="layoutAlignment">AlignNone</prop>
+    <prop name="snapMode">Point</prop>
+    <prop name="Location">150 200</prop>
+    <prop name="Size">31 11</prop>
+    <prop name="Orientation">horizontal</prop>
+   </properties>
+  </shape>
+  <shape Name="SPACER3" layerId="0" shapeType="SPACER">
+   <properties>
+    <prop name="serialId">11</prop>
+    <prop name="Type"></prop>
+    <prop name="RefPoint">440 330</prop>
+    <prop name="Enable">True</prop>
+    <prop name="Visible">True</prop>
+    <prop name="ForeColor">{0,0,0}</prop>
+    <prop name="BackColor">{255,255,255}</prop>
+    <prop name="TabOrder">3</prop>
+    <prop name="ToolTipText">
+     <prop name="de_AT.utf8"></prop>
+    </prop>
+    <prop name="TransparentForMouse">True</prop>
+    <prop name="sizePolicy">
+     <sizePolicy horizontal="Expanding" vertical="Ignored"/>
+    </prop>
+    <prop name="layoutAlignment">AlignNone</prop>
+    <prop name="snapMode">Point</prop>
+    <prop name="Location">440 330</prop>
+    <prop name="Size">41 21</prop>
+    <prop name="Orientation">horizontal</prop>
+   </properties>
+  </shape>
+  <shape Name="SPACER4" layerId="0" shapeType="SPACER">
+   <properties>
+    <prop name="serialId">12</prop>
+    <prop name="Type"></prop>
+    <prop name="RefPoint">320 110</prop>
+    <prop name="Enable">True</prop>
+    <prop name="Visible">True</prop>
+    <prop name="ForeColor">{0,0,0}</prop>
+    <prop name="BackColor">{255,255,255}</prop>
+    <prop name="TabOrder">4</prop>
+    <prop name="ToolTipText">
+     <prop name="de_AT.utf8"></prop>
+    </prop>
+    <prop name="TransparentForMouse">True</prop>
+    <prop name="sizePolicy">
+     <sizePolicy horizontal="Ignored" vertical="Minimum"/>
+    </prop>
+    <prop name="layoutAlignment">AlignNone</prop>
+    <prop name="snapMode">Point</prop>
+    <prop name="Location">320 110</prop>
+    <prop name="Size">71 31</prop>
+    <prop name="Orientation">vertical</prop>
+   </properties>
+  </shape>
+  <shape Name="guideText" layerId="0" shapeType="TEXT_EDIT">
+   <properties>
+    <prop name="serialId">13</prop>
+    <prop name="Type">WF</prop>
+    <prop name="RefPoint">30 10</prop>
+    <prop name="Enable">True</prop>
+    <prop name="Visible">True</prop>
+    <prop name="ForeColor">_WindowText</prop>
+    <prop name="BackColor">_Window</prop>
+    <prop name="TabOrder">5</prop>
+    <prop name="ToolTipText">
+     <prop name="de_AT.utf8"></prop>
+    </prop>
+    <prop name="sizePolicy">
+     <sizePolicy horizontal="Expanding" vertical="MinimumExpanding"/>
+    </prop>
+    <prop name="layoutAlignment">AlignNone</prop>
+    <prop name="snapMode">Point</prop>
+    <prop name="Font">
+     <prop name="de_AT.utf8">Noto Sans,-1,16,5,400,0,0,0,0,0,0,0,0,0,0,1</prop>
+     <prop name="en_US.utf8">Noto Sans,-1,16,5,400,0,0,0,0,0,0,0,0,0,0,1</prop>
+    </prop>
+    <prop name="Location">30 10</prop>
+    <prop name="Size">461 71</prop>
+    <extended>
+     <prop name="text" type="CHAR_STRING">• Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+• Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+• Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+• Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
+• Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+• Curabitur pretium tincidunt lacus. Nulla gravida orci a odio.
+• Nullam varius, turpis et commodo pharetra, est eros bibendum elit, nec luctus magna felis sollicitudin mauris.
+• Integer in mauris eu nibh euismod gravida. Duis ac tellus et risus vulputate vehicula.
+• Donec lobortis risus a elit. Etiam tempor. Ut ullamcorper, ligula eu tempor congue, eros est euismod turpis, id tincidunt sapien risus a quam.
+• Maecenas fermentum consequat mi. Donec fermentum. Pellentesque malesuada nulla a mi.
+• Duis sapien sem, aliquet nec, commodo eget, consequat quis, neque.
+• Aliquam faucibus, elit ut dictum aliquet, felis nisl adipiscing sapien, sed malesuada diam lacus eget erat.
+• Cras mollis scelerisque nunc. Nullam arcu. Aliquam consequat.
+• Curabitur augue lorem, dapibus gravida, dignissim et, pretium ac, enim.
+• Vestibulum facilisis, purus nec pulvinar iaculis, ligula mi congue nunc, vitae euismod ligula urna in dolor.
+• Mauris sollicitudin fermentum libero. Praesent molestie orci sed pede.</prop>
+    </extended>
+   </properties>
+  </shape>
+ </shapes>
+ <groups>
+  <layout Name="LAYOUT_GROUP1" parentSerial="5" serial="0">
+   <properties>
+    <prop idx="0" name="shapeSerial">3</prop>
+    <prop idx="2" name="shapeSerial">4</prop>
+    <prop idx="1" name="shapeSerial">8</prop>
+    <prop name="isContainerShape">False</prop>
+    <prop name="layoutType">HBox</prop>
+   </properties>
+  </layout>
+  <layout Name="LAYOUT_GROUP2" parentSerial="5" serial="1">
+   <properties>
+    <prop idx="0" name="shapeSerial">5</prop>
+    <prop idx="2" name="shapeSerial">6</prop>
+    <prop idx="1" name="shapeSerial">9</prop>
+    <prop name="isContainerShape">False</prop>
+    <prop name="layoutType">HBox</prop>
+   </properties>
+  </layout>
+  <layout Name="LAYOUT_GROUP4" parentSerial="5" serial="3">
+   <properties>
+    <prop idx="1" name="shapeSerial">2</prop>
+    <prop idx="0" name="shapeSerial">11</prop>
+    <prop name="isContainerShape">False</prop>
+    <prop name="layoutType">HBox</prop>
+   </properties>
+  </layout>
+  <layout Name="LAYOUT_GROUP6" parentSerial="5" serial="4">
+   <properties>
+    <prop idx="0" name="shapeSerial">13</prop>
+    <prop name="isContainerShape">False</prop>
+    <prop name="layoutType">HBox</prop>
+   </properties>
+  </layout>
+  <layout Name="LAYOUT_GROUP12" parentSerial="-1" serial="5">
+   <properties>
+    <prop idx="1" name="shapeSerial">12</prop>
+    <prop idx="2" name="groupSerial">0</prop>
+    <prop idx="3" name="groupSerial">1</prop>
+    <prop idx="4" name="groupSerial">3</prop>
+    <prop idx="0" name="groupSerial">4</prop>
+    <prop name="isContainerShape">False</prop>
+    <prop name="layoutType">VBox</prop>
+   </properties>
+  </layout>
+ </groups>
+</panel>

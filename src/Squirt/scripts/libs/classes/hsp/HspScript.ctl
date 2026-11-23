@@ -173,7 +173,7 @@ class HspScript
 
     if ((templFile != "") && isfile(templFile))
     {
-      fileToString(templFile, script);
+      fileToString(templFile, script, "UTF-8");
 
       replaceKey("newClassTemplate", fileNameToClassName());
       replaceKey("newTestTemplate", "Tst" + fileNameToClassName());
@@ -624,7 +624,7 @@ class HspScript
     addOptions = covFilePath + " " + addOptions;
     int rc = start(relPath, addOptions, TRUE);
     string str;
-    fileToString(PROJ_PATH + "quickResult.json", str);
+    fileToString(PROJ_PATH + "quickResult.json", str, "UTF-8");
     OaTestProjectView::updateStatisic(getFilePath(), str, covFilePath);
     remove(PROJ_PATH + "quickResult.json");
     remove(PROJ_PATH + "fullResult.json");
@@ -685,7 +685,7 @@ class HspScript
     addOptions = covFilePath + " " + addOptions;
     int rc = start(relPath, addOptions, TRUE);
     string str;
-    fileToString(PROJ_PATH + "quickResult.json", str);
+    fileToString(PROJ_PATH + "quickResult.json", str, "UTF-8");
     OaTestProjectView::updateStatisic(getFilePath(), str, covFilePath);
     remove(PROJ_PATH + "quickResult.json");
     remove(PROJ_PATH + "fullResult.json");
