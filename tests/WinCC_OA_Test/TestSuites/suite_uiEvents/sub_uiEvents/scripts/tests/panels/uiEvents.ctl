@@ -138,7 +138,7 @@ class TstUiEvents : OaTest
     player.mouseEventTableCell(1, 0, 0, 0);
     expectCount(3);
     assertEqual(results.items(), makeDynString("Zeile: 1",
-                "Spalte: Forename", "Value: Martin"), "Ordered table callback records");
+        "Spalte: Forename", "Value: Martin"), "Ordered table callback records");
     return 0;
   }
 
@@ -196,10 +196,13 @@ class TstUiEvents : OaTest
     player.sleep(200);
     player.clickShape(address("PUSH_BUTTON_TXTVERIFICATION"));
     expectCount(5);
-    assertEqual(results.items(), makeDynString("focus in: TEXT_LEFT",
-                "focus out: TEXT_LEFT", "focus in: TEXT_RIGHT",
-                "focus out: TEXT_RIGHT",
-                "Textfield_RIGHT, Value is: Tool Verification 2"),
+    dyn_string expectedEntries = makeDynString(
+                                   "focus in: TEXT_LEFT",
+                                   "focus out: TEXT_LEFT",
+                                   "focus in: TEXT_RIGHT",
+                                   "focus out: TEXT_RIGHT",
+                                   "Textfield_RIGHT, Value is: Tool Verification 2");
+    assertEqual(results.items(), expectedEntries,
                 "Focus transitions precede verification of the pasted text");
     return 0;
   }
