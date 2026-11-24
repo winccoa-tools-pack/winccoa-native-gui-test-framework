@@ -1,4 +1,4 @@
-# Squirt Public Release Plan and Roadmap
+# Splash Public Release Plan and Roadmap
 
 Research date: 2026-10-12.
 
@@ -8,7 +8,7 @@ CI results were not independently verified.
 
 ## Product Direction
 
-Release Squirt as an open-source, native WinCC OA panel regression framework
+Release Splash as an open-source, native WinCC OA panel regression framework
 with CI-ready results. The first audience is WinCC OA developers and project
 teams already using CTL, GEDI, OaTest, and native panels.
 
@@ -32,7 +32,7 @@ superiority. Attribute assertions alone do not prove rendering or user experienc
 | SikuliX / Oculix | Image-driven automation for otherwise inaccessible controls | Rendering-sensitive; project maintenance transition needs assessment |
 | CtrlppCheck | WinCC OA static analysis and CI companion | Not a GUI-testing competitor |
 
-No other maintained public project with exactly Squirt's native CTL-panel scope
+No other maintained public project with exactly Splash's native CTL-panel scope
 was established in this research. This is not proof that none exists.
 
 ### Competitive Gaps
@@ -43,7 +43,7 @@ was established in this research. This is not proof that none exists.
   Self-healing can reduce maintenance but also conceal unintended changes.
 - Visual checks: screenshots are not visual regression testing. Squish documents
   baseline comparisons, tolerances, diff reports, and OCR.
-- Workflow breadth: Squirt is limited to native OA shapes, not OS dialogs or
+- Workflow breadth: Splash is limited to native OA shapes, not OS dialogs or
   arbitrary applications. Other tools cover broader supported technologies.
 - Reporting: commercial tools offer richer investigation interfaces, history,
   test-management integrations, and vendor support.
@@ -56,12 +56,12 @@ was established in this research. This is not proof that none exists.
   TestFramework integration, and JUnit publishing. Implementation does not by
   itself establish recent successful execution.
 - [Package workflow](.github/workflows/package.yml) remains a placeholder.
-- [Project overview](src/Squirt/README.md) documents native recording/replay,
+- [Project overview](src/Splash/README.md) documents native recording/replay,
   execution modes, addressing limitations, and incomplete onboarding sections.
-- [Usage guide](src/Squirt/docs/usage.md) describes local and CI workflows.
+- [Usage guide](src/Splash/docs/usage.md) describes local and CI workflows.
 - [Test instructions](tests/WinCC_OA_Test/README.md) describe Windows prerequisites
   and Linux GUI runtime requirements.
-- [Verification-point implementation](src/Squirt/scripts/libs/classes/SquirtVp.ctl)
+- [Verification-point implementation](src/Splash/scripts/libs/classes/SplashVp.ctl)
   creates missing baselines from live state. CI needs strict verification mode.
 
 Windows CI and native AI automation were not demonstrated by this inspection.

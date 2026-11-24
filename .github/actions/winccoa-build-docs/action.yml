@@ -5,7 +5,7 @@ inputs:
   path:
     description: "Path to WinCC OA project root (relative to repository root)."
     required: false
-    default: "src/Squirt"
+    default: "src/Splash"
   winccoa-version:
     description: "WinCC OA install directory version (major.minor), e.g. 3.21."
     required: true

@@ -1,8 +1,8 @@
-name: squirt-maintenance-skills
+name: splash-maintenance-skills
 version: 0.1.0
-description: AI skills for maintaining the Squirt framework.
+description: AI skills for maintaining the Splash framework.
 dependencies:
   apm:
-    - path: ./squirt-maintenance
+    - path: ./splash-maintenance
     - path: ./tc-quide-panel
     - path: ./winccoa-gui-shape-tests

@@ -5,7 +5,7 @@
   @AIgeneratedHelpContent
 */
 
-#uses "classes/SquirtInputEventPlayer"
+#uses "classes/SplashInputEventPlayer"
 #uses "classes/oaTest/OaTest"
 #uses "panel"
 
@@ -13,7 +13,7 @@
   @brief Isolated whole-string text input tests.
   @AIgeneratedHelpContent
 */
-class TstSquirtStandaloneTextInput : OaTest
+class TstSplashStandaloneTextInput : OaTest
 {
 //@public members
   /**
@@ -26,10 +26,10 @@ class TstSquirtStandaloneTextInput : OaTest
     if (OaTest::setUp() != 0)
       return -1;
 
-    ModuleOnWithPanel("squirtStandaloneText", -1, -1, 700, 500, 2, 2, "",
+    ModuleOnWithPanel("splashStandaloneText", -1, -1, 700, 500, 2, 2, "",
                       "about.pnl", "standaloneText", makeDynString());
-    player.waitForPanelOpen("squirtStandaloneText", "standaloneText");
-    editor = addShape("squirtStandaloneText", "standaloneText", 1,
+    player.waitForPanelOpen("splashStandaloneText", "standaloneText");
+    editor = addShape("splashStandaloneText", "standaloneText", 1,
                       "TEXT_FIELD", "textEditor");
     setValue(editor, "position", 20, 20, "size", 300, 35,
              "visible", true, "enabled", true);
@@ -101,16 +101,16 @@ class TstSquirtStandaloneTextInput : OaTest
   */
   public int tearDown()
   {
-    moduleOff("squirtStandaloneText");
-    player.waitForPanelClosed("squirtStandaloneText", "standaloneText");
+    moduleOff("splashStandaloneText");
+    player.waitForPanelClosed("splashStandaloneText", "standaloneText");
     return OaTest::tearDown();
   }
 
 //@protected members
 //@private members
-  private SquirtInputEventPlayer player;
+  private SplashInputEventPlayer player;
   private shape editor;
-  private string address = "squirtStandaloneText.standaloneText:textEditor";
+  private string address = "splashStandaloneText.standaloneText:textEditor";
 };
 
 /**
@@ -121,7 +121,7 @@ void main(...)
 {
   va_list arguments;
   int count = va_start(arguments);
-  TstSquirtStandaloneTextInput test;
+  TstSplashStandaloneTextInput test;
   test.cla.readArguments(arguments, count);
   va_end(arguments);
   test.startAll();

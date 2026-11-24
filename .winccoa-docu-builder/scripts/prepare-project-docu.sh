@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Ensure the shared documentation theme is available and merge it with
-# project overrides into src/Squirt/data/projectDocu.
+# project overrides into src/Splash/data/projectDocu.
 #
 # Default sources (in order):
 #   1. .docu-builder-theme   (checkout / sibling clone of docu-builder-theme)
@@ -8,7 +8,7 @@
 #
 # Env:
 #   REPO_ROOT            repository root (default: auto)
-#   WORKER_PATH          worker project path (default: src/Squirt)
+#   WORKER_PATH          worker project path (default: src/Splash)
 #   THEME_PATH           theme checkout path (default: .docu-builder-theme)
 #   THEME_REPOSITORY     owner/name (default: winccoa-tools-pack/docu-builder-theme)
 #   THEME_REF            git ref (default: main)
@@ -21,7 +21,7 @@ set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 REPO_ROOT="${REPO_ROOT:-$(cd "${SCRIPT_DIR}/../.." && pwd)}"
-WORKER_PATH="${WORKER_PATH:-src/Squirt}"
+WORKER_PATH="${WORKER_PATH:-src/Splash}"
 THEME_PATH="${THEME_PATH:-.docu-builder-theme}"
 THEME_REPOSITORY="${THEME_REPOSITORY:-winccoa-tools-pack/docu-builder-theme}"
 THEME_REF="${THEME_REF:-main}"

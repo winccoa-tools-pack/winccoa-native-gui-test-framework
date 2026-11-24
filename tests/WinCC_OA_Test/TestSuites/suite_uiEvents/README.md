@@ -23,7 +23,7 @@ terms before publishing or packaging them.
 
 The new CTL driver and replacement logo are repository-owned content, not a
 relicensing of the copied resources. The replacement PNG is a transparent
-625x188 raster rendering of `src/Squirt/docs/images/squirt-logo.svg`, including
+625x188 raster rendering of `src/Splash/docs/images/splash-logo.svg`, including
 its Splash wordmark and taglines. It replaces the previous checker artwork
 and is not a screenshot baseline.
 
@@ -77,7 +77,7 @@ rather than copying those assertions unchanged.
 
 The standalone driver is `sub_uiEvents/scripts/tests/panels/uiEvents.ctl`.
 It adapts the current UiFiles HSP `newUnitTest.ctl` structure and uses
-`#uses "classes/SquirtInputEventPlayer"` plus public OaTest methods:
+`#uses "classes/SplashInputEventPlayer"` plus public OaTest methods:
 
 - `testInitialization`: all eight initialization records in creation order.
 - `testLeftClicks`: no modifier, Ctrl, and Ctrl+Alt; release event fields.
@@ -87,8 +87,11 @@ It adapts the current UiFiles HSP `newUnitTest.ctl` structure and uses
 - `testTableCell`: row 1, column Forename, value Martin, in exact record order.
 - `testTabs`: mouse selection and right-arrow navigation, each followed by
 	the RP2 button's actual prefix/JSON callback pair.
-- `testTextClipboardFocus`: keyboard entry, select-all/copy/paste shortcuts,
-	four ordered focus transitions and exact pasted-text verification.
+- `skipTextClipboardFocus` (deactivated, was `testTextClipboardFocus`):
+	keyboard entry, select-all/copy/paste shortcuts, four ordered focus
+	transitions and exact pasted-text verification. Behavior differs between
+	WinCC OA 3.21 and 3.22; see
+	[#56](https://github.com/winccoa-tools-pack/winccoa-native-gui-test-framework/issues/56).
 - `testNativeDoubleClick`: actual native `MouseButtonDblClick`, not two
 	ordinary clicks or a manually invoked callback.
 
@@ -100,7 +103,7 @@ clipboard and can replace its current contents; run on a test desktop.
 
 ## Direct Native Run
 
-The existing `DPE_monitor_test_3.22` configuration already includes Squirt and
+The existing `DPE_monitor_test_3.22` configuration already includes Splash and
 this suite's `sub_uiEvents`. Do not edit that configuration, restart the
 project, or start the whole CtrlTF runner. The project must already be running.
 Use an interactive Windows desktop with the native 3.22 binaries and Noto Sans.
@@ -121,7 +124,7 @@ Get-Content $err -Tail 30
 The driver opens its own `suite_uiEvents_native` module with instance
 `main_pnl`. A preexisting module of that name causes setup to stop rather than
 reuse another fixture. OaTest handles teardown and `exit(0)` terminates only
-this UI manager. Existing combined/standalone Squirt tests are unchanged.
+this UI manager. Existing combined/standalone Splash tests are unchanged.
 
 **The process exit code is not a test verdict.** Require a final OaTest
 `Checks done` summary and inspect its Failed and Aborted counts. Missing summary
@@ -133,7 +136,7 @@ as undefined and is not authoritative for this UI script.
 ## Test Guide Panel
 
 The [guide-panel contract test](sub_uiEvents/scripts/tests/panels/vision/tc_quide/tc_quide_010.ctl)
-is owned by Squirt and was moved out of the DPE Monitor product suite.
+is owned by Splash and was moved out of the DPE Monitor product suite.
 It verifies the displayed configuration and the Finish button's Splash stop
 payload. Prepare project-root `.tcQuide.json` with `macroName`, `libraryPath`,
 and `quide`, and ensure the framework's `_Splash` datapoint exists.
@@ -142,7 +145,7 @@ Run without an active recording session because the test clears
 
 Use WCCOAui with `-p about.pnl` and
 `-s tests/panels/vision/tc_quide/tc_quide_010.ctl` in a running project that
-includes Squirt and `sub_uiEvents`. The script opens its own `TcQuideUiTest`
+includes Splash and `sub_uiEvents`. The script opens its own `TcQuideUiTest`
 module. It is not in `testProj.events.config`'s unattended manager list while
 its configuration prerequisite remains external. The move preserves test
 behavior; no new runtime pass is claimed.
@@ -158,7 +161,7 @@ do not restart CtrlTF or edit configuration.
 	tap, double-tap, explicit press/release and long press; 44 assertions.
 - [Multitouch behavior](sub_uiEvents/scripts/tests/panels/multiTouchEvents.ctl):
 	native spread/pinch zoom and one-/two-finger swipe payloads; 18 assertions.
-- [Frame contracts](sub_uiEvents/scripts/tests/libs/classes/SquirtTouchFrames.ctl):
+- [Frame contracts](sub_uiEvents/scripts/tests/libs/classes/SplashTouchFrames.ctl):
 	framing, validation and injected-failure cleanup; 161 assertions.
 - [Runnable tap example](sub_uiEvents/scripts/examples/touchTap.ctl):
 	actual ToolVerification click callback; 5 assertions.

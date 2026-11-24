@@ -1,4 +1,4 @@
-# Squirt CLI Tests
+# Splash CLI Tests
 
 This suite tests the pure path-validation rules used by `splash/cli.ctl`. It
 runs as a CTRL manager with `-n`; it does not launch WCCOAui, create panels, or
@@ -33,10 +33,10 @@ the automated regression run.
 
 The `cli` run is registered in
 [testRuns.config](../../testRuns.config) and included in
-`Regression-tests`. With `TfCustomizedSquirt` configured for this checkout:
+`Regression-tests`. With `TfCustomizedSplash` configured for this checkout:
 
 ```powershell
-& '<WinCC OA installation>/bin/WCCOActrl.exe' -proj TfCustomizedSquirt testRunner.ctl cli -n -log +stderr
+& '<WinCC OA installation>/bin/WCCOActrl.exe' -proj TfCustomizedSplash testRunner.ctl cli -n -log +stderr
 ```
 
 The suite's test project manager runs

@@ -1,6 +1,6 @@
-name: squirt-usage-skills
+name: splash-usage-skills
 version: 0.1.0
-description: AI skills for writing product and project tests with Squirt.
+description: AI skills for writing product and project tests with Splash.
 dependencies:
   apm:
-    - path: ./squirt-test-authoring
+    - path: ./splash-test-authoring

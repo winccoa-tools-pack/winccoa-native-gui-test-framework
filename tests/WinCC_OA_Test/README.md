@@ -11,8 +11,8 @@ This directory contains automated tests based on the WinCC OA TestFramework.
 
 ## Run regression tests locally
 
-Register Project TfCustomizedSquirt as runnable project
-Start the WinCC OA Console whithin TfCustomizedSquirt
+Register Project TfCustomizedSplash as runnable project
+Start the WinCC OA Console whithin TfCustomizedSplash
 Start the WinCC OA ctrl manager testRunner.ctl
 
 ## GUI tests and GitHub automation
@@ -22,7 +22,7 @@ a working display is not available. This includes the `shapes` test run in
 [testRuns.config](testRuns.config), which is currently excluded from the
 automated `Regression-tests` run. This limitation does not apply to non-GUI
 CTRL unit tests, including the new headless `cli` test run, which validates
-Squirt CLI path handling without starting WCCOAui.
+Splash CLI path handling without starting WCCOAui.
 
 **Run the GUI tests locally before merging a pull request.** A passing GitHub
 Actions run does not verify GUI behavior while these tests are excluded.
@@ -49,8 +49,8 @@ From the repository root (requires a local WinCC OA install):
 
 ```powershell
 # one-shot via npx (no permanent install)
-npx --yes @winccoa-tools-pack/npm-winccoa-ctrl-code-style@0.2.1 check ./src/Squirt -v 3.21
-npx --yes @winccoa-tools-pack/npm-winccoa-ctrl-code-style@0.2.1 format ./src/Squirt -v 3.21
+npx --yes @winccoa-tools-pack/npm-winccoa-ctrl-code-style@0.2.1 check ./src/Splash -v 3.21
+npx --yes @winccoa-tools-pack/npm-winccoa-ctrl-code-style@0.2.1 format ./src/Splash -v 3.21
 ```
 
 Or install the CLI, then run:
@@ -59,23 +59,23 @@ Or install the CLI, then run:
 npm install --no-save @winccoa-tools-pack/npm-winccoa-ctrl-code-style@0.2.1
 
 # register StyleCheck (non-runnable) + worker project once
-npx winccoa-ctrl-style register ./src/Squirt -v 3.21
+npx winccoa-ctrl-style register ./src/Splash -v 3.21
 
 # dry-run: exit non-zero if formatting would change files
-npx winccoa-ctrl-style check ./src/Squirt -v 3.21
+npx winccoa-ctrl-style check ./src/Splash -v 3.21
 
 # format CTL in place
-npx winccoa-ctrl-style format ./src/Squirt -v 3.21
+npx winccoa-ctrl-style format ./src/Splash -v 3.21
 
 # tests tree (worker path + optional -s source subtree)
-npx winccoa-ctrl-style check ./src/Squirt -v 3.21 -s ./tests/WinCC_OA_Test
-npx winccoa-ctrl-style format ./src/Squirt -v 3.21 -s ./tests/WinCC_OA_Test
+npx winccoa-ctrl-style check ./src/Splash -v 3.21 -s ./tests/WinCC_OA_Test
+npx winccoa-ctrl-style format ./src/Splash -v 3.21 -s ./tests/WinCC_OA_Test
 ```
 
 Skip re-registration when the worker is already set up:
 
 ```powershell
-npx winccoa-ctrl-style check ./src/Squirt -v 3.21 --no-register
+npx winccoa-ctrl-style check ./src/Splash -v 3.21 --no-register
 ```
 
 ## Check copyright locally
@@ -85,7 +85,7 @@ There is **no** published npm copyright CLI. Headers are enforced in CI by
 
 - owner: `winccoa-tools-pack`
 - SPDX: `MIT`
-- paths: `src/Squirt`, `tests/WinCC_OA_Test`
+- paths: `src/Splash`, `tests/WinCC_OA_Test`
 
 Year bumps are handled by the scheduled workflow
 `.github/workflows/yearly-copyright-update.yml`

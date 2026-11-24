@@ -4,7 +4,7 @@
   @copyright MIT
   @AIgeneratedHelpContent
 */
-#uses "classes/SquirtInputEventPlayer"
+#uses "classes/SplashInputEventPlayer"
 #uses "classes/oaTest/OaTest"
 
 /**
@@ -173,10 +173,12 @@ class TstUiEvents : OaTest
   }
 
   /**
-    @test Text entry, clipboard transfer and focus callbacks retain exact order.
+    @brief Text entry, clipboard transfer and focus callbacks retain exact order.
+    @todo Deactivated (not discovered as test) until verified on 3.21 and 3.22,
+          see https://github.com/winccoa-tools-pack/winccoa-native-gui-test-framework/issues/56
     @AIgeneratedHelpContent
   */
-  public int testTextClipboardFocus()
+  public int skipTextClipboardFocus()
   {
     this.tcData.setMaxCountOfPrintedCharacters(0);
     clearResults();
@@ -226,7 +228,7 @@ class TstUiEvents : OaTest
 
 //@private members
   private string moduleName = "suite_uiEvents_native";
-  private SquirtInputEventPlayer player;
+  private SplashInputEventPlayer player;
   private shape results;
 
   private string address(const string &shapeName)

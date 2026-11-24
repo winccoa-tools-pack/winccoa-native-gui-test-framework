@@ -21,11 +21,11 @@ permissions:
 
 jobs:
   syntax-check:
-    name: Syntax check (Squirt)
+    name: Syntax check (Splash)
     runs-on: ubuntu-latest
     env:
       WINCCOA_VERSION: 3.21
-      PROJECT_PATH: src/Squirt
+      PROJECT_PATH: src/Splash
       WINCCOA_IMAGE: ghcr.io/winccoa-tools-pack/winccoa-images:3.21.6-debian12-amd64-all
     steps:
       - name: Checkout repository

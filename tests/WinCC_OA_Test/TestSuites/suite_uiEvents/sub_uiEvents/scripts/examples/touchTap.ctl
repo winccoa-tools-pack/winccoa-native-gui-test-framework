@@ -4,7 +4,7 @@
   @copyright MIT
   @AIgeneratedHelpContent
 */
-#uses "classes/SquirtInputEventPlayer"
+#uses "classes/SplashInputEventPlayer"
 #uses "classes/oaTest/OaTest"
 
 /**
@@ -71,7 +71,7 @@ class TouchTapExample : OaTest
 
 //@private members
   private string moduleName = "suite_uiEvents_example_tap";
-  private SquirtInputEventPlayer player;
+  private SplashInputEventPlayer player;
 };
 
 /** @brief Runs the example, then terminates only this UI manager.

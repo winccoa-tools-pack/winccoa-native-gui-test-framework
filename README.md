@@ -2,7 +2,7 @@
 
 <div align="center">
 
-<img src="src/Squirt/docs/images/squirt-logo.svg" alt="Squirt native GUI test framework for WinCC OA" width="560">
+<img src="src/Splash/docs/images/splash-logo.svg" alt="Splash native GUI test framework for WinCC OA" width="560">
 
 ![Version](https://img.shields.io/github/v/release/winccoa-tools-pack/winccoa-native-gui-test-framework?label=version)
 ![License](https://img.shields.io/github/license/winccoa-tools-pack/winccoa-native-gui-test-framework)
@@ -13,11 +13,11 @@
 
 GUI test automation utilities for WinCC OA native panels.
 
-This repository currently contains the Squirt framework in [src/Squirt](src/Squirt), used to record, replay, and validate UI behavior for WinCC OA panels (.pnl/.xml).
+This repository currently contains the Splash framework in [src/Splash](src/Splash), used to record, replay, and validate UI behavior for WinCC OA panels (.pnl/.xml).
 
 ---
 
-## What Squirt provides
+## What Splash provides
 
 - Macro recording of GUI interactions for native WinCC OA panels
 - Replay of recorded GUI actions
@@ -29,7 +29,7 @@ This repository currently contains the Squirt framework in [src/Squirt](src/Squi
 
 ## Test concept and execution modes
 
-Squirt GUI tests are based on the WinCC OA `OaTest` class and therefore follow the WinCC OA Test concept.
+Splash GUI tests are based on the WinCC OA `OaTest` class and therefore follow the WinCC OA Test concept.
 
 Tests can be executed in multiple ways:
 
@@ -47,25 +47,25 @@ for the current status and local execution instructions.
 
 ## Repository layout
 
-- [src/Squirt](src/Squirt): Main framework source
-- [src/Squirt/scripts](src/Squirt/scripts): CTL scripts and classes
-- [src/Squirt/panels](src/Squirt/panels): Test and helper panels
-- [src/Squirt/data](src/Squirt/data): Templates, captured data, and VP metadata
+- [src/Splash](src/Splash): Main framework source
+- [src/Splash/scripts](src/Splash/scripts): CTL scripts and classes
+- [src/Splash/panels](src/Splash/panels): Test and helper panels
+- [src/Splash/data](src/Splash/data): Templates, captured data, and VP metadata
 
 ---
 
 ## Getting started
 
 1. Open this repository in VS Code.
-2. Use your WinCC OA project environment to load and run the Squirt scripts.
-3. Read project-specific details in [src/Squirt/README.md](src/Squirt/README.md).
+2. Use your WinCC OA project environment to load and run the Splash scripts.
+3. Read project-specific details in [src/Splash/README.md](src/Splash/README.md).
 4. For TestFramework regression tests, see [tests/WinCC_OA_Test/README.md](tests/WinCC_OA_Test/README.md).
 
 ---
 
-## Activate Squirt as WinCC OA sub-project
+## Activate Splash as WinCC OA sub-project
 
-Register [src/Squirt](src/Squirt) as a (non-runnable) WinCC OA sub-project
+Register [src/Splash](src/Splash) as a (non-runnable) WinCC OA sub-project
 from the repository root. Requires Node.js (`npx`) and a WinCC OA installation.
 
 ```powershell
@@ -83,24 +83,24 @@ installed. See [scripts/README.md](scripts/README.md) for details.
 
 ## AI skills
 
-Squirt provides two independently installable APM skill groups:
+Splash provides two independently installable APM skill groups:
 
-- [Usage](.apm/skills/usage/squirt-test-authoring/SKILL.md): write product or
-  project tests with Squirt, including fixtures, recording, and unattended replay.
-- [Maintenance](.apm/skills/maintenance/squirt-maintenance/SKILL.md): develop
-  Squirt itself, including its guide panel and shape-wrapper tests.
+- [Usage](.apm/skills/usage/splash-test-authoring/SKILL.md): write product or
+  project tests with Splash, including fixtures, recording, and unattended replay.
+- [Maintenance](.apm/skills/maintenance/splash-maintenance/SKILL.md): develop
+  Splash itself, including its guide panel and shape-wrapper tests.
 
 With [APM](https://microsoft.github.io/apm/) installed and this repository
 checked out locally, run the appropriate command from your consumer project:
 
 ```powershell
-$squirtSkills = 'C:/ws/winccoa-tools-pack/winccoa-native-gui-test-framework/.apm/skills'
+$splashSkills = 'C:/ws/winccoa-tools-pack/winccoa-native-gui-test-framework/.apm/skills'
 
-# Use Squirt to write tests (one skill).
-apm install "$squirtSkills/usage" --only apm --target copilot
+# Use Splash to write tests (one skill).
+apm install "$splashSkills/usage" --only apm --target copilot
 
-# Maintain Squirt itself (three skills).
-apm install "$squirtSkills/maintenance" --only apm --target copilot
+# Maintain Splash itself (three skills).
+apm install "$splashSkills/maintenance" --only apm --target copilot
 ```
 
 Choose one group, or run both commands when you need both roles. Adjust the
@@ -122,25 +122,25 @@ repository root:
 
 ```powershell
 # dry-run: fail if CTL files need formatting
-npx --yes @winccoa-tools-pack/npm-winccoa-ctrl-code-style@0.1.2 check ./src/Squirt -v 3.21
+npx --yes @winccoa-tools-pack/npm-winccoa-ctrl-code-style@0.1.2 check ./src/Splash -v 3.21
 
 # format CTL files in place
-npx --yes @winccoa-tools-pack/npm-winccoa-ctrl-code-style@0.1.2 format ./src/Squirt -v 3.21
+npx --yes @winccoa-tools-pack/npm-winccoa-ctrl-code-style@0.1.2 format ./src/Splash -v 3.21
 ```
 
 Optional: register once, then reuse without re-registration:
 
 ```powershell
-npx --yes @winccoa-tools-pack/npm-winccoa-ctrl-code-style@0.1.2 register ./src/Squirt -v 3.21
-npx winccoa-ctrl-style check ./src/Squirt -v 3.21 --no-register
-npx winccoa-ctrl-style format ./src/Squirt -v 3.21 --no-register
+npx --yes @winccoa-tools-pack/npm-winccoa-ctrl-code-style@0.1.2 register ./src/Splash -v 3.21
+npx winccoa-ctrl-style check ./src/Splash -v 3.21 --no-register
+npx winccoa-ctrl-style format ./src/Splash -v 3.21 --no-register
 ```
 
 Scan the tests tree (or another subtree) with `-s`:
 
 ```powershell
-npx winccoa-ctrl-style check ./src/Squirt -v 3.21 -s ./tests/WinCC_OA_Test
-npx winccoa-ctrl-style format ./src/Squirt -v 3.21 -s ./tests/WinCC_OA_Test
+npx winccoa-ctrl-style check ./src/Splash -v 3.21 -s ./tests/WinCC_OA_Test
+npx winccoa-ctrl-style format ./src/Splash -v 3.21 -s ./tests/WinCC_OA_Test
 ```
 
 More local QA notes (tests, copyright CI): [tests/WinCC_OA_Test/README.md](tests/WinCC_OA_Test/README.md).

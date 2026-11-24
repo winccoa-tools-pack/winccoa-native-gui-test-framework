@@ -6,11 +6,11 @@ Support and evolve the WinCC OA native GUI test framework in this repository, wi
 
 ## Repository scope
 
-- Main framework lives in [src/Squirt](../src/Squirt).
-- Core CTL libraries are in [src/Squirt/scripts/libs](../src/Squirt/scripts/libs).
-- Shape-specific wrappers are in [src/Squirt/scripts/libs/classes/splash/shapes](../src/Squirt/scripts/libs/classes/splash/shapes).
-- Panel resources are in [src/Squirt/panels](../src/Squirt/panels).
-- VP and template data are in [src/Squirt/data](../src/Squirt/data).
+- Main framework lives in [src/Splash](../src/Splash).
+- Core CTL libraries are in [src/Splash/scripts/libs](../src/Splash/scripts/libs).
+- Shape-specific wrappers are in [src/Splash/scripts/libs/classes/splash/shapes](../src/Splash/scripts/libs/classes/splash/shapes).
+- Panel resources are in [src/Splash/panels](../src/Splash/panels).
+- VP and template data are in [src/Splash/data](../src/Splash/data).
 - Automation and published docs belong under [.github](.).
 
 ## Working principles
@@ -86,7 +86,7 @@ Support and evolve the WinCC OA native GUI test framework in this repository, wi
 When behavior or workflows change, update relevant docs in the same change:
 
 - [README.md](../README.md)
-- [src/Squirt/README.md](../src/Squirt/README.md)
+- [src/Splash/README.md](../src/Splash/README.md)
 - [CONTRIBUTING.md](../CONTRIBUTING.md)
 - Every Markdown documentation file (`*.md`) must end with this footer:
 

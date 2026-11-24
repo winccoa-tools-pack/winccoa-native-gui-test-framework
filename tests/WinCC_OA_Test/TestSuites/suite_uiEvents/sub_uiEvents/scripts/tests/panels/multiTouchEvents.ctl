@@ -4,7 +4,7 @@
   @copyright MIT
   @AIgeneratedHelpContent
 */
-#uses "classes/SquirtInputEventPlayer"
+#uses "classes/SplashInputEventPlayer"
 #uses "classes/oaTest/OaTest"
 
 /**
@@ -128,7 +128,7 @@ class TstMultiTouchEvents : OaTest
 //@private members
   private string moduleName = "suite_uiEvents_multitouch";
   private string address = "suite_uiEvents_multitouch.touch_surface:touchTarget";
-  private SquirtInputEventPlayer player;
+  private SplashInputEventPlayer player;
   private shape surface;
 
   private mapping expectCallback(const string &type, int expected = 1)

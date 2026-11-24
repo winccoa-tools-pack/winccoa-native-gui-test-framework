@@ -15,9 +15,9 @@ permissions:
 
 env:
   WINCCOA_VERSION: 3.21
-  PROJECT_PATH: src/Squirt
+  PROJECT_PATH: src/Splash
   TEST_PROJECT_PATH: tests/WinCC_OA_Test
-  TEST_RUNNER_PROJECT: TfCustomizedSquirt
+  TEST_RUNNER_PROJECT: TfCustomizedSplash
   WINCCOA_IMAGE: ghcr.io/winccoa-tools-pack/winccoa-images:3.21.6-debian12-amd64-all
   LANGUAGES: en_US.utf8 de_AT.utf8
   DISPLAY: :0
@@ -25,8 +25,8 @@ env:
   QT_DEBUG_PLUGINS: '1'
 
 jobs:
-  test-squirt:
-    name: WinCC OA TestFramework - Squirt Tests
+  test-splash:
+    name: WinCC OA TestFramework - Splash Tests
     runs-on: ubuntu-latest
     container:
       image: ghcr.io/winccoa-tools-pack/winccoa-images:3.21.6-debian12-amd64-all
@@ -71,7 +71,7 @@ jobs:
           cat /tmp/xvfb.log || true
           exit 1
 
-      - name: Register Squirt as non-runnable sub-project
+      - name: Register Splash as non-runnable sub-project
         shell: bash
         run: |
           set -euo pipefail
@@ -116,7 +116,7 @@ jobs:
         uses: winccoa-tools-pack/github-actions-winccoa/actions/winccoa-ctrl-test-framework-runner@main
         with:
           winccoa-test-path: ${{ env.TEST_PROJECT_PATH }}
-          test-run-id: ${{ github.event_name == 'pull_request' && 'Regression-tests' || 'Squirt-regression' }}
+          test-run-id: ${{ github.event_name == 'pull_request' && 'Regression-tests' || 'Splash-regression' }}
           languages: ${{ env.LANGUAGES }}
           winccoa-version: ${{ env.WINCCOA_VERSION }}
           upload-artifacts: 'true'

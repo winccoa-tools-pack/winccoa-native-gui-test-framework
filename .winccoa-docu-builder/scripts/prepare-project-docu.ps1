@@ -10,12 +10,12 @@
     3. Sibling ../docu-builder-theme (multi-root workspace)
     4. git clone of -ThemeRepository @ -ThemeRef (unless -SkipThemeFetch)
 
-  Then merges theme + .winccoa-docu-builder into src/Squirt/data/projectDocu.
+  Then merges theme + .winccoa-docu-builder into src/Splash/data/projectDocu.
 #>
 [CmdletBinding()]
 param(
     [string] $RepoRoot = "",
-    [string] $WorkerPath = "src/Squirt",
+    [string] $WorkerPath = "src/Splash",
     [string] $ThemePath = ".docu-builder-theme",
     [string] $ThemeRepository = "winccoa-tools-pack/docu-builder-theme",
     [string] $ThemeRef = "main",

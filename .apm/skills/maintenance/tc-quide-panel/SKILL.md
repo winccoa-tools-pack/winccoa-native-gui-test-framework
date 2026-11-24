@@ -1,25 +1,25 @@
 ---
 name: tc-quide-panel
 description: >
-  Use when maintaining, testing, or debugging Squirt's tc_quide.pnl
+  Use when maintaining, testing, or debugging Splash's tc_quide.pnl
   implementation, project-root .tcQuide.json configuration contract,
   SplashGuidedMacroRecorder integration, or _Splash.command stop handshake.
-  For using guided recording in product tests, use squirt-test-authoring.
+  For using guided recording in product tests, use splash-test-authoring.
 ---
 
-# Maintain The Squirt Test Guide
+# Maintain The Splash Test Guide
 
-This is a focused [Squirt maintenance skill](../squirt-maintenance/SKILL.md).
+This is a focused [Splash maintenance skill](../splash-maintenance/SKILL.md).
 Use it when changing the guide panel or testing its framework-owned contract.
-The consumer recording workflow belongs to `squirt-test-authoring`, available
+The consumer recording workflow belongs to `splash-test-authoring`, available
 separately in the usage skill package.
 
 ## Ownership And Runtime
 
-- The panel is a framework resource under `src/Squirt/panels/vision`.
+- The panel is a framework resource under `src/Splash/panels/vision`.
 - Its [GUI contract test](../../../../tests/WinCC_OA_Test/TestSuites/suite_uiEvents/sub_uiEvents/scripts/tests/panels/vision/tc_quide/tc_quide_010.ctl)
-  belongs to Squirt's `suite_uiEvents`, not a product-specific test suite.
-- The worker project runs it from the attached/installed Squirt subproject at
+  belongs to Splash's `suite_uiEvents`, not a product-specific test suite.
+- The worker project runs it from the attached/installed Splash subproject at
   `panels/vision/tc_quide.pnl`; do not treat the worker project as the source
   of truth for this reusable UI.
 - The caller supplies guide values to `SplashGuidedMacroRecorder`; the helper
@@ -67,7 +67,7 @@ registered in the unattended suite manager list because its configuration is
 currently supplied externally. A CTRL-only syntax check cannot validate its
 UI APIs; require native UI execution for a runtime verdict.
 
-See [the user guide](../../../../src/Squirt/docs/tc-quide-guide.md) for the JSON
+See [the user guide](../../../../src/Splash/docs/tc-quide-guide.md) for the JSON
 example, startup sequence, and complete handshake details.
 
 ---
